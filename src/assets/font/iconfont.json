@@ -1,0 +1,93 @@
+{
+  "id": "1617060",
+  "name": "ssc",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "825060",
+      "name": "手机",
+      "font_class": "shouji54",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "3050498",
+      "name": "验证码",
+      "font_class": "ecurityCode",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "696950",
+      "name": "报名",
+      "font_class": "sign",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "768745",
+      "name": "进行中",
+      "font_class": "shouye",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
+      "icon_id": "1130962",
+      "name": "结束",
+      "font_class": "jieshu",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "10279391",
+      "name": "订单-待面试",
+      "font_class": "dingdan-daimianshi",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "8288828",
+      "name": "电话",
+      "font_class": "dianhua",
+      "unicode": "e842",
+      "unicode_decimal": 59458
+    },
+    {
+      "icon_id": "10721333",
+      "name": "钥匙",
+      "font_class": "yuechi",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "8922346",
+      "name": "锁",
+      "font_class": "suo",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "1215511",
+      "name": "联系方式",
+      "font_class": "lianxifangshi",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "7874522",
+      "name": "添加",
+      "font_class": "tianjia",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "2742624",
+      "name": "安全",
+      "font_class": "anquan",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    }
+  ]
+}

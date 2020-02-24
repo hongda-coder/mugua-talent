@@ -1,0 +1,133 @@
+<template>
+  <div>
+    <div>
+     <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
+        :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
+        <af-table-column prop="number" label="编号" align="center"></af-table-column>
+        <af-table-column prop="guild" label="所属行业" align="center"></af-table-column>
+        <af-table-column prop="name" label="职位名称" align="center"></af-table-column>
+        <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
+        <af-table-column prop="experience" label="工作经验" align="center"></af-table-column>
+        <af-table-column prop="education" label="学历要求" align="center"></af-table-column>
+        <af-table-column prop="end_data" label="竞聘结束日期" align="center"></af-table-column>
+        <af-table-column prop="start_data" label="面试时间" align="center"></af-table-column>
+        <af-table-column prop="commission1" label="人数" align="center"></af-table-column>
+        <af-table-column prop="commission2" label="竞聘状态" align="center"></af-table-column>
+        <af-table-column prop="name" label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">分享</el-button>
+            <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
+            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">查看</el-button>
+          </template>
+        </af-table-column>
+      </el-table>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'CompeteTable',
+  data() {
+      return {
+        table: [{
+          number:1,
+          guild: '佛山市畅腾智能家居有限公司',
+          name: '业务销售',
+          address: '上海市普陀区金沙江路 1518 弄',
+          experience: '3-5年',
+          education: '本科',
+          end_data: '2020年1月9日',
+          start_data: '2020年1月10日 15:00-17:00',
+          commission1: '5人',
+          commission2: '待面试'
+        }, {
+          number:1,
+          guild: '佛山市畅腾智能家居有限公司',
+          name: '业务销售',
+          address: '上海市普陀区金沙江路 1518 弄',
+          experience: '3-5年',
+          education: '本科',
+          end_data: '2020年1月9日',
+          start_data: '2020年1月10日 15:00-17:00',
+          commission1: '5人',
+          commission2: '面试中'
+        }, {
+          number:1,
+          guild: '佛山市畅腾智能家居有限公司',
+          name: '业务销售',
+          address: '上海市普陀区金沙江路 1518 弄',
+          experience: '3-5年',
+          education: '本科',
+          end_data: '2020年1月9日',
+          start_data: '2020年1月10日 15:00-17:00',
+          commission1: '5人',
+          commission2: '已完成'
+        }, {
+          number:1,
+          guild: '佛山市畅腾智能家居有限公司',
+          name: '业务销售',
+          address: '上海市普陀区金沙江路 1518 弄',
+          experience: '3-5年',
+          education: '本科',
+          end_data: '2020年1月9日',
+          start_data: '2020年1月10日 15:00-17:00',
+          commission1: '5人',
+          commission2: '竞聘中'
+        }, {
+          number:1,
+          guild: '佛山市畅腾智能家居有限公司',
+          name: '业务销售',
+          address: '上海市普陀区金沙江路 1518 弄',
+          experience: '3-5年',
+          education: '本科',
+          end_data: '2020年1月9日',
+          start_data: '2020年1月10日 15:00-17:00',
+          commission1: '5人',
+          commission2: '竞聘中'
+        }, {
+          number:1,
+          guild: '佛山市畅腾智能家居有限公司',
+          name: '业务销售',
+          address: '上海市普陀区金沙江路 1518 弄',
+          experience: '3-5年',
+          education: '本科',
+          end_data: '2020年1月9日',
+          start_data: '2020年1月10日 15:00-17:00',
+          commission1: '5人',
+          commission2: '竞聘中'
+        },{
+          number:1,
+          guild: '佛山市畅腾智能家居有限公司',
+          name: '业务销售',
+          address: '上海市普陀区金沙江路 1518 弄',
+          experience: '3-5年',
+          education: '本科',
+          end_data: '2020年1月9日',
+          start_data: '2020年1月10日 15:00-17:00',
+          commission1: '5人',
+          commission2: '竞聘中'
+        }]
+      }
+    }
+}
+</script>
+
+<style scoped>
+
+
+.c-info-name::before {
+  display: inline-block;
+  content: '';
+  width: 3px;
+  height: 15px;
+  background: #FEAD1C;
+  margin-right: 10px;
+  border-radius: 15px;
+}
+
+.commonColor {
+  color: #FEAD1C;
+}
+
+</style>

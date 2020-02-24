@@ -1,0 +1,269 @@
+<template>
+  <div>
+    <div class="c_header_nav_jz">
+      <div class="c_jzheaader clearfix">
+        <div class="c_jzlogo">
+          <img src="@/assets/images/perfect-logo.png" alt="">
+        </div>
+        <div class="c_talent_soon">专注人才快招！</div>
+      </div>
+    </div>
+
+
+    <div class="c_talent_w" style="border: 1px solid #ccc;">
+      <div class="container">
+        <div class="perfect">
+          完善个人信息<span class="hint">（个人注册信息为猎头的唯一凭证，请按如实填写）</span>
+        </div>
+      </div>
+
+      <div style="padding: 20px;background: #fff;">
+        <div style="padding: 30px 0; ">
+          <el-form label-width="80px" :model="editorForm">
+            <el-row>
+              <el-col :span="10" style="padding: 0;margin-left: 100px">
+                <div style="float: left;margin-right: 38px;">
+                    <div style="width:100px;"><img src="@/assets/images/c-avatar.png" alt="" style="width: 100%;"></div>
+                    <div style="color: #FEB12C;text-align: center; line-height: 30px;">修改<span style="font-size: 12px;color: #ccc;margin: 0 5px;">|</span>删除</div>
+                </div>
+                <div style="float: left;">
+                  <div class="clearfix">
+                    <div class="content-input">
+                      <el-form-item label="姓名" prop="name">
+                          <el-input v-model="editorForm.name"></el-input>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <div class="content-input">
+                      <el-form-item label="性别" prop="sex">
+                        <el-radio-group v-model="editorForm.sex">
+                          <el-radio-button label="男" ></el-radio-button>
+                          <el-radio-button label="女"></el-radio-button>
+                        </el-radio-group>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <div class="content-input">
+                      <el-form-item label="出生日期" prop="time">
+                          <el-date-picker v-model="editorForm.time" type="date" placeholder="选择日期"></el-date-picker>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <div class="content-input">
+                      <el-form-item label="联系方式" prop="contact">
+                        <el-input v-model="editorForm.contact"></el-input>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <div class="content-input">
+                      <el-form-item label="电子邮箱" prop="email">
+                        <el-input v-model="editorForm.email"></el-input>
+                      </el-form-item>
+                    </div>
+                  </div>
+                </div>
+              </el-col>
+
+              
+              <el-col  :span="10" style="padding: 0;margin-left: 60px;">
+                <div class="clearfix">
+                  <div class="content-input">
+                    <el-form-item label="证书名称" prop="credential">
+                      <el-input v-model="editorForm.credential"></el-input>
+                    </el-form-item>
+                  </div>
+                </div>
+
+                <div class="clearfix">
+                  <div class="icon"><img src="" alt=""></div>
+                  <div class="content-input">
+                    <el-form-item label="证件附件" prop="password" style="float: left;">
+                        <el-upload
+                          action="https://jsonplaceholder.typicode.com/posts/"
+                          list-type="picture-card"
+                          >
+                          <i class="el-icon-plus"></i>
+                        </el-upload>
+                        <el-dialog :visible.sync="dialogVisible" size="tiny">
+                          <img width="100%" :src="dialogImageUrl" alt="">
+                        </el-dialog>
+
+
+                    </el-form-item>
+
+                    <el-form-item label="示例" prop="password" style="float: left;">
+                      <div style="width: 140px; margin-left: 20px; padding:15px 25px;;box-sizing: border-box;float:left; border: 2px solid #E9E9E9;line-height:0;">
+                        <img width="100%" src="@/assets/images/upload-img.png" alt="">
+                      </div>
+                    </el-form-item>
+
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+
+            <div style="width: 150px;margin:60px auto 0 auto;">
+              <el-button style="background: #FEAD1C; color: #fff;width:100%; border: none;" >保存</el-button>
+            </div>
+          </el-form>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+
+
+
+    <Footer style="position: fixed;bottom: 0; left: 0;width: 100%;"></Footer>
+  </div>
+
+
+</template>
+
+<script>
+import Footer from "@/components/footer/Footer"
+export default {
+  name: "Register",
+  components: {
+    Footer
+  },
+  data () {
+    return {
+      dialogImageUrl: '',
+      dialogVisible: false,
+      dialogEditor: false,
+      editorForm: {
+        name: '陈小姐姐',
+        sex: '',
+        time: '1996-02-14',
+        contact: '123545266325',
+        email: '21235412@qq.com',
+        credential: '蓝桥杯二等奖'
+      }
+    }
+  },
+  methods: {
+    goLogin () {
+      console.log("656496")
+      this.$router.push("./login")
+    }
+  }
+}
+</script>
+
+
+<style scoped>
+
+
+  .c_header_nav_jz {
+    width: 100%;
+    background: #000;
+  }
+
+  .c_jzheaader {
+    width: 1200px;
+    margin: auto;
+  }
+
+  .c_jzlogo {
+    width: 92px;
+    float: left;
+    box-sizing: border-box;
+    line-height: 50px;
+  }
+  .c_jzlogo img {
+    width: 100%;
+    vertical-align: middle;
+  }
+
+  .c_talent_soon {
+    float: left;
+    font-size: 18px;
+    color: #fff;
+    margin-left: 12px;
+    line-height: 50px;
+  }
+
+
+      
+  .c_talent_w {
+    width: 1200px;
+    margin: 30px auto;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .perfect {
+    line-height: 50px;
+    font-size: 16px;
+    color: #333;
+    background: #F1F5FE;
+    padding: 0 20px;
+  }
+
+  .hint {
+    color: #ff5777;
+  }
+
+  .el-form-item {
+    margin-bottom: 0;
+  }
+
+  /deep/ .el-input__inner {
+    height: 30px;
+    line-height: 30px;
+  }
+
+  /deep/ .el-radio-button__inner {
+    width: 110px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+  }
+
+ /deep/ .el-upload--picture-card {
+    background-color: #fff;
+    border: 2px solid #E9E9E9;
+    border-radius: 6px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 140px;
+    height: 160px;
+    line-height: 160px;
+    vertical-align: top;
+ }
+
+ .el-upload--picture-card i {
+    font-size: 50px;
+    color: #FEAD1C;
+  }
+
+  /deep/ .el-form-item__content div{
+    float: left;
+  }
+
+   /deep/  .el-input__icon {
+     line-height: 30px;
+  }
+
+  /deep/ .el-radio-button__orig-radio:checked+.el-radio-button__inner {
+    color: #FFF;
+    background-color: #FEAD1C;
+    border-color: #FEAD1C;
+    box-shadow: -1px 0 0 0 #FEAD1C;
+  }
+
+  /deep/  .el-date-table td.current:not(.disabled) span {
+    color: #FFF;
+    background-color: #FEAD1C;
+  }
+</style>
