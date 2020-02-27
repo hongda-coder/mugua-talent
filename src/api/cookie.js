@@ -5,13 +5,16 @@ const tokenKey = 'Admin-Token';
 export function setToken(token){
     // return Cookies.set(tokenKey, token);
     //expires: 7设置有效期
-    return Cookies.set(tokenKey, token, { expires: 7, path: '' });
+    // return Cookies.set(tokenKey, token, { expires: 7, path: '' });
+    return Cookies.set(tokenKey, token)
 }
 //取
 export function getToken(){
-    return Cookies.get(tokenKey);
+    return Cookies.get(tokenKey)
 }
 //删除
 export function removeToken(){
-    return Cookies.remove(tokenKey);
+    return Cookies.remove(tokenKey)
 }
+
+

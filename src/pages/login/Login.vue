@@ -20,20 +20,20 @@
           </div>
           <div class="col-xs-2 col-md-2"></div>
           <div class="right-content">
-            <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm c_talent_form">
+            <el-form ref="form" :model="form" class="demo-ruleForm c_talent_form">
               <div class="c_talent_title">
                 欢迎来到人才推荐中心！
               </div>
               <el-form-item  prop="loginuser" class="input-code">
-                <el-input type="text" v-model="loginForm.loginuser" auto-complete="off" placeholder="请输入手机号"></el-input>
+                <el-input type="text" v-model="form.loginuser" placeholder="请输入手机号"></el-input>
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
               </el-form-item>
               <el-form-item  prop="pwd" class="input-code">
-                <el-input type="password" v-model="loginForm.pwd" auto-complete="off"  placeholder="请输入密码"></el-input>
+                <el-input type="password" v-model="form.pwd" placeholder="请输入密码"></el-input>
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
               </el-form-item>
               <el-form-item>
-                <el-button class="btn" @click="submitForm('loginForm')" >登录</el-button>
+                <el-button class="btn" @click="submitForm('form')">登录</el-button>
               </el-form-item>
               <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
             </el-form>
@@ -51,80 +51,46 @@
 
 <script>
 
-import { login } from "@/api/serve"
-import { setToken } from "@/api/cookie"
+// import { login } from "@/api/serve"
+// import { setToken } from "@/api/cookie"
 
 import Footer from "@/components/footer/Footer"
 import Pic from '@/components/common/Pic'
 export default {
   name: "Login",
   data () {
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入手机号'));
-        } else {
-          if (this.loginForm.loginuser !== '') {
-            this.$refs.loginForm.validateField('loginuser');
-            callback(new Error('请输入正确手机号码'));
-          }
-          callback();
-        }
-      };
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else if (value !== this.loginForm.pwd) {
-          callback(new Error('请输入正确密码!'));
-        } else {
-          callback();
-        }
-      };
-      return {
-        loginForm: {
-          loginuser: '',
-          pwd: ''
-        },
-        rules: {
-          loginuser: [
-            { validator: validatePass, trigger: 'blur' }
-          ],
-          pwd: [
-            { validator: validatePass2, trigger: 'blur' }
-          ],
-        }
-      };
-    },
+    return {
+      form: {
+        loginuser: '',
+        pwd: ''
+      }
+    }
+  },
   components: {
     Pic,
     Footer
   },
   methods: {
-
-    submitForm(loginForm) {
-      this.$refs[loginForm].validate((valid) => {
+    submitForm(form, tel) {
+      this.$refs[form].validate((valid) => {
         if (valid) {
-            // 发送请求
-          login(this.loginForm).then( res => {
-            console.log(res)
-            if (res.code == '20000') {
-                // 跳转到首页
-              // this.$router.push('/home')
-                // 存储token
-              // setToken(res.data.token)
-            }
-          }).catch( error => {
+          this.$store.dispatch('Login',this.form).then(res => {
+            let tel = res.data.tel
+            if(res.data.Message == 'ok') {
+              this.$router.push({name:'editor',params:{tel: tel}})
+             } else if(res.data.Message == 'success') {
+              this.$router.push({name:'home',params:{tel: tel}})
+             }
+          }).catch(error=>{
             console.log(error)
           })
         } else {
           console.log('error submit!!');
           return false;
         }
-      });
+      })
     },
-    login () {
-      console.log("656496")
-      this.$router.push("./home")
-    },
+
     goRegister () {
        this.$router.push("./register")
     },

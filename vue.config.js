@@ -12,7 +12,17 @@ module.exports = {
         overlay: {
             warnings: true,
             errors: true
-        }
+        },
+        proxy: { 
+            '/api': {
+                target: 'http://192.168.0.182/api/',
+                ws: true,
+                changOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
+        },
     },
     configureWebpack:{  // 覆盖webpack默认配置的都在这里
         resolve:{   // 配置解析别名
@@ -20,5 +30,5 @@ module.exports = {
                 '@':path.resolve(__dirname, './src'),
             } 
         }
-    }
+    },
 }

@@ -28,92 +28,49 @@
 </template>
 
 <script>
+
+import { shareList } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
+
 export default {
   name: 'ShareTable',
   components: {
   },
   data() {
-      return {
-        table: [{
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '待面试'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '面试中'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '已完成'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        },{
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        }]
+    return {
+      table: [{
+        number:1,
+        guild: '佛山市畅腾智能家居有限公司',
+        name: '业务销售',
+        address: '上海市普陀区金沙江路 1518 弄',
+        experience: '3-5年',
+        education: '本科',
+        end_data: '2020年1月9日',
+        start_data: '2020年1月10日 15:00-17:00',
+        commission1: '5人',
+        commission2: '待面试'
+      }],
+      lists: {
+        guid: '', //token
+        tel: 'tel',  // 加密得电话号码
+        limit: '1' , // 当前页
+        curr: '5' //当前页多少数据
       }
     }
+  },
+  created () {
+    this.shareList()
+  },
+  methods: {
+    shareList () {
+      this.lists.Guid = getToken()
+      this.lists.Tel = getTel(this.lists.Tel)
+      shareList(this.lists).then( res => {
+        console.log(res)
+      })
+    }
+  }
 }
 </script>
 

@@ -8,15 +8,12 @@
         <div class="c_talent_soon">专注人才快招！</div>
       </div>
     </div>
-
-
     <div class="c_talent_w" style="border: 1px solid #ccc;">
       <div class="container">
         <div class="perfect">
           完善个人信息<span class="hint">（个人注册信息为猎头的唯一凭证，请按如实填写）</span>
         </div>
       </div>
-
       <div style="padding: 20px;background: #fff;">
         <div style="padding: 30px 0; ">
           <el-form label-width="80px" :model="editorForm">
@@ -29,8 +26,15 @@
                 <div style="float: left;">
                   <div class="clearfix">
                     <div class="content-input">
-                      <el-form-item label="姓名" prop="name">
-                          <el-input v-model="editorForm.name"></el-input>
+                      <el-form-item label="用户名" prop="loginuser">
+                          <el-input v-model="editorForm.loginuser"></el-input>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <div class="content-input">
+                      <el-form-item label="真实姓名" prop="TrueName">
+                          <el-input v-model="editorForm.TrueName"></el-input>
                       </el-form-item>
                     </div>
                   </div>
@@ -38,23 +42,23 @@
                     <div class="content-input">
                       <el-form-item label="性别" prop="sex">
                         <el-radio-group v-model="editorForm.sex">
-                          <el-radio-button label="男" ></el-radio-button>
-                          <el-radio-button label="女"></el-radio-button>
+                          <el-radio-button label="1" >男</el-radio-button>
+                          <el-radio-button label="2">女</el-radio-button>
                         </el-radio-group>
                       </el-form-item>
                     </div>
                   </div>
                   <div class="clearfix">
                     <div class="content-input">
-                      <el-form-item label="出生日期" prop="time">
-                          <el-date-picker v-model="editorForm.time" type="date" placeholder="选择日期"></el-date-picker>
+                      <el-form-item label="出生日期" prop="create ">
+                          <el-date-picker v-model="editorForm.create " type="date" placeholder="选择日期"></el-date-picker>
                       </el-form-item>
                     </div>
                   </div>
                   <div class="clearfix">
                     <div class="content-input">
-                      <el-form-item label="联系方式" prop="contact">
-                        <el-input v-model="editorForm.contact"></el-input>
+                      <el-form-item label="联系方式" prop="xtel">
+                        <el-input v-model="editorForm.xtel"></el-input>
                       </el-form-item>
                     </div>
                   </div>
@@ -65,15 +69,22 @@
                       </el-form-item>
                     </div>
                   </div>
+
+                  <div class="clearfix">
+                    <div class="content-input">
+                      <el-form-item label="邀请码" prop="othersinvitecode">
+                        <el-input v-model="editorForm.othersinvitecode"></el-input>
+                      </el-form-item>
+                    </div>
+                  </div>
                 </div>
               </el-col>
-
               
               <el-col  :span="10" style="padding: 0;margin-left: 60px;">
                 <div class="clearfix">
                   <div class="content-input">
-                    <el-form-item label="证书名称" prop="credential">
-                      <el-input v-model="editorForm.credential"></el-input>
+                    <el-form-item label="证书名称" prop="imagename">
+                      <el-input v-model="editorForm.imagename"></el-input>
                     </el-form-item>
                   </div>
                 </div>
@@ -94,33 +105,24 @@
 
 
                     </el-form-item>
-
                     <el-form-item label="示例" prop="password" style="float: left;">
                       <div style="width: 140px; margin-left: 20px; padding:15px 25px;;box-sizing: border-box;float:left; border: 2px solid #E9E9E9;line-height:0;">
                         <img width="100%" src="@/assets/images/upload-img.png" alt="">
                       </div>
                     </el-form-item>
-
                   </div>
                 </div>
               </el-col>
             </el-row>
 
             <div style="width: 150px;margin:60px auto 0 auto;">
-              <el-button style="background: #FEAD1C; color: #fff;width:100%; border: none;" >保存</el-button>
+              <el-button style="background: #FEAD1C; color: #fff;width:100%; border: none;"  @click="saveInfo">保存</el-button>
             </div>
           </el-form>
         </div>
       </div>
 
     </div>
-
-
-
-
-
-
-
     <Footer style="position: fixed;bottom: 0; left: 0;width: 100%;"></Footer>
   </div>
 
@@ -128,6 +130,8 @@
 </template>
 
 <script>
+import { perInfo } from "@/api/serve"
+
 import Footer from "@/components/footer/Footer"
 export default {
   name: "Register",
@@ -140,19 +144,36 @@ export default {
       dialogVisible: false,
       dialogEditor: false,
       editorForm: {
-        name: '陈小姐姐',
-        sex: '',
-        time: '1996-02-14',
-        contact: '123545266325',
-        email: '21235412@qq.com',
-        credential: '蓝桥杯二等奖'
+        tel: '', // 加密手机号
+        sex: '', // 性别
+        othersinvitecode: '', // 邀请码
+        loginuser : '', // 昵称 用户名
+        TrueName:'',  // 真实姓名
+        xtel: '',  // 联系电话
+        create: '', // 生日
+        email: '', // 邮箱
+        imagename: '', // 证书名称
       }
     }
   },
+  created () {
+    this.getROuterData()
+  },
   methods: {
-    goLogin () {
-      console.log("656496")
-      this.$router.push("./login")
+    // 接受获取都加密手机号码
+    getROuterData () {
+      this.editorForm.tel = this.$route.params.tel
+      console.log(this.editorForm.tel)
+    },
+
+    // 发送请求完善信息
+    saveInfo () {
+      console.log("456465")
+      perInfo(this.editorForm).then ( res => {
+        if (res.data.Message == 'success') {
+          this.$router.push("./home")
+        }
+      })
     }
   }
 }
@@ -160,8 +181,6 @@ export default {
 
 
 <style scoped>
-
-
   .c_header_nav_jz {
     width: 100%;
     background: #000;
