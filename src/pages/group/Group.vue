@@ -1,6 +1,5 @@
 <template>
   <div>
-    <CommeInfo></CommeInfo>
     <ul class="tab clearfix">
       <li class="item" :class="{current: num == 1}" v-on:click="change(1)">我的下级</li>
       <li class="item" :class="{current: num == 2}" v-on:click="change(2)">我的上级</li>
@@ -13,13 +12,11 @@
 </template>
 
 <script>
-import CommeInfo from '@/components/common/CommeInfo'
 import Subordinate from './children/Subordinate'
 import superior from './children/superior'
 export default {
   name: 'Task',
   components: {
-    CommeInfo,
     Subordinate,
     superior
   },

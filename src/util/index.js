@@ -2,7 +2,7 @@
 const Key = 'tel';
 //存
 export function setTel(Key, value){
-  return sessionStorage.setItem(Key, JSON.stringify(value))
+  return sessionStorage.setItem(Key, value)
 }
 
 //取

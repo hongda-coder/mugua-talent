@@ -67,7 +67,7 @@ export default {
       this.lists.Guid = getToken()
       this.lists.Tel = getTel(this.lists.Tel)
       shareList(this.lists).then( res => {
-        console.log(res)
+        // console.log(res)
       })
     }
   }

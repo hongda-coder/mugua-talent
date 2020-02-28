@@ -35,8 +35,34 @@
 </template>
 
 <script>
+
+import { personEarnings } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
+
 export default {
-  name: 'CommeInfo'
+  name: 'CommeInfo',
+  data () {
+    return {
+      lists: {
+        guid: '', //token
+        tel: 'tel',  // 加密得电话号码
+      }
+    }
+  },
+  created () {
+    this.personEarnings()
+  },
+  methods: {
+    personEarnings () {
+      this.lists.guid = getToken()
+      this.lists.tel = getTel(this.lists.tel)
+      console.log(this.lists.tel)
+      personEarnings(this.lists).then( res => {
+        console.log(res)
+      })
+    }
+  }
 }
 </script>
 <style scoped>

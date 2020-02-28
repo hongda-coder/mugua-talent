@@ -1,6 +1,5 @@
 <template>
   <div>
-    <CommeInfo></CommeInfo>
     <ul class="tab clearfix">
       <li class="item" :class="{current: num == 1}" v-on:click="change(1)">分享情况</li>
       <li class="item" :class="{current: num == 2}" v-on:click="change(2)">竞聘情况</li>
@@ -13,13 +12,11 @@
 </template>
 
 <script>
-import CommeInfo from '@/components/common/CommeInfo'
 import ShareTable from './children/ShareTable'
 import CompeteTable from './children/CompeteTable'
 export default {
   name: 'Recommend',
   components: {
-    CommeInfo,
     ShareTable,
     CompeteTable
   },

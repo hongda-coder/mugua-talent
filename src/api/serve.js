@@ -65,3 +65,21 @@ export function competeList(data){
 }
 
 
+// 8、个人信息
+export function personInfo(data){  
+  return ajax({
+    url:'user/UserData',
+    method:'post',
+    data
+  })
+}
+
+// 9、个人信息
+export function personEarnings(data){  
+  return ajax({
+    url:'zpjob/synthesize',
+    method:'post',
+    data
+  })
+}
+

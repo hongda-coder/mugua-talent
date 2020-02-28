@@ -1,6 +1,5 @@
 <template>
   <div>
-    <CommeInfo /> 
     <ul class="tab clearfix">
       <li class="item" :class="{current: num == 1}" v-on:click="change(1)">我的收益</li>
       <li class="item" :class="{current: num == 2}" v-on:click="change(2)">任务佣金</li>
@@ -17,7 +16,6 @@
 </template>
 
 <script>
-import CommeInfo from '@/components/common/CommeInfo'
 import MyEarnings from './children/MyEarnings'
 import TaskEarnings from './children/TaskEarnings'
 import AllotEarnings from './children/AllotEarnings'
@@ -25,7 +23,6 @@ import Withdraw from './children/Withdraw'
 export default {
   name: 'Commission',
   components: {
-    CommeInfo,
     MyEarnings,
     TaskEarnings,
     AllotEarnings,

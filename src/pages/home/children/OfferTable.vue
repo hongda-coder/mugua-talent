@@ -8,7 +8,7 @@
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
         <af-table-column prop="id" label="编号" align="center"></af-table-column>
-        <af-table-column prop="cname" label="所属公司" align="center"></af-table-column>
+        <af-table-column prop="cname" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="jobname" label="职位名称" align="center"></af-table-column>
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
         <af-table-column prop="working" label="工作经验" align="center"></af-table-column>
@@ -39,7 +39,7 @@ export default {
   name: 'OfferTable',
   components: {
   },
-  data() {
+  data () {
     return {
       table: [{
         id: '',
@@ -69,6 +69,7 @@ export default {
       this.lists.Guid = getToken()
       this.lists.Tel = getTel(this.lists.Tel)
       jobList(this.lists).then( res => {
+        // console.log(res)
         this.table = res.data.data
       })
     }

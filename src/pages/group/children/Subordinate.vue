@@ -1,7 +1,7 @@
 <template>
   <div class="subordinate clearfix">
     <el-row :gutter="10">
-      <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="xl-5"  v-for="(item, index) in lists" :key="index">
+      <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4" class="xl-5"  v-for="(item, index) in lists" :key="index">
       <div class="wrap" >
           <div class="avatar"><img src="@/assets/images/c-avatar.png" alt=""></div>
           <div class="contact-people">

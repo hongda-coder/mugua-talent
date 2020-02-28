@@ -12,8 +12,7 @@ export default  {
         setToken(response.data.token); //值保存到cookie
 
         commit('SET_TEL', response.data.tel); //mutations
-        setTel('tel', response.data.tel); //值保存到localStorage
-        // console.log(response.data.tel)
+        setTel('tel', response.data.tel); //值保存到sessionStorage
         resolve(response)
       }).catch(error => {
         reject(error)

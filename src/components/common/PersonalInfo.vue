@@ -14,15 +14,15 @@
             </div>
             <div class="c-people-data">
               <div class="clearfix">
-                <div class="c-people-name" style="margin-right: 15px;font-size: 20px;">陈小姐姐</div>
+                <div class="c-people-name" style="margin-right: 15px;font-size: 20px;">{{userInfo.TrueName}}</div>
                 <div class="c-people-icon"><i class="iconfont">&#xe668;</i>已认证</div>
               </div>
               <div class="clearfix" style="line-height: 35px;">
-                <div class="c-people-sex" style="margin-right: 20px;">性别：<span>女</span></div>
-                <div class="c-people-age">年龄：<span>16岁</span></div>
+                <div class="c-people-sex" style="margin-right: 20px;">性别：<span>{{userInfo.sex}}</span></div>
+                <div class="c-people-age">年龄：<span>{{getAge}}岁</span></div>
               </div>
-              <div>联系方式：<span>12345678900</span></div>
-              <div>电子邮箱：<span>12345678900</span></div>
+              <div>联系方式：<span>{{userInfo.tel}}</span></div>
+              <div>电子邮箱：<span>{{userInfo.email}}</span></div>
               <div>证书名称：<span>人力资源管理师二级</span></div>
             </div>
           </div>
@@ -76,9 +76,10 @@
     
     <!-- 编辑 -->
 
-    <div  v-show="dialogEditor" style="padding: 20px;background: #fff;">
+    <!-- <div  v-show="dialogEditor" style="padding: 20px;background: #fff;">
       <div style="border: 1px solid #FEAF1D; padding: 30px 0; background: #FAFAFA;">
-        <el-form label-width="80px" :model="editorForm">
+                      
+        <el-form label-width="80px" :model="editorForm" action="http://192.168.0.182/api/user/PostUpload">
           <el-row>
             <el-col :span="10" style="padding: 0;margin-left: 100px;min-width: 480px;">
               <div style="float: left;margin-right: 38px;">
@@ -141,21 +142,22 @@
               </div>
 
               <div class="clearfix">
-                <div class="icon"><img src="" alt=""></div>
-                <div class="content-input">
+                <!-- <div class="icon"><img src="" alt=""></div> -->
+                <!-- <div class="content-input">
                   <el-form-item label="证件附件" prop="password" style="float: left;" >
-                      <el-upload
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        list-type="picture-card"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove">
-                        <i class="el-icon-plus"></i>
-                      </el-upload>
-                      <el-dialog :visible.sync="dialogVisible" size="tiny">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                      </el-dialog>
-
-
+                     <el-upload
+                      class="avatar-uploader"
+                      v-loading="loading"
+                      :show-file-list="false"
+                      :multiple="false"
+                      :on-success="handleAvatarSuccess"
+                      :before-upload="beforeAvatarUpload"
+                      action="http://192.168.0.182/api/user/PostUpload"
+                      >
+                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                     
                   </el-form-item>
 
                   <el-form-item label="示例" prop="password" style="float: left;">
@@ -175,68 +177,80 @@
           </div>
         </el-form>
       </div>
-    </div>
+    </div>  -->
 
     </div>
   </div>
 </template>
 
 <script>
+import { personInfo } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
 export default {
   name: 'PersonalInfo',
   data () {
     return {
-      dialogImageUrl: '',
+      loading: false,
+      imageUrl: '',
       dialogVisible: false,
       dialogEditor: false,
+      imageUrl: '',
       editorForm: {
         name: '陈小姐姐',
         sex: '',
         time: '1996-02-14',
         contact: '123545266325',
         email: '21235412@qq.com',
-        credential: '蓝桥杯二等奖'
+        credential: '蓝桥杯二等奖',
+        imageUrl: '',
+      },
+      userInfo: {
+        sex: '', // 性别
+        loginuser: '', // 用户名
+        TrueName: '', // 真实姓名
+        tel: '',  // 联系电话
+        create: '', // 出生日期
+        eamil: '', // 邮箱
+        userAge: ''
+      },
+      lists: {
+        guid: '', //token
+        tel: 'tel',  // 加密得电话号码
       }
-      // rules: {
-      //     name: [
-      //       { required: true, message: '请输入活动名称', trigger: 'blur' },
-      //       { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      //     ],
-      //     region: [
-      //       { required: true, message: '请选择活动区域', trigger: 'change' }
-      //     ],
-      //     date1: [
-      //       { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-      //     ],
-      //     date2: [
-      //       { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-      //     ],
-      //     type: [
-      //       { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-      //     ],
-      //     resource: [
-      //       { required: true, message: '请选择活动资源', trigger: 'change' }
-      //     ],
-      //     desc: [
-      //       { required: true, message: '请填写活动形式', trigger: 'blur' }
-      //     ]
-      //   }
-
     }
   },
+
+  created () {
+    this.personInfo()
+  },
+
+  computed: {
+    getAge () {
+      
+      var d = new Date()
+      return d.getFullYear() - new Date(this.userInfo.create).getFullYear() - (d.getMonth() < new Date(this.userInfo.create).getMonth() || (d.getMonth() == new Date(this.userInfo.create).getMonth() && d.getDate() < new Date(this.userInfo.create).getDate()) ? 1 : 0)
+    } 
+  },
+
   methods: {
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+    personInfo () {
+      this.lists.guid = getToken()
+      this.lists.tel = getTel(this.lists.tel)
+        console.log(this.lists.tel)
+// console.log(this.lists.guid)
+      personInfo(this.lists).then( res => {
+        console.log(res)
+        this.userInfo = res.data.data
+         
+        // console.log(new Date(this.userInfo.create).getFullYear())
+      })
     },
 
     // 编辑
     editor () {
       this.dialogEditor = true
-    }
+    },
   }
 }
 </script>
@@ -460,7 +474,7 @@ export default {
     padding: 0;
   }
 
-  /deep/ .el-upload--picture-card {
+  /* /deep/ .el-upload {
     background-color: #fff;
     border: 2px solid #E9E9E9;
     border-radius: 6px;
@@ -472,7 +486,7 @@ export default {
     vertical-align: top;
   }
 
-  .el-upload--picture-card i {
+  .el-icon-plus {
       font-size: 50px;
       color: #FEAD1C;
   }
@@ -490,6 +504,29 @@ export default {
     background-color: #FEAD1C;
     border-color: #FEAD1C;
     box-shadow: -1px 0 0 0 #FEAD1C;
-  }
+  } */
 
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 140px;
+    height: 160px;
+    line-height: 160px;
+    text-align: center;
+  }
+  .avatar {
+    width: 140px;
+    height: 160px;
+    display: block;
+  }
 </style>

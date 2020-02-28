@@ -75,7 +75,7 @@ export default {
       this.lists.Guid = getToken()
       this.lists.Tel = getTel(this.lists.Tel)
       competeList(this.lists).then( res => {
-        console.log(res)
+        // console.log(res)
       })
     }
   }

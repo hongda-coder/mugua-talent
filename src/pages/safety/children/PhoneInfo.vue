@@ -53,12 +53,10 @@
               <input type="text" v-model="form.code">
               <button>获取验证码</button>
             </div>
-
             <div class="sure" @click="confirm">确定</div>
           </form>
         </div>
       </div>
-
       <!-- 修改密码 -->
 
       <div class="dialog" v-show="dialogPsd">
@@ -108,10 +106,9 @@ export default {
       formLabelWidth: '80px'
     }
   },
-  // filters: {
-  //   formatPhone (val) {
-  //       return `${val.substring(0,3)}*****${val.substring(val.length-2)}` ;
-      
+  // computed: {
+  //   phone () {
+  //     return this.pswForm.phone.substr(0, 3) + "****" + this.pswForm.phone.substring(7, 11)
   //   }
   // },
   methods: {
