@@ -43,38 +43,6 @@
         </el-col>
       </el-row>
     </div>
-    <div class="search-form">
-      <el-form ref="form" :inline="true" :model="form" label-width="80px">
-        <el-form-item label="开始时间">
-          <el-col :span="24">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="结束时间">
-          <el-col :span="24">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-          </el-col>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button class="search" type="button" @click="search">查询</el-button>
-        </el-form-item>
-
-      </el-form>
-    </div>
-    <div>
-      <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
-        :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
-        <af-table-column prop="number" label="编号" align="center"></af-table-column>
-        <af-table-column prop="guild" label="任务类别" align="center"></af-table-column>
-        <af-table-column prop="name" label="到场人数" align="center"></af-table-column>
-        <af-table-column prop="address" label="面过人数" align="center"></af-table-column>
-        <af-table-column prop="education" label="到场所获佣金" align="center"></af-table-column>
-        <af-table-column prop="end_data" label="面过所获佣金" align="center"></af-table-column>
-        <af-table-column prop="start_data" label="共获佣金" align="center"></af-table-column>
-        <af-table-column prop="commission1" label="创建时间" align="center"></af-table-column>
-      </el-table>
-    </div>
   </div>
 </template>
 

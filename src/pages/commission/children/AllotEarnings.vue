@@ -36,11 +36,11 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col style="float: right;margin-right: 50px;width: 30%;padding: 0;">
+        <!-- <el-col style="float: right;margin-right: 50px;width: 30%;padding: 0;">
           <div class="withdraw">
             <button>提现</button>
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
     <div class="search-form">

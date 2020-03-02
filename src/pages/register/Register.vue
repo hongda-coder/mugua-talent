@@ -150,25 +150,14 @@ export default {
       }, 1000)
       shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.tel}).then(res => {
         console.log(res)
-        //  {
-        //     tel: '1897778444',
-        //     guid: 0,
-        //     type:1
-        //   }
       })
     },
     goLogin () {
       this.$router.push("./login")
     },
 
-    // getCaptcha () {
-    //   // 每次指定的src要不一样
-    //   this.$refs.captcha.src = 'http://192.168.0.182/api/user/GenerateCheckCode?time='+Date.now()
-    // },
-
     // 注册
     registerBtn () {
-      console.log("635633")
       register ({tel:this.form.tel,pwd:this.form.pwd,code:this.form.code}).then( res=> {
         if (res.data.Message == 'success') {
           this.$router.push("./login")

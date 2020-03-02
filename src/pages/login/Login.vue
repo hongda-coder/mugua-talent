@@ -75,7 +75,6 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('Login',this.form).then(res => {
-            console.log(res)
             if(res.data.Message == 'ok') {
               this.$router.push({name:'editor',params:{tel: tel}})
              } else if(res.data.Message == 'success') {

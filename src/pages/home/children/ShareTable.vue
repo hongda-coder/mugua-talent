@@ -60,12 +60,12 @@ export default {
     }
   },
   created () {
+    this.lists.guid = getToken()
+    this.lists.tel = getTel(this.lists.tel)
     this.shareList()
   },
   methods: {
     shareList () {
-      this.lists.Guid = getToken()
-      this.lists.Tel = getTel(this.lists.Tel)
       shareList(this.lists).then( res => {
         // console.log(res)
       })

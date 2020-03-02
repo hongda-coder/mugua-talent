@@ -83,3 +83,48 @@ export function personEarnings(data){
   })
 }
 
+// 上传图片
+
+export function uploadImg(data){  
+  return ajax({
+    url:'user/PostUpload',
+    method:'post',
+    data
+  })
+}
+
+// 修改电话号码
+export function newPhone(data){  
+  return ajax({
+    url:'Account/UpdateTel',
+    method:'post',
+    data
+  })
+}
+
+// 修改密码
+export function newPwd(data){  
+  return ajax({
+    url:'Account/UpdatePwd',
+    method:'post',
+    data
+  })
+}
+
+// 绑定银行卡
+export function bindBank(data){  
+  return ajax({
+    url:'account/Bank_Add',
+    method:'post',
+    data
+  })
+}
+
+// 银行卡信息
+export function bankInfo(data){  
+  return ajax({
+    url:'account/Bank_Select',
+    method:'post',
+    data
+  })
+}

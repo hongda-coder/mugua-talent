@@ -42,11 +42,11 @@
           <form action="">
             <div class="item">
               <label>原手机号</label>
-              <input type="text" v-model="form.old_phone">
+              <input type="text" v-model="form.tel">
             </div>
             <div class="item">
               <label>新手机号</label>
-              <input type="text" v-model="form.new_phone">
+              <input type="text" v-model="form.Xtel">
             </div>
             <div class="item">
               <label>验证码</label>
@@ -65,19 +65,13 @@
           <form action="">
             <div class="item">
               <label>原密码</label>
-              <input type="text" v-model="form.old_phone">
+              <input type="text" v-model="pwdForm.pwd">
             </div>
             <div class="item">
               <label>新密码</label>
-              <input type="text" v-model="form.new_phone">
+              <input type="text" v-model="pwdForm.xpwd">
             </div>
-            <!-- <div class="item">
-              <label>验证码</label>
-              <input type="text" v-model="form.code">
-              <button>获取验证码</button>
-            </div> -->
-
-            <div class="sure" @click="confirm">确定</div>
+            <div class="sure" @click="confirmPwd">确定</div>
           </form>
         </div>
       </div>
@@ -86,6 +80,11 @@
 </template>
 
 <script>
+
+import { newPhone,newPwd,shortCode } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
+
 export default {
   name: 'PhoneInfo',
   data () {
@@ -97,34 +96,56 @@ export default {
         password: '451321685',
       },
       form: {
-        old_phone: '',
-        new_phone: '',
-        code: ''
+        tel: '',
+        Xtel: '',
+        code: '',
+        guid: '', //token
+      },
+      pwdForm: {
+        pwd: '',
+        xpwd: '',
+        guid: '', //token
       },
       dialogPhone: false,
       dialogPsd: false,
       formLabelWidth: '80px'
     }
   },
-  // computed: {
-  //   phone () {
-  //     return this.pswForm.phone.substr(0, 3) + "****" + this.pswForm.phone.substring(7, 11)
-  //   }
-  // },
+  created () {
+    this.form.guid = getToken()
+    this.pwdForm.guid = getToken()
+  },
   methods: {
+    // 修改电话号码
     updatePhone () {
-      // console.log("19549")
       this.dialogPhone = true
     },
 
+    // 修改密码
     updatePsw () {
       this.dialogPsd = true
     },
 
+    // 确定修改号码
     confirm () {
-      this.dialogPhone = false
-      this.dialogPsd = false
-    }
+      console.log("68456856")
+      newPhone (this.form).then( res => {
+        console.log(res)
+        this.dialogPhone = false
+      })
+    },
+
+    // 确认修改密码
+    confirmPwd () {
+      newPwd(this.pwdForm).then( res => {
+        console.log(res)
+      })
+    },
+
+    // // 获取手机验证码
+    // shortCode ({this.form.tel}) {
+
+    // }
   }
 }
 </script>

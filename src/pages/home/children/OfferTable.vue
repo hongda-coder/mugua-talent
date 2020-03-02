@@ -62,12 +62,12 @@ export default {
     }
   },
   created () {
+    this.lists.guid = getToken()
+    this.lists.tel = getTel(this.lists.tel)
     this.jobList()
   },
   methods: {
     jobList () {
-      this.lists.Guid = getToken()
-      this.lists.Tel = getTel(this.lists.Tel)
       jobList(this.lists).then( res => {
         // console.log(res)
         this.table = res.data.data

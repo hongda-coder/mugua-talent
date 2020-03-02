@@ -136,7 +136,7 @@ export default new Router({
 
     {
       path: 'withdraw', //提现
-      redirect: '/withdraw',
+      redirect: '/withdraw',  // 绑定银行卡
       component: () => import('@/components/Home'),
       meta: {
         title: '提现'

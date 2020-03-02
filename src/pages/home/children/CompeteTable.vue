@@ -68,12 +68,13 @@ export default {
     }
   },
   created () {
+    this.lists.guid = getToken()
+    this.lists.tel = getTel(this.lists.tel)
     this.competeList()
   },
   methods: {
     competeList () {
-      this.lists.Guid = getToken()
-      this.lists.Tel = getTel(this.lists.Tel)
+
       competeList(this.lists).then( res => {
         // console.log(res)
       })

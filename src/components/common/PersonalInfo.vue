@@ -32,7 +32,7 @@
         <div class="grid-content bg-purple clearfix lists" style="padding: 32px 0;">
             <div class="c-recommend-info">
               <div class="invite">分销邀请码</div>
-              <div class="code">123456</div>
+              <div class="code">{{userInfo.othersinvitecode}}</div>
               <div class="hint">您的下级在注册时也可填写邀请码</div>
             </div>
         </div>
@@ -47,16 +47,16 @@
               </div>
               <div class="c-invite-odds">
                 <div class="c-count-odds">
-                  <div>20人</div>
+                  <div style="margin: 5px 0;">{{jpcount}}</div>
                   <div>参与人数</div>
                 </div>
                 <div class="c-pass-odds">
-                  <div>20%</div>
+                  <div style="margin: 5px 0;">{{dmprobability}}</div>
                   <div>通过率</div>
                 </div>
                 <div class="c-make-odds">
-                  <div>20%</div>
-                  <div>成交率</div>
+                  <div style="margin: 5px 0;">{{tgprobability}}</div>
+                  <div>到面率</div>
                 </div>
               </div>
             </div>
@@ -76,10 +76,10 @@
     
     <!-- 编辑 -->
 
-    <!-- <div  v-show="dialogEditor" style="padding: 20px;background: #fff;">
+    <div  v-show="dialogEditor" style="padding: 20px;background: #fff;">
       <div style="border: 1px solid #FEAF1D; padding: 30px 0; background: #FAFAFA;">
                       
-        <el-form label-width="80px" :model="editorForm" action="http://192.168.0.182/api/user/PostUpload">
+        <el-form label-width="80px" :model="editorForm" >
           <el-row>
             <el-col :span="10" style="padding: 0;margin-left: 100px;min-width: 480px;">
               <div style="float: left;margin-right: 38px;">
@@ -140,32 +140,28 @@
                   </el-form-item>
                 </div>
               </div>
-
+   <!-- :http-request="uploadImg" -->
               <div class="clearfix">
-                <!-- <div class="icon"><img src="" alt=""></div> -->
-                <!-- <div class="content-input">
+                <div class="content-input">
                   <el-form-item label="证件附件" prop="password" style="float: left;" >
                      <el-upload
                       class="avatar-uploader"
                       v-loading="loading"
                       :show-file-list="false"
                       :multiple="false"
-                      :on-success="handleAvatarSuccess"
-                      :before-upload="beforeAvatarUpload"
+                   
                       action="http://192.168.0.182/api/user/PostUpload"
+                      :data="lists"
                       >
                       <img v-if="imageUrl" :src="imageUrl" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-                     
                   </el-form-item>
-
                   <el-form-item label="示例" prop="password" style="float: left;">
                     <div style="width: 140px; margin-left: 20px; padding:15px 25px;;box-sizing: border-box;float:left; border: 2px solid #E9E9E9;line-height:0;">
                       <img width="100%" src="@/assets/images/upload-img.png" alt="">
                     </div>
                   </el-form-item>
-
                 </div>
               </div>
             </el-col>
@@ -177,14 +173,14 @@
           </div>
         </el-form>
       </div>
-    </div>  -->
+    </div> 
 
     </div>
   </div>
 </template>
 
 <script>
-import { personInfo } from "@/api/serve"
+import { personInfo, personEarnings,uploadImg } from "@/api/serve"
 import { getToken } from "@/api/cookie"
 import { getTel } from "@/util"
 export default {
@@ -217,17 +213,22 @@ export default {
       lists: {
         guid: '', //token
         tel: 'tel',  // 加密得电话号码
-      }
+      },
+      jpcount: '', //参与人数
+      dmprobability: '', // 通过
+      tgprobability: '' // 到面
     }
   },
 
   created () {
+    this.lists.guid = getToken()
+    this.lists.tel = getTel(this.lists.tel)
     this.personInfo()
+    this.personEarnings()
   },
 
   computed: {
     getAge () {
-      
       var d = new Date()
       return d.getFullYear() - new Date(this.userInfo.create).getFullYear() - (d.getMonth() < new Date(this.userInfo.create).getMonth() || (d.getMonth() == new Date(this.userInfo.create).getMonth() && d.getDate() < new Date(this.userInfo.create).getDate()) ? 1 : 0)
     } 
@@ -235,17 +236,29 @@ export default {
 
   methods: {
     personInfo () {
-      this.lists.guid = getToken()
-      this.lists.tel = getTel(this.lists.tel)
-        console.log(this.lists.tel)
-// console.log(this.lists.guid)
+
       personInfo(this.lists).then( res => {
-        console.log(res)
         this.userInfo = res.data.data
-         
-        // console.log(new Date(this.userInfo.create).getFullYear())
       })
     },
+
+    // 通过
+    personEarnings () {
+      personEarnings(this.lists).then( res => {
+        this.jpcount = res.data.data.jpcount
+        this.dmprobability = res.data.data.dmprobability
+        this.tgprobability = res.data.data.tgprobability
+      })
+    },
+
+    // 上传
+    // uploadImg () {
+    //   console.log(this.lists)
+    //   uploadImg(this.lists).then( res => {
+    //     console.log(res)
+    //   })
+    // },
+    
 
     // 编辑
     editor () {
@@ -366,7 +379,7 @@ export default {
   background: url("../../assets/images/c-pass.png") no-repeat;
   text-align: center;
   color: #fff;
-  padding-top: 10px;
+  padding-top: 6px;
   box-sizing: border-box;
   margin-right: 12px;
 }
@@ -378,7 +391,7 @@ export default {
   background: url("../../assets/images/c-make.png") no-repeat;
   text-align: center;
   color: #fff;
-  padding-top: 10px;
+  padding-top: 6px;
   box-sizing: border-box;
 }
 
@@ -389,7 +402,7 @@ export default {
   background: url("../../assets/images/c-people-count.png") no-repeat;
   text-align: center;
   color: #fff;
-  padding-top: 10px;
+  padding-top: 6px;
   box-sizing: border-box;
   margin-right: 12px;
   background-size: 100%;
