@@ -128,3 +128,12 @@ export function bankInfo(data){
     data
   })
 }
+
+// 上传
+export function shareJob(data){  
+  return ajax({
+    url:'zpjob/getShareUrl',
+    method:'post',
+    data
+  })
+}

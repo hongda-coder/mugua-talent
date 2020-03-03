@@ -6,21 +6,23 @@
       </div>
 
       <div>
-        <div class="card" style="display: none;">
+        <div class="card" v-show="false">
           <div class="icon">
             <i class="iconfont" @click="bindBlankBtn">&#xe60b;</i>
           </div>
           <div class="black-card">您尚未绑定银行卡，<span>绑定即可提现</span> </div>
         </div>
         
-        <div >
+        <div v-show="true">
           <div class="bank-card clearfix">
-            <div class="bank-img"><img src="@/assets/images/c-bank-img.png" alt=""></div>
+            <div class="bank-img"><img src="@/assets/images/c-bank-tag.png" alt=""></div>
             <div class="bank-type">
-              <div >中国建设银行 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;储蓄卡</div>
-              <div>
-                <span><img  alt=""></span>
-                <span>8354</span>
+              <div class="what-bank"><span>{{bankForm.branch}}</span><span class="c-save-share">存管专享</span></div>
+              <div class="c-bank-number">
+                <span class="c-omit-count"><img src="@/assets/images/c-omit-count.png" alt=""></span>
+                <span class="c-omit-count"><img src="@/assets/images/c-omit-count.png" alt=""></span>
+                <span class="c-omit-count"><img src="@/assets/images/c-omit-count.png" alt=""></span>
+                <span>{{bankForm.bank}}</span>
                 </div>
             </div>
           </div>
@@ -39,11 +41,15 @@
         width="30%"
         center
        >
-        <el-form :label-position="labelPosition" label-width="80px" :model="lists">
+        <el-form :label-position="labelPosition" label-width="80px" :rules="rules" :model="lists">
           <el-form-item label="持卡人">
             <el-input v-model="lists.name"></el-input>
           </el-form-item>
-          <el-form-item label="银行卡号">
+          <el-form-item label="银行卡号" :rules="[
+            { required: true, message: '银行卡号不能为空',trigger: 'blur'},
+            { type: 'number', message: '银行卡号必须为数字值',trigger: 'blur'},
+            { min: 16, max: 19, message: '长度在 16 到 19 个字符', trigger: 'blur' }
+          ]" prop="bank">
             <el-input v-model="lists.bank"></el-input>
           </el-form-item>
           <el-form-item label="开户支行">
@@ -83,7 +89,7 @@
 </template>
 
 <script>
-import { bindBank } from "@/api/serve"
+import { bindBank,bankInfo } from "@/api/serve"
 import { getToken } from "@/api/cookie"
 import { getTel } from "@/util"
 export default {
@@ -178,36 +184,46 @@ export default {
         pwd: '' // 密码
       },
       labelPosition: 'right',
-        formLabelAlign: {
-          name: '',
-          region: '',
-          type: ''
-        }
+      formLabelAlign: {
+        name: '',
+        region: '',
+        type: ''
+      },
+      rules: {
+        bank: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 16, max: 19, message: '长度在 16 到 19 个字符', trigger: 'blur' }
+        ]
+      },
+      bankForm:{
+        branch: '',
+        bank: ''
+      }
     }
   },
   created () {
     this.lists.guid = getToken()
     this.lists.tel = getTel(this.lists.tel)
+
+    // 银行卡
+    this.bankInfo()
   },
   methods: {
-
-    
     bindBlankBtn () {
       this.dialogVisible = true
     },
 
+    // 绑定银行卡
     bindMyBank () {
       bindBank (this.lists).then( res => {
         console.log(res)
       })
     },
-    handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      }
+    bankInfo () {
+      bankInfo ({guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+        this.bankForm = res.data.data
+      }) 
+    }
   }
 }
 </script>
@@ -268,18 +284,30 @@ export default {
 
   .bank-card {
     background: #F2F2F2;
-    width: 420px;
-    height: 210px;
+    width: 540px;
+    height: 180px;
     border-radius: 4px;
     padding: 5px 20px;
     box-sizing: border-box;
     margin:20px auto;
+    background: url("../../../assets/images/c-bank-bg.png") no-repeat;
+    background-size: 100% 100%;
   }
 
   .bank-img {
     float: left;
+    width: 60px;
+    margin-top: 32px;
+    margin-left: 26px;
+    height: 60px;
+    background: #fff;
+    border-radius: 60px;
     line-height: 70px;
     margin-right: 20px;
+  }
+
+  .bank-img img {
+    width: 100%;
   }
 
   .bank-type{
@@ -287,12 +315,28 @@ export default {
     padding: 8px 0;
     line-height: 20px;
     box-sizing: border-box;
+    margin-top: 32px;
+    color: #fff;
+    font-size: 18px;
   }
 
+  .c-omit-count {
+    margin-right: 18px;
+  }
 
+  .c-bank-number {
+    margin-top: 25px;
+  }
 
-
-
+  .c-save-share {
+    display: inline-block;
+    border: 2px solid #81A1D8;
+    padding: 2px 10px;
+    margin-left: 20px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-size: 13px;
+  }
 
 
 </style>

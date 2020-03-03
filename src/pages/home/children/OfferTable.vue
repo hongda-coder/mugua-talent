@@ -15,23 +15,50 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="mstime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"></af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center"></af-table-column>
+        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center">
+          <template slot-scope="scope">
+            <span>
+            ￥{{scope.row.aiMoenyOutside}}
+            </span>
+          </template>
+        </af-table-column>
+        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center">
+            <template slot-scope="scope">
+            <span>
+            ￥{{scope.row.rdMoenyOutside}}
+            </span>
+          </template>
+        </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">分享</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="share">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
             <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
     </div>
+
+<vshare ></vshare>
+
+    <!-- 分享 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <vshare :vshareConfig="vshareConfig"></vshare>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 
-import { jobList } from "@/api/serve"
+import { jobList,shareJob } from "@/api/serve"
 import { getToken } from "@/api/cookie"
 import { getTel } from "@/util"
 
@@ -52,13 +79,40 @@ export default {
         jpetime: '',
         aiMoenyOutside: '',
         rdMoenyOutside: '',
+        msid: 0 // 分享id
       }],
       lists: {
         guid: '', //token
         tel: 'tel',  // 加密得电话号码
         limit: '1' , // 当前页
         curr: '5' //当前页多少数据
-      }
+      },
+      dialogVisible: false, // 分享弹出层
+
+
+
+       vshareConfig: {
+          shareList: [
+          'more', 'qzone', 'tsina', 'tqq', 'renren', 'weixin'
+          ],
+          common : {
+            bdUrl,
+          },
+          share : [{
+            //此处放置分享按钮设置
+            }
+          ],
+          slide : [
+            //此处放置浮窗分享设置
+          ],
+          image : [
+            //此处放置图片分享设置
+          ],
+          selectShare : [
+            //此处放置划词分享设置
+          ]
+        }
+
     }
   },
   created () {
@@ -69,10 +123,24 @@ export default {
   methods: {
     jobList () {
       jobList(this.lists).then( res => {
-        // console.log(res)
         this.table = res.data.data
       })
-    }
+    },
+
+    // 分享
+    share () {
+      this.dialogVisible = true
+      // shareJob ({msid:this.table[0].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+      //   console.log(res)
+      // })
+    },
+     handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
   }
 }
 </script>

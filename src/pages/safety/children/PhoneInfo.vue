@@ -8,7 +8,7 @@
           <div class="content-input">
             <el-form-item label="绑定手机" prop="phone">
               <el-col :span="19">
-                <input type="text"  v-model="phoneForm.phone"  disabled style="background: #fff;" class="phone" />
+                <input type="password"  v-model="phoneForm.phone"  disabled style="background: #fff;" class="phone" />
               </el-col>
               <el-col :span="5">
                 <el-button type="buttom" @click="updatePhone" class="btn">更改号码</el-button>
@@ -24,7 +24,7 @@
           <div class="content-input">
             <el-form-item label="登录密码" prop="password">
               <el-col :span="19">
-                <input type="text"  v-model="pswForm.password" disabled style="background: #fff;" class="phone" />
+                <input type="password"  v-model="pswForm.password" disabled style="background: #fff;" class="phone" />
               </el-col>
               <el-col :span="5">
                 <el-button type="buttom" @click="updatePsw" class="btn">修改密码</el-button>
@@ -57,19 +57,19 @@
           </form>
         </div>
       </div>
-      <!-- 修改密码 -->
 
+      <!-- 修改密码 -->
       <div class="dialog" v-show="dialogPsd">
         <div class="dialogPhone">
           <div class="c-title">修改密码</div>
           <form action="">
             <div class="item">
               <label>原密码</label>
-              <input type="text" v-model="pwdForm.pwd">
+              <input type="password" v-model="pwdForm.pwd">
             </div>
             <div class="item">
               <label>新密码</label>
-              <input type="text" v-model="pwdForm.xpwd">
+              <input type="password" v-model="pwdForm.xpwd">
             </div>
             <div class="sure" @click="confirmPwd">确定</div>
           </form>
@@ -104,6 +104,7 @@ export default {
       pwdForm: {
         pwd: '',
         xpwd: '',
+        tel: 'tel',
         guid: '', //token
       },
       dialogPhone: false,
@@ -114,6 +115,7 @@ export default {
   created () {
     this.form.guid = getToken()
     this.pwdForm.guid = getToken()
+    this.pwdForm.tel = getTel(this.pwdForm.tel)
   },
   methods: {
     // 修改电话号码
@@ -141,11 +143,6 @@ export default {
         console.log(res)
       })
     },
-
-    // // 获取手机验证码
-    // shortCode ({this.form.tel}) {
-
-    // }
   }
 }
 </script>

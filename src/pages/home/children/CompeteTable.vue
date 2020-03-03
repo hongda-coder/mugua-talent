@@ -8,21 +8,20 @@
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
         <af-table-column prop="number" label="编号" align="center"> </af-table-column>
-        <af-table-column prop="guild" label="所属行业" align="center"></af-table-column>
-        <af-table-column prop="name" label="职位名称" align="center"></af-table-column>
+        <af-table-column prop="cname" label="所属行业" align="center"></af-table-column>
+        <af-table-column prop="jobname" label="职位名称" align="center"></af-table-column>
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
-        <af-table-column prop="experience" label="工作经验" align="center"></af-table-column>
-        <af-table-column prop="education" label="学历要求" align="center"></af-table-column>
-        <af-table-column prop="end_data" label="竞聘结束日期" align="center"></af-table-column>
-        <af-table-column prop="start_data" label="面试时间" align="center"></af-table-column>
+        <af-table-column prop="working" label="工作经验" align="center"></af-table-column>
+        <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
+        <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
+        <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
         <af-table-column prop="commission1" label="人数" align="center"></af-table-column>
         <af-table-column prop="commission2" label="竞聘状态" align="center">
           <template slot-scope="scope">
-            <span>
+            <span :class="addclassStatus(scope.row.state)">
             <i class="iconfont">&#xe649;</i>
-            {{scope.row.commission2}}
+            {{scope.row.state}}
             </span>
-
           </template>
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
@@ -49,15 +48,17 @@ export default {
     return {
       table: [{
         number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '待面试'
+        cname: '',
+        jobname: '',
+        address: '',
+        working: '',
+        education: '',
+        record: '',
+        jpetime: '',
+        state: '',
+        number: '',
+        aiMoenyOutside: '',
+        rdMoenyOutside: ''
       }],
       lists: {
         guid: '', //token
@@ -76,11 +77,25 @@ export default {
     competeList () {
 
       competeList(this.lists).then( res => {
+        this.table = res.data.data
         // console.log(res)
       })
+    },
+
+    // class状态
+    addclassStatus (value) {
+      switch (value) {
+        case '待面试':
+          return 'StatusTypeColorA'
+        case '面试中':
+          return 'StatusTypeColorB'
+        case '已完成': 
+          return 'StatusTypeColorC'
+        case '竞聘中' :
+          return 'StatusTypeColorD'
+      }
     }
   }
-
 }
 </script>
 
@@ -89,7 +104,6 @@ export default {
   padding: 20px 10px;
   background: #fff;
 }
-
 
 .c-people-title {
   border-bottom: 1px solid #EEEEEE;
@@ -124,4 +138,23 @@ export default {
 .commonColor {
   color: #FEAD1C;
 }
+
+
+/*状态 */
+.StatusTypeColorA {
+  color: #FF6002;
+}
+
+.StatusTypeColorB {
+  color: #FEAD1D;
+}
+
+.StatusTypeColorC{
+  color: #0FD286;
+}
+
+.StatusTypeColorD {
+  color: #FE0000;
+}
+
 </style>

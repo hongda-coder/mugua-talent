@@ -7,7 +7,7 @@ export default  {
     const { loginuser, pwd } = user
     return new Promise((resolve,reject) => {
       login({loginuser,pwd}).then(response => {
-        // console.log(response)
+        console.log(reject)
         commit('SET_TOKEN', response.data.token); //mutations
         setToken(response.data.token); //值保存到cookie
 

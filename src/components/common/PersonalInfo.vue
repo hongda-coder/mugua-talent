@@ -132,11 +132,8 @@
             <el-col  :span="8" style="padding: 0;margin-left: 100px;min-width: 480px;">
               <div class="clearfix">
                 <div class="content-input">
-                  <el-form-item label="邀请码" prop="credential">
-                    <el-input v-model="editorForm.credential"></el-input>
-                  </el-form-item>’
-                  <el-form-item label="证书名称" prop="credential">
-                    <el-input v-model="editorForm.credential"></el-input>
+                  <el-form-item label="证书名称" prop="imagename">
+                    <el-input v-model="editorForm.imagename"></el-input>
                   </el-form-item>
                 </div>
               </div>
@@ -149,11 +146,12 @@
                       v-loading="loading"
                       :show-file-list="false"
                       :multiple="false"
-                   
-                      action="http://192.168.0.182/api/user/PostUpload"
+                      action="/api/user/PostUpload"
                       :data="lists"
+                      :on-change="handleChange"
+                      :http-request="uploadFile"
                       >
-                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                      <img v-if="imageUrl" :src="url" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                   </el-form-item>
@@ -198,8 +196,7 @@ export default {
         time: '1996-02-14',
         contact: '123545266325',
         email: '21235412@qq.com',
-        credential: '蓝桥杯二等奖',
-        imageUrl: '',
+        imagename: '蓝桥杯二等奖',
       },
       userInfo: {
         sex: '', // 性别
@@ -208,7 +205,7 @@ export default {
         tel: '',  // 联系电话
         create: '', // 出生日期
         eamil: '', // 邮箱
-        userAge: ''
+        imagename: '' // 证书名称
       },
       lists: {
         guid: '', //token
@@ -216,7 +213,9 @@ export default {
       },
       jpcount: '', //参与人数
       dmprobability: '', // 通过
-      tgprobability: '' // 到面
+      tgprobability: '', // 到面
+      formData: {},
+      url: ''
     }
   },
 
@@ -236,8 +235,8 @@ export default {
 
   methods: {
     personInfo () {
-
       personInfo(this.lists).then( res => {
+        console.log(res)
         this.userInfo = res.data.data
       })
     },
@@ -251,14 +250,22 @@ export default {
       })
     },
 
+   // 上传文件，获取文件流
+    handleChange(file) {
+      this.file = file.raw
+    },
     // 上传
-    // uploadImg () {
-    //   console.log(this.lists)
-    //   uploadImg(this.lists).then( res => {
-    //     console.log(res)
-    //   })
-    // },
-    
+    uploadFile () {
+      this.formData = new FormData()
+      this.formData.append('file', this.file)
+      this.formData.append('guid', this.lists.guid)
+      this.formData.append('tel', this.lists.tel)
+      this.formData.append('imagename', this.editorForm.imagename)
+      uploadImg(this.formData).then(res => {
+        // console.log(res)
+        this.url = res.data.url
+      })
+    },
 
     // 编辑
     editor () {
