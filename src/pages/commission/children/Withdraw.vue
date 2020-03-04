@@ -4,16 +4,15 @@
       <div class="account-info">
         <div class="account">银行账户</div>
       </div>
-
       <div>
-        <div class="card" v-show="false">
+        <div class="card" v-if="bankid =='' ">
           <div class="icon">
-            <i class="iconfont" @click="bindBlankBtn">&#xe60b;</i>
+            <img src="@/assets/images/add-bank.png" @click="bindBlankBtn" alt="">
           </div>
           <div class="black-card">您尚未绑定银行卡，<span>绑定即可提现</span> </div>
         </div>
         
-        <div v-show="true">
+        <div v-else>
           <div class="bank-card clearfix">
             <div class="bank-img"><img src="@/assets/images/c-bank-tag.png" alt=""></div>
             <div class="bank-type">
@@ -26,178 +25,111 @@
                 </div>
             </div>
           </div>
+          <div class="unbindBank" @click="unbindBank">解绑</div>
         </div>
       </div>
-
-
-
-      <!-- <div class="bound"><button>去绑定</button></div> -->
     </div>
 
-    <div>
-      <el-dialog
-        title="绑定银行卡"
-        :visible.sync="dialogVisible"
-        width="30%"
-        center
-       >
-        <el-form :label-position="labelPosition" label-width="80px" :rules="rules" :model="lists">
-          <el-form-item label="持卡人">
-            <el-input v-model="lists.name"></el-input>
-          </el-form-item>
-          <el-form-item label="银行卡号" :rules="[
-            { required: true, message: '银行卡号不能为空',trigger: 'blur'},
-            { type: 'number', message: '银行卡号必须为数字值',trigger: 'blur'},
-            { min: 16, max: 19, message: '长度在 16 到 19 个字符', trigger: 'blur' }
-          ]" prop="bank">
-            <el-input v-model="lists.bank"></el-input>
-          </el-form-item>
-          <el-form-item label="开户支行">
-            <el-input v-model="lists.branch"></el-input>
-          </el-form-item>
-          <el-form-item label="密码">
-            <el-input type="password" v-model="lists.pwd"></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="验证码">
-            <el-input v-model="formLabelAlign.type" style="width: 65%;"></el-input>
-            <el-button  style="width: 33%;margin-left: 2%;background: #FEAD1C; color: #fff;">获取验证码</el-button>
-          </el-form-item> -->
-
-          <el-form-item>
-            <el-button  style="background: #FEAD1C; color: #fff;border: none;width: 100%;" @click="bindMyBank">立即绑定</el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-    </div>
-
+    <!-- 提取记录 -->
     <div>
       <div class="account-info">
         <div class="account">提现记录</div>
       </div>
       <div class="deposit">
-        <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
+        <el-table :data="recordTable" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
           :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
-          <af-table-column prop="guild" label="流水号" align="center"></af-table-column>
-          <af-table-column prop="commission1" label="申请时间" align="center"></af-table-column>
-          <af-table-column prop="education" label="提现金额（￥）" align="center"></af-table-column>
-          <af-table-column prop="start_data" label="提现账户" align="center"></af-table-column>
-          <af-table-column prop="commission1" label="提现状态" align="center"></af-table-column>
+          <af-table-column prop="orderno" label="流水号" align="center"></af-table-column>
+          <af-table-column prop="time" label="申请时间" align="center"></af-table-column>
+          <af-table-column prop="money" label="提现金额（￥）" align="center"></af-table-column>
+          <af-table-column prop="bank" label="提现账户" align="center"></af-table-column>
+          <af-table-column prop="state" label="提现状态" align="center"></af-table-column>
         </el-table>
       </div>
+    </div>
+
+    <!-- 绑定银行卡 -->
+    <div>
+      <el-dialog
+        title="绑定银行卡"
+        :visible.sync="dialogBank"
+        width="30%"
+        center
+       >
+        <el-form :label-position="labelPosition" label-width="80px" :model="lists" :rules="rules">
+          <el-form-item label="持卡人" prop="name">
+            <el-input v-model="lists.name"></el-input>
+          </el-form-item>
+          <el-form-item label="银行卡号" prop="bank">
+            <el-input v-model="lists.bank"></el-input>
+          </el-form-item>
+          <el-form-item label="开户支行" prop="branch">
+            <el-input v-model="lists.branch"></el-input>
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-input type="password" v-model="lists.pwd"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button  style="background: #FEAD1C; color: #fff;border: none;width: 100%;" @click="bindMyBank">立即绑定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <el-popover
+        ref="popover1"
+        placement="top-start"
+        title="银行卡绑定"
+        width="200"
+        trigger="hover"
+        content="银行卡绑定成功">
+      </el-popover>
     </div>
   </div>
 </template>
 
 <script>
-import { bindBank,bankInfo } from "@/api/serve"
+import { bindBank,bankInfo, unbindBank,withdrawRecord } from "@/api/serve"
 import { getToken } from "@/api/cookie"
 import { getTel } from "@/util"
 export default {
   name: 'Withdraw',
   data () {
     return {
-      table: [{
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '待面试'
-      }, {
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '面试中'
-      }, {
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '已完成'
-      }, {
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '竞聘中'
-      }, {
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '竞聘中'
-      }, {
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '竞聘中'
-      },{
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '竞聘中'
+      recordTable: [{
+        orderno: '', //流水号
+        time: '', //申请时间
+        money: '', //提现金额
+        bank: '', //提现账户
+        state: '' //状态
       }],
-      dialogVisible: false,
+      limit: '1', //总页数
+      curr: '1', // 当前页数
+      dialogBank: false,
       lists: {
-        guid: '',
-        tel: 'tel',
+        guid: '', // token
+        tel: 'tel', // 加密号码
         name: '', // 持卡人姓名
         bank: '', //卡号
         branch: '', //开户银
         pwd: '' // 密码
       },
       labelPosition: 'right',
-      formLabelAlign: {
-        name: '',
-        region: '',
-        type: ''
-      },
-      rules: {
-        bank: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 16, max: 19, message: '长度在 16 到 19 个字符', trigger: 'blur' }
-        ]
-      },
       bankForm:{
-        branch: '',
-        bank: ''
+        branch: '111',
+        bank: '111'
+      },
+      bankid: '', // 解绑卡号id
+      rules: {
+        name: [
+          { required: true, message: '请输入持卡人姓名', trigger: 'blur' },
+        ],
+        bank: [
+          { required: true, message: '请输入卡号', trigger: 'change' },
+        ],
+        branch: [
+          { required: true, message: '请输入开发银行', trigger: 'change' }
+        ],
+        pwd: [
+          { required: true, message: '请输入密码', trigger: 'change' }
+        ]
       }
     }
   },
@@ -207,22 +139,63 @@ export default {
 
     // 银行卡
     this.bankInfo()
+
+    // 提现记录
+    this.record()
   },
   methods: {
+      // 绑定银行卡
     bindBlankBtn () {
-      this.dialogVisible = true
+      this.dialogBank = true
+      // console.log(this.dialogBank)
     },
-
     // 绑定银行卡
     bindMyBank () {
       bindBank (this.lists).then( res => {
-        console.log(res)
+        this.dialogBank = false
+        this.$message('绑定银行卡成功')
+        this.bankInfo()
       })
     },
+
+    // 银行卡信息
     bankInfo () {
       bankInfo ({guid:this.lists.guid,tel:this.lists.tel}).then( res => {
         this.bankForm = res.data.data
+        this.bankid = res.data.data.id
       }) 
+    },
+
+    // 解绑银行卡
+    unbindBank () {
+      this.$confirm('确定解除银行卡绑定?', '解除', {
+        center: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        unbindBank ({bankid: this.bankid,guid:this.lists.guid}).then( res => {
+          // console.log(res)
+        })
+        this.$message({
+          type: 'success',
+          message: '解绑成功!'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消解绑'
+        });          
+      });
+
+    },
+
+    // 提现记录
+    record () {
+      withdrawRecord ({guid: this.lists.guid,tel: this.lists.tel,limit: this.limit,curr: this.curr}).then( res => {
+        this.recordTable = res.data.data
+        // console.log(this.recordTable)
+      })
     }
   }
 }
@@ -251,15 +224,21 @@ export default {
     background: #F9F9F9;
     margin: 15px auto;
     text-align: center;
+
   }
 
   .icon {
     padding-top: 45px;
+    width: 80px;
+    margin: auto;
   }
-  .icon .iconfont {
+    .icon img {
+      width: 100%;
+    }
+  /* .icon .iconfont {
     font-size: 80px;
     color: #FEAD1C;
-  }
+  } */
 
   .black-card {
     margin-top: 20px;
@@ -338,5 +317,20 @@ export default {
     font-size: 13px;
   }
 
+  .unbindBank {
+    width: 120px;
+    line-height: 30px;
+    background: #FEAD1C;
+    border-radius: 5px;
+    margin: auto;
+    text-align: center;
+    color: #fff;
+  }
+
+  /* /deep/ .el-button--primar {
+    background: #FEAD1C!important;
+    color: #fff!important;
+    border-color: #FEAD1C!important;
+  } */
 
 </style>

@@ -137,3 +137,76 @@ export function shareJob(data){
     data
   })
 }
+
+
+// 解绑银行卡
+export function unbindBank(data){  
+  return ajax({
+    url:'account/Bank_Del',
+    method:'post',
+    data
+  })
+} 
+
+// 收益管理
+export function earningsManage(data){  
+  return ajax({
+    url:'account/DateiCount',
+    method:'post',
+    data
+  })
+} 
+
+// 提现金额
+export function withdrawMoney(data){  
+  return ajax({
+    url:'account/Bank_datei_Add',
+    method:'post',
+    data
+  })
+} 
+
+// 提现记录
+export function withdrawRecord(data){  
+  return ajax({
+    url:'account/Bank_datei_Select',
+    method:'post',
+    data
+  })
+} 
+
+// 任务佣金
+export function taskMoney(data){  
+  return ajax({
+    url:'account/Transactionflow',
+    method:'post',
+    data
+  })
+} 
+
+// 分销佣金
+export function allotMoney(data){  
+  return ajax({
+    url:'account/Transactionflow',
+    method:'post',
+    data
+  })
+} 
+
+// 上级
+export function superior(data){  
+  return ajax({
+    url:'user/user_equal',
+    method:'post',
+    data
+  })
+} 
+
+// 下级
+export function subordinate(data){  
+  return ajax({
+    url:'user/user_subordinate',
+    method:'post',
+    data
+  })
+} 

@@ -12,6 +12,10 @@
 </template>
 
 <script>
+
+import { superior } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
 export default {
   name: 'Subordinate',
   data () {
@@ -21,7 +25,23 @@ export default {
           name: '陈小姐',
           contact: "65454598651+6"
         }
-      ]
+      ],
+      form: {
+        guid: '',
+        tel: 'tel'
+      }
+    }
+  },
+  created () {
+    this.form.guid = getToken()
+    this.form.tel = getTel(this.form.tel)
+    this.getSuperiorInfo()
+  },
+  methods: {
+    getSuperiorInfo () {
+      superior (this.form).then( res => {
+        console.log(res)
+      }) 
     }
   }
 }

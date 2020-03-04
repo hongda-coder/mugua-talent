@@ -46,35 +46,14 @@
             </el-col>
           </el-row>
         </el-col>
-        <div class="withdraw"> <button @click="getMoney">提现</button> </div>
       </el-row>
     </div>
-        <!-- 提现 -->
-    <el-dialog
-      title="提现金额"
-      :visible.sync="dialogMoney"
-      width="30%"
-      center
-     >
-      <el-form  label-width="80px" :model="form">
-        <el-form-item label="提现金额" prop="much">
-          <el-input v-model="form.much"></el-input>
-        </el-form-item>
-        <el-form-item label="提现密码" prop="much">
-          <el-input tyep="password" v-model="form.pwd"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogMoney = false">取 消</el-button>
-        <el-button type="primary" @click="comfirmMoney">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 
-import { earningsManage,withdrawMoney } from "@/api/serve"
+import { earningsManage } from "@/api/serve"
 import { getToken } from "@/api/cookie"
 import { getTel } from "@/util"
 
@@ -92,11 +71,6 @@ export default {
         Monthstatistics: '',  //月提现
         withdraw: '', // 已提现
       },
-      dialogMoney: false, //提现弹出
-      form: {
-        much: '', //提现金额
-        pwd: '' // 提现密码
-      }
     }
   },
   created() {
@@ -111,24 +85,8 @@ export default {
       earningsManage (this.lists).then( res => {
         this.monye = res.data.data
       })
-    },
-        // 提现
-    getMoney () {
-      console.log("5465465")
-      this.dialogMoney = true
-    },
-    //确定提现
-    comfirmMoney () {
-      withdrawMoney({guid:this.lists.guid, tel:this.lists.tel, much:this.form.much,pwd:this.form.pwd }).then( res => {
-        if (res.Message == 'success') {
-          this.Myearnings()  // 再次调用  刷新提现
-          this.dialogMoney = false
-        }
-        
-      })
     }
   }
-  
 }
 </script>
 

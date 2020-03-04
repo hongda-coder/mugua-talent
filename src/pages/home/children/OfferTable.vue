@@ -39,7 +39,7 @@
       </el-table>
     </div>
 
-<vshare ></vshare>
+
 
     <!-- 分享 -->
     <el-dialog
@@ -47,6 +47,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
+      <div class="share"><input type="text" v-model="vshareConfig.share[0].bdUrl"></div>
       <vshare :vshareConfig="vshareConfig"></vshare>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -61,11 +62,9 @@
 import { jobList,shareJob } from "@/api/serve"
 import { getToken } from "@/api/cookie"
 import { getTel } from "@/util"
-
+// import Share from "../share/Share"
 export default {
   name: 'OfferTable',
-  components: {
-  },
   data () {
     return {
       table: [{
@@ -88,31 +87,23 @@ export default {
         curr: '5' //当前页多少数据
       },
       dialogVisible: false, // 分享弹出层
-
-
-
+      // shareUrl: '',  //分享路径
        vshareConfig: {
-          shareList: [
-          'more', 'qzone', 'tsina', 'tqq', 'renren', 'weixin'
-          ],
-          common : {
-            bdUrl,
-          },
-          share : [{
-            //此处放置分享按钮设置
-            }
-          ],
-          slide : [
-            //此处放置浮窗分享设置
-          ],
-          image : [
-            //此处放置图片分享设置
-          ],
-          selectShare : [
-            //此处放置划词分享设置
-          ]
-        }
-
+        shareList: [ 'more','qzone','tsina','tqq','renren','weixin'],
+        common : {
+          //此处放置通用设置
+        },
+        share: [{ bdUrl: '' }]
+        // slide : [
+        //   //此处放置浮窗分享设置
+        // ],
+        // image : [
+        //   //此处放置图片分享设置
+        // ],
+        // selectShare : [
+        //   //此处放置划词分享设置
+        // ]
+      }
     }
   },
   created () {
@@ -130,9 +121,10 @@ export default {
     // 分享
     share () {
       this.dialogVisible = true
-      // shareJob ({msid:this.table[0].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-      //   console.log(res)
-      // })
+      shareJob ({msid:this.table[0].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+        this.vshareConfig.share[0].bdUrl= res.data.data.urlpath
+        // console.log(this.vshareConfig.common.bdUrl)
+      })
     },
      handleClose(done) {
         this.$confirm('确认关闭？')
@@ -186,5 +178,9 @@ export default {
 
 .commonColor {
   color: #FEAD1C;
+}
+
+.share input{
+  width: 300px;
 }
 </style>

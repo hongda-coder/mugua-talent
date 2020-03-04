@@ -1,58 +1,16 @@
 <template>
   <div class="myearnings">
-    <div class="wrap clearfix">
-      <el-row :gutter="10" class="earnings-info clearfix" style="">
-        <el-col style="float: left; width: calc(70% - 50px);padding: 0;">
-          <el-row :gutter="10">
-            <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-              <div class="item">
-                <div class="earnings">本月累计收益</div>
-                <div class="account">
-                  <div class="money">
-                  ￥21.00<span style="margin-left: 20px;"><img src="@/assets/images/c-coin-count.png" alt=""></span>
-                  </div>
-                </div>
-              </div>
-            </el-col>
-            <el-col :xs="8" :sm="8" :md="8"  :lg="8" :xl="8">
-              <div class="item">
-                <div class="earnings">总收益</div>
-                <div class="account">
-                  <div class="money">
-                  ￥21.00<span style="margin-left: 20px;"><img src="@/assets/images/c-coin-count.png" alt=""></span>
-                  </div>
-                </div>
-              </div>
-            </el-col>
-            <el-col :xs="8" :sm="8" :md="8" :xl="8">
-              <div class="item">
-                <div class="earnings">可提现</div>
-                <div class="account">
-                  <div class="money">
-                  ￥21.00<span style="margin-left: 20px;"><img src="@/assets/images/c-coin-count.png" alt=""></span>
-                  </div>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-        </el-col>
-        <!-- <el-col style="float: right;margin-right: 50px;width: 30%;padding: 0;">
-          <div class="withdraw">
-            <button>提现</button>
-          </div>
-        </el-col> -->
-      </el-row>
-    </div>
+      <commonWithdraw></commonWithdraw>
     <div class="search-form">
-      <el-form ref="form" :inline="true" :model="form" label-width="80px">
+      <el-form ref="form" :inline="true" :model="dataForm" label-width="80px">
         <el-form-item label="开始时间">
           <el-col :span="24">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.btime" style="width: 100%;"></el-date-picker>
           </el-col>
         </el-form-item>
         <el-form-item label="结束时间">
           <el-col :span="24">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.etime" style="width: 100%;"></el-date-picker>
           </el-col>
         </el-form-item>
 
@@ -80,97 +38,53 @@
 </template>
 
 <script>
+import commonWithdraw from '../common/commonWithdraw'
+
+import { taskMoney } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
 export default {
   name: 'TaskEarnings',
   data() {
-      return {
-        form: {
-          date1: '',
-        },
-        table: [{
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '待面试'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '面试中'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '已完成'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        }, {
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        },{
-          number:1,
-          guild: '佛山市畅腾智能家居有限公司',
-          name: '业务销售',
-          address: '上海市普陀区金沙江路 1518 弄',
-          experience: '3-5年',
-          education: '本科',
-          end_data: '2020年1月9日',
-          start_data: '2020年1月10日 15:00-17:00',
-          commission1: '5人',
-          commission2: '竞聘中'
-        }]
-      }
-    },
-
+    return {
+      dataForm: {
+        btime: '', // 开始时间
+        etime: '', // 结束时间
+        limit: '1',// 当前数据条数
+        curr: '1', // 当钱页数
+        tel: 'tel', //加密手机号
+        guid: ''  // token
+      },
+      table: [{
+        number:1,
+        guild: '佛山市畅腾智能家居有限公司',
+        name: '业务销售',
+        address: '上海市普陀区金沙江路 1518 弄',
+        experience: '3-5年',
+        education: '本科',
+        end_data: '2020年1月9日',
+        start_data: '2020年1月10日 15:00-17:00',
+        commission1: '5人',
+        commission2: '待面试'
+      }]
+    }
+  },
+  components: {
+    commonWithdraw
+  },
+  created () {
+    this.dataForm.guid = getToken()
+    this.dataForm.tel = getTel(this.dataForm.tel)
+    this.getTastMoney()
+  },
   methods: {
     search () {
-      alert("45646")
+      this.getTastMoney ()
+    },
+    getTastMoney () {
+      taskMoney(this.dataForm).then(res => {
+        console.log(res)
+      })
     }
   }
   

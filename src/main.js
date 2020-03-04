@@ -11,11 +11,10 @@ import './assets/css/reset.css'
 
 // import axios from 'axios'
 // axios.defaults.baseURL = 'http://192.168.0.182/api/'
- 
+Vue.use(vshare)
 Vue.use(AFTableColumn)
 
 Vue.use(ElementUI)
-Vue.use(vshare)
 
 Vue.config.productionTip = false
 

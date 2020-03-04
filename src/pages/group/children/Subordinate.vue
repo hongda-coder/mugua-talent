@@ -17,6 +17,10 @@
 </template>
 
 <script>
+
+import { subordinate } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
 export default {
   name: 'Subordinate',
   data () {
@@ -25,44 +29,24 @@ export default {
         {
           name: '陈小姐',
           contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
-        },
-                {
-          name: '陈小姐',
-          contact: "65454598651+6"
         }
-      ]
+      ],
+      form: {
+        guid: '',
+        tel: 'tel'
+      }
+    }
+  },
+  created () {
+    this.form.guid = getToken()
+    this.form.tel = getTel(this.form.tel)
+    this.getSubordinateInfo()
+  },
+  methods: {
+    getSubordinateInfo () {
+      subordinate (this.form).then( res => {
+        console.log(res)
+      }) 
     }
   }
 }
