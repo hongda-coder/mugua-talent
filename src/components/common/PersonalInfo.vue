@@ -143,7 +143,6 @@
                   <el-form-item label="证件附件" prop="password" style="float: left;" >
                      <el-upload
                       class="avatar-uploader"
-                      v-loading="loading"
                       :show-file-list="false"
                       :multiple="false"
                       action="/api/user/PostUpload"
@@ -189,7 +188,6 @@ export default {
       imageUrl: '',
       dialogVisible: false,
       dialogEditor: false,
-      imageUrl: '',
       editorForm: {
         name: '陈小姐姐',
         sex: '',

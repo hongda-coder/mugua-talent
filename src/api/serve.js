@@ -74,6 +74,16 @@ export function personInfo(data){
   })
 }
 
+// 完善信息
+export function perInfo2(data){  
+  return ajax({
+    url:'user/UpdateCertificateimage',
+    method:'post',
+    data
+  })
+}
+
+
 // 9、个人信息
 export function personEarnings(data){  
   return ajax({
@@ -84,7 +94,6 @@ export function personEarnings(data){
 }
 
 // 上传图片
-
 export function uploadImg(data){  
   return ajax({
     url:'user/PostUpload',
@@ -129,7 +138,7 @@ export function bankInfo(data){
   })
 }
 
-// 上传
+// 分享
 export function shareJob(data){  
   return ajax({
     url:'zpjob/getShareUrl',
@@ -206,6 +215,15 @@ export function superior(data){
 export function subordinate(data){  
   return ajax({
     url:'user/user_subordinate',
+    method:'post',
+    data
+  })
+} 
+
+// 领任务
+export function getTask(data){  
+  return ajax({
+    url:'account/Task_Add',
     method:'post',
     data
   })

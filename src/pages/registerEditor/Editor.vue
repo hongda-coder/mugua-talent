@@ -93,15 +93,18 @@
                   <div class="icon"><img src="" alt=""></div>
                   <div class="content-input">
                     <el-form-item label="证件附件" prop="password" style="float: left;">
-                        <el-upload
-                          action="https://jsonplaceholder.typicode.com/posts/"
-                          list-type="picture-card"
-                          >
-                          <i class="el-icon-plus"></i>
-                        </el-upload>
-                        <el-dialog :visible.sync="dialogVisible" size="tiny">
-                          <img width="100%" :src="dialogImageUrl" alt="">
-                        </el-dialog>
+                         <el-upload
+                          class="avatar-uploader"
+                          :show-file-list="false"
+                          :multiple="false"
+                          action="/api/user/PostUpload"
+                          :data="{guid: editorForm.guid,tel: editorForm.tel}"
+                          :on-change="handleChange"
+                          :http-request="uploadFile"
+                        >
+                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
 
 
                     </el-form-item>
@@ -125,12 +128,12 @@
     </div>
     <Footer style="position: fixed;bottom: 0; left: 0;width: 100%;"></Footer>
   </div>
-
-
 </template>
 
 <script>
-import { perInfo } from "@/api/serve"
+import { perInfo2,uploadImg } from "@/api/serve"
+import { getToken } from "@/api/cookie"
+import { getTel } from "@/util"
 
 import Footer from "@/components/footer/Footer"
 export default {
@@ -143,8 +146,8 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       dialogEditor: false,
+      imageUrl: '',
       editorForm: {
-        tel: '', // 加密手机号
         sex: '', // 性别
         othersinvitecode: '', // 邀请码
         loginuser : '', // 昵称 用户名
@@ -152,29 +155,47 @@ export default {
         xtel: '',  // 联系电话
         create: '', // 生日
         email: '', // 邮箱
-        imagename: '', // 证书名称
-      }
+        guid: '', //token
+        tel: 'tel', // 加密手机号
+        imageid: '' // 图片id
+      },
+      imageUrl: '', // 证书名称
     }
   },
   created () {
-    this.getROuterData()
+    this.editorForm.guid = getToken()
+    this.editorForm.tel = getTel(this.editorForm.tel)
+    console.log(this.editorForm.tel)
   },
   methods: {
-    // 接受获取都加密手机号码
-    getROuterData () {
-      this.editorForm.tel = this.$route.params.tel
-      console.log(this.editorForm.tel)
-    },
-
     // 发送请求完善信息
     saveInfo () {
       console.log("456465")
-      perInfo(this.editorForm).then ( res => {
+      perInfo2(this.editorForm).then ( res => {
         if (res.data.Message == 'success') {
           this.$router.push("./home")
         }
       })
-    }
+    },
+
+      // 上传文件，获取文件流
+    handleChange(file) {
+      this.file = file.raw
+    },
+    // 上传
+    uploadFile () {
+      this.formData = new FormData()
+      this.formData.append('file', this.file)
+      this.formData.append('guid', this.editorForm.guid)
+      this.formData.append('tel', this.editorForm.tel)
+      // this.formData.append('imagename', this.editorForm.imagename)
+      uploadImg(this.formData).then(res => {
+        console.log(res)
+        this.imageUrl = res.data.url
+        this.editorForm.imageid = res.data.imageid
+        console.log(this.editorForm.imageid)
+      })
+    },
   }
 }
 </script>
@@ -284,5 +305,29 @@ export default {
   /deep/  .el-date-table td.current:not(.disabled) span {
     color: #FFF;
     background-color: #FEAD1C;
+  }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 140px;
+    height: 160px;
+    line-height: 160px;
+    text-align: center;
+  }
+  .avatar {
+    width: 140px;
+    height: 160px;
+    display: block;
   }
 </style>

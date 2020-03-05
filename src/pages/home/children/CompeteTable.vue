@@ -47,7 +47,6 @@ export default {
   data() {
     return {
       table: [{
-        number:1,
         cname: '',
         jobname: '',
         address: '',
@@ -56,7 +55,6 @@ export default {
         record: '',
         jpetime: '',
         state: '',
-        number: '',
         aiMoenyOutside: '',
         rdMoenyOutside: ''
       }],

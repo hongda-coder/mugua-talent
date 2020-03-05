@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="search-form">
       <el-row>
         <el-form :inline="true" label-width="80px">
@@ -33,24 +32,47 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="mstime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"></af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center"></af-table-column>
+        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"  width="130">
+          <template slot-scope="scope">
+            ￥{{scope.row.aiMoenyOutside}}
+          </template>
+        </af-table-column>
+        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center" width="130">
+            <template slot-scope="scope">
+            ￥{{scope.row.rdMoenyOutside}}
+          </template>
+        </af-table-column>
         <af-table-column prop="name" label="操作" align="center">
           <template slot-scope="scope" width="180">
-            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small"  class="commonColor">分享</el-button>
+            <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
               <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-              <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small"  class="commonColor">领任务</el-button>
+              <el-button type="text" size="small" class="commonColor" @click="getTask(scope.$index,scope.row)">领任务</el-button>
               <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small"  class="commonColor">查看</el-button>
+            <el-button type="text" size="small"  class="commonColor">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
     </div>
+
+       <!-- 分享 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogShare"
+      width="30%"
+      >
+      <div class="share"><input type="text" v-model="vshareConfig.share[0].bdUrl"></div>
+      <vshare :vshareConfig="vshareConfig"></vshare>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogShare = false">取 消</el-button>
+        <el-button type="primary" @click="dialogShare = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { jobList } from "@/api/serve"
+import { jobList, getTask, shareJob } from "@/api/serve"
 import { getToken } from "@/api/cookie"
 import { getTel } from "@/util"
 export default {
@@ -68,6 +90,7 @@ export default {
         jpetime: '',
         aiMoenyOutside: '',
         rdMoenyOutside: '',
+        msid: ''
       }],
       lists: {
         guid: '', //token
@@ -111,7 +134,16 @@ export default {
           value: 'zhinan',
           label: '广东省',
         }
-      ]
+      ],
+      dialogShare: false, // 分享
+      vshareConfig: {
+        shareList: [ 'more','qzone','tsina','tqq','renren','weixin'],
+        common : {
+          //此处放置通用设置
+        },
+        share: [{ bdUrl: '' }],
+        tableIndex: ''
+      }
     }
   },
   created () {
@@ -119,10 +151,24 @@ export default {
   },
   methods: {
     jobList () {
-      this.lists.Guid = getToken()
-      this.lists.Tel = getTel(this.lists.Tel)
+      this.lists.guid = getToken()
+      this.lists.tel = getTel(this.lists.tel)
       jobList(this.lists).then( res => {
         this.table = res.data.data
+        // console.log(res)
+      })
+    },
+    getTask (row) {
+      getTask ({guid:this.lists.guid,tel:this.lists.tel,msid: this.table[row].msid}).then( res => {
+        // console.log(res)
+      })
+    },
+    share (row) {
+      this.dialogShare = true
+      shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+        this.vshareConfig.share[0].bdUrl= res.data.data.urlpath
+        // console.log(this.vshareConfig.share[0].bdUrl)
+        
       })
     }
   }

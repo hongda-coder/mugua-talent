@@ -7,7 +7,11 @@
     <div class="table-wrap">
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
-        <af-table-column prop="id" label="编号" align="center"></af-table-column>
+        <af-table-column prop="id" label="序号" align="center" width="70px">
+        <template slot-scope="scope">
+            {{scope.$index+1}}
+        </template>
+        </af-table-column>
         <af-table-column prop="cname" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="jobname" label="职位名称" align="center"></af-table-column>
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
@@ -15,25 +19,21 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="mstime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center">
+        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"  width="130">
           <template slot-scope="scope">
-            <span>
             ￥{{scope.row.aiMoenyOutside}}
-            </span>
           </template>
         </af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center">
+        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center" width="130">
             <template slot-scope="scope">
-            <span>
             ￥{{scope.row.rdMoenyOutside}}
-            </span>
           </template>
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="commonColor" @click="share">分享</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">查看</el-button>
+            <el-button  type="text" size="small" class="commonColor">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -46,7 +46,7 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose">
+      >
       <div class="share"><input type="text" v-model="vshareConfig.share[0].bdUrl"></div>
       <vshare :vshareConfig="vshareConfig"></vshare>
       <span slot="footer" class="dialog-footer">
@@ -78,7 +78,7 @@ export default {
         jpetime: '',
         aiMoenyOutside: '',
         rdMoenyOutside: '',
-        msid: 0 // 分享id
+        msid: '' // 分享id
       }],
       lists: {
         guid: '', //token
@@ -87,22 +87,13 @@ export default {
         curr: '5' //当前页多少数据
       },
       dialogVisible: false, // 分享弹出层
-      // shareUrl: '',  //分享路径
        vshareConfig: {
         shareList: [ 'more','qzone','tsina','tqq','renren','weixin'],
         common : {
           //此处放置通用设置
         },
-        share: [{ bdUrl: '' }]
-        // slide : [
-        //   //此处放置浮窗分享设置
-        // ],
-        // image : [
-        //   //此处放置图片分享设置
-        // ],
-        // selectShare : [
-        //   //此处放置划词分享设置
-        // ]
+        share: [{ bdUrl: '' }],
+        tableIndex: ''
       }
     }
   },
@@ -117,22 +108,15 @@ export default {
         this.table = res.data.data
       })
     },
-
     // 分享
-    share () {
+    share (row, column) {
       this.dialogVisible = true
-      shareJob ({msid:this.table[0].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+      // console.log(this.table[row].msid)
+      shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
         this.vshareConfig.share[0].bdUrl= res.data.data.urlpath
-        // console.log(this.vshareConfig.common.bdUrl)
+        console.log(this.vshareConfig.share[0].bdUrl)
       })
-    },
-     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      }
+    }
   }
 }
 </script>

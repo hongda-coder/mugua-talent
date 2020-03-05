@@ -10,7 +10,7 @@
           <img src="../../assets/images/c-avatar.png" alt="">
         </div>
         <div class="c-user">
-          <span>cqcdwlbsm </span>|<span style="cursor: pointer;">退出</span>
+          <span>cqcdwlbsm </span>|<span style="cursor: pointer;" @click="loginout">退出</span>
         </div>
       </div>
     </div>
@@ -18,13 +18,41 @@
   <div class="c-bannner">
     <img src="../../assets/images/c-bannner.png" alt="">
   </div>
+
+    <el-dialog
+    title="退出登陆"
+    :visible.sync="isLoginout"
+    width="30%"
+    center>
+    <div class="loginout">确定退出</div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="isLoginout = false">取 消</el-button>
+      <el-button type="primary" @click="comfirmLoginout">确 定</el-button>
+    </span>
+  </el-dialog>
 </div>
 
 </template>
 
 <script>
+import { removeToken } from "@/api/cookie"
 export default {
-  name: 'Header'
+  name: 'Header',
+  data () {
+    return {
+      isLoginout: false
+    }
+  },
+  methods: {
+    loginout () {
+      this.isLoginout = true
+    },
+    // 确定退出登录
+    comfirmLoginout () {
+      this.$router.push('/login')
+      removeToken()
+    }
+  }
 }
 </script>
 
@@ -79,5 +107,11 @@ export default {
 
 .c-bannner  img {
   width: 100%;
+}
+
+.loginout {
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 1px;
 }
 </style>
