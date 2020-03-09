@@ -149,7 +149,7 @@ export default {
         }
       }, 1000)
       shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.tel}).then(res => {
-        console.log(res)
+        // console.log(res)
       })
     },
     goLogin () {

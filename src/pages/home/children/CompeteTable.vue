@@ -7,7 +7,11 @@
     <div class="table-wrap">
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
-        <af-table-column prop="number" label="编号" align="center"> </af-table-column>
+        <af-table-column prop="id" label="编号" align="center" width="70px">
+        <template slot-scope="scope">
+            {{scope.$index+1}}
+        </template>
+        </af-table-column>
         <af-table-column prop="cname" label="所属行业" align="center"></af-table-column>
         <af-table-column prop="jobname" label="职位名称" align="center"></af-table-column>
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
@@ -37,8 +41,7 @@
 <script>
 
 import { competeList } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { getTel,getToken } from "@/util"
 
 export default {
   name: 'CompeteTable',
@@ -59,7 +62,7 @@ export default {
         rdMoenyOutside: ''
       }],
       lists: {
-        guid: '', //token
+        guid: 'ssc-token', //token
         tel: 'tel',  // 加密得电话号码
         limit: '1' , // 当前页
         curr: '5' //当前页多少数据
@@ -67,16 +70,14 @@ export default {
     }
   },
   created () {
-    this.lists.guid = getToken()
+    this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.competeList()
   },
   methods: {
     competeList () {
-
       competeList(this.lists).then( res => {
         this.table = res.data.data
-        // console.log(res)
       })
     },
 

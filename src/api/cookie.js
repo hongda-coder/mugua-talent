@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'   //js-cookie是一个简单的，轻量级的处理cookies的js API。
 
-const tokenKey = 'Admin-Token';
+const tokenKey = 'ssc-Token';
 //存
 export function setToken(token){
     // return Cookies.set(tokenKey, token);

@@ -7,6 +7,9 @@ export default {
   },
   SET_TEL (state, tel) {
     state.tel = tel
+  },
+  SAVE_URL(state,e){
+    state.url = e
   }
 }
 

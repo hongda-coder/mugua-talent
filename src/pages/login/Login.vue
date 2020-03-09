@@ -26,10 +26,12 @@
               </div>
               <el-form-item  prop="loginuser" class="input-code">
                 <el-input type="text" v-model="form.loginuser" placeholder="请输入手机号"></el-input>
+                <div class="no-code" v-show="isCode">手机号码未注册</div>
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
               </el-form-item>
               <el-form-item  prop="pwd" class="input-code">
                 <el-input type="password" v-model="form.pwd" placeholder="请输入密码"></el-input>
+                <div class="no-code" v-show="isPwd">密码错误</div>
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
               </el-form-item>
               <el-form-item>
@@ -45,14 +47,8 @@
     <Pic></Pic>
     <Footer></Footer>
   </div>
-
-
 </template>
-
 <script>
-
-// import { login } from "@/api/serve"
-// import { setToken } from "@/api/cookie"
 
 import Footer from "@/components/footer/Footer"
 import Pic from '@/components/common/Pic'
@@ -63,7 +59,9 @@ export default {
       form: {
         loginuser: '',
         pwd: ''
-      }
+      },
+      isCode: false,
+      isPwd: false,
     }
   },
   components: {
@@ -75,11 +73,15 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('Login',this.form).then(res => {
-            if(res.data.Message == 'ok') {
+            if(res.data.Message == '-3') {
+              this.isCode = true
+            } else if (res.data.Message == '-4') {
+              this.isPwd = true
+            } else if(res.data.Message == 'ok') {
               this.$router.push({name:'editor',params:{tel: tel}})
-             } else if(res.data.Message == 'success') {
+            } else if(res.data.Message == 'success') {
               this.$router.push({name:'home',params:{tel: tel}})
-             }
+            }
           }).catch(error=>{
             console.log(error)
           })
@@ -289,6 +291,14 @@ export default {
 
   /deep/ .el-input__inner:focus {
     border-color: #FEAD1C;
+  }
+
+
+  .no-code {
+    position: absolute;
+    top: 38px;
+    left: 5px;
+    color:red;
   }
 
 </style>

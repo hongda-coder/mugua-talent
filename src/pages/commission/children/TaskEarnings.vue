@@ -23,7 +23,11 @@
     <div>
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
-        <af-table-column prop="number" label="编号" align="center"></af-table-column>
+        <af-table-column prop="id" label="编号" align="center" width="70px">
+        <template slot-scope="scope">
+            {{scope.$index+1}}
+        </template>
+        </af-table-column>
         <af-table-column prop="guild" label="流水号" align="center"></af-table-column>
         <af-table-column prop="name" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="address" label="职位名称" align="center"></af-table-column>
@@ -41,8 +45,7 @@
 import commonWithdraw from '../common/commonWithdraw'
 
 import { taskMoney } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { getTel, getToken } from "@/util"
 export default {
   name: 'TaskEarnings',
   data() {
@@ -53,7 +56,7 @@ export default {
         limit: '1',// 当前数据条数
         curr: '1', // 当钱页数
         tel: 'tel', //加密手机号
-        guid: ''  // token
+        guid: 'ssc-token'  // token
       },
       table: [{
         number:1,
@@ -73,7 +76,7 @@ export default {
     commonWithdraw
   },
   created () {
-    this.dataForm.guid = getToken()
+    this.dataForm.guid = getToken(this.dataForm.guid)
     this.dataForm.tel = getTel(this.dataForm.tel)
     this.getTastMoney()
   },
@@ -83,7 +86,7 @@ export default {
     },
     getTastMoney () {
       taskMoney(this.dataForm).then(res => {
-        console.log(res)
+        // console.log(res)
       })
     }
   }

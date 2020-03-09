@@ -54,15 +54,14 @@
 <script>
 
 import { earningsManage } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { getTel,getToken } from "@/util"
 
 export default {
   name: 'MyEarnings',
   data () {
     return {
       lists: {
-        guid: '',
+        guid: 'ssc-token',
         tel: 'tel'
       },
       monye: {
@@ -74,7 +73,7 @@ export default {
     }
   },
   created() {
-    this.lists.guid = getToken()
+    this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
     // 我的收益

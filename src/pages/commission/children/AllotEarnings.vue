@@ -23,7 +23,11 @@
     <div>
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
-        <af-table-column prop="number" label="编号" align="center"></af-table-column>
+        <af-table-column prop="id" label="编号" align="center" width="70px">
+        <template slot-scope="scope">
+            {{scope.$index+1}}
+        </template>
+        </af-table-column>
         <af-table-column prop="guild" label="流水号" align="center"></af-table-column>
         <af-table-column prop="name" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="address" label="职位名称" align="center"></af-table-column>
@@ -41,8 +45,8 @@
 import commonWithdraw from '../common/commonWithdraw'
 
 import { allotMoney } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+// import { getToken } from "@/api/cookie"
+import { getTel,getToken } from "@/util"
 export default {
   name: 'AllotEarnings',
   data() {
@@ -53,19 +57,18 @@ export default {
         limit: '1',// 当前数据条数
         curr: '1', // 当钱页数
         tel: 'tel', //加密手机号
-        guid: ''  // token
+        guid: 'ssc-token'  // token
       },
       table: [{
-        number:1,
-        guild: '佛山市畅腾智能家居有限公司',
-        name: '业务销售',
-        address: '上海市普陀区金沙江路 1518 弄',
-        experience: '3-5年',
-        education: '本科',
-        end_data: '2020年1月9日',
-        start_data: '2020年1月10日 15:00-17:00',
-        commission1: '5人',
-        commission2: '待面试'
+        guild: '',
+        name: '',
+        address: '',
+        experience: '',
+        education: '',
+        end_data: '',
+        start_data: '',
+        commission1: '',
+        commission2: ''
       }]
     }
   },
@@ -73,7 +76,7 @@ export default {
     commonWithdraw
   },
   created () {
-    this.dataForm.guid = getToken()
+    this.dataForm.guid = getToken(this.dataForm.guid)
     this.dataForm.tel = getTel(this.dataForm.tel)
     this.getAllotMoney()
   },
@@ -83,7 +86,7 @@ export default {
     },
     getAllotMoney () {
       allotMoney(this.dataForm).then(res => {
-        console.log(res)
+        // console.log(res)
       })
     }
   }

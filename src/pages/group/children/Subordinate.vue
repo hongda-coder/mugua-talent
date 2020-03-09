@@ -19,31 +19,30 @@
 <script>
 
 import { subordinate } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { getTel,getToken } from "@/util"
 export default {
   name: 'Subordinate',
   data () {
     return {
       lists:{
-          name: '陈小姐',
-          contact: "65454598651+6"
+          name: '',
+          contact: "+6"
         },
       form: {
-        guid: '',
+        guid: 'ssc-token',
         tel: 'tel'
       }
     }
   },
   created () {
-    this.form.guid = getToken()
+    this.form.guid = getToken(this.form.guid)
     this.form.tel = getTel(this.form.tel)
     this.getSubordinateInfo()
   },
   methods: {
     getSubordinateInfo () {
       subordinate (this.form).then( res => {
-        // console.log(res)
+        console.log(res)
         this.lists.name = res.data.data.TrueName
         this.lists.contact = res.data.data.tel
       }) 

@@ -22,10 +22,10 @@ export default {
 </script>
 
 <style>
-    /deep/ .el-input__inner:focus{
-      border-color: #FEAD1C;
-    }
-
-
-
+  /deep/ .el-input__inner:focus{
+    border-color: #FEAD1C;
+  }
+  #app {
+    min-height: 100vh;
+  }
 </style>

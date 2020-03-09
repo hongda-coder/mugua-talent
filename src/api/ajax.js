@@ -1,17 +1,20 @@
 import axios from 'axios'
+import qs from 'qs'
 import { Message } from 'element-ui'
 import { getToken } from './cookie'
 
 const ajax = axios.create({
   baseURL:'http://192.168.0.182:8002/api/',
-  // http://192.168.0.182/api/
+  timeout: 5000,
   withCredentials: true,  // 允许携带cookie
 })
 
-//添加请求拦截器
+//  添加请求拦截器
 ajax.interceptors.request.use(
   config => {
+    if (getToken())
     config.headers['token'] = getToken()
+    config.data = qs.stringify(config.data)
     return config
   },
   error => {
@@ -20,11 +23,11 @@ ajax.interceptors.request.use(
   }
 )
 
-// 添加响应拦截器
 ajax.interceptors.response.use(
   response => {
-    const res = response.data
-    if (res.status !== 200) {  //请求不正确
+    const res = response
+    ///console.log(response.data.status!==200)
+    if (res.status != 200) {  //请求不正确
       Message({
         message: res.message || '服务器错误',
         type: 'error',
@@ -45,5 +48,4 @@ ajax.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-export default ajax   
+export default ajax  

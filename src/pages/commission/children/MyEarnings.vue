@@ -50,7 +50,7 @@
       </el-row>
     </div>
         <!-- 提现 -->
-    <el-dialog
+    <!-- <el-dialog
       title="提现金额"
       :visible.sync="dialogMoney"
       width="30%"
@@ -68,22 +68,22 @@
         <el-button @click="dialogMoney = false">取 消</el-button>
         <el-button type="primary" @click="comfirmMoney">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
 
-import { earningsManage,withdrawMoney } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { earningsManage} from "@/api/serve"
+// import { getToken } from "@/api/cookie"
+import { getTel,getToken } from "@/util"
 
 export default {
   name: 'MyEarnings',
   data () {
     return {
       lists: {
-        guid: '',
+        guid: 'ssc-token',
         tel: 'tel'
       },
       monye: {
@@ -100,7 +100,7 @@ export default {
     }
   },
   created() {
-    this.lists.guid = getToken()
+    this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
     // 我的收益
@@ -114,19 +114,9 @@ export default {
     },
         // 提现
     getMoney () {
-      console.log("5465465")
-      this.dialogMoney = true
+      this.$router.push('/withdraw')
     },
-    //确定提现
-    comfirmMoney () {
-      withdrawMoney({guid:this.lists.guid, tel:this.lists.tel, much:this.form.much,pwd:this.form.pwd }).then( res => {
-        if (res.Message == 'success') {
-          this.Myearnings()  // 再次调用  刷新提现
-          this.dialogMoney = false
-        }
-        
-      })
-    }
+
   }
   
 }

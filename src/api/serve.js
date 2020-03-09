@@ -32,7 +32,7 @@ export function perInfo(data){
   return ajax({
       url:'user/perfect',
       method:'post',
-      data
+       data
   })
 }
 
@@ -96,7 +96,7 @@ export function personEarnings(data){
 // 上传图片
 export function uploadImg(data){  
   return ajax({
-    url:'user/PostUpload',
+    url:'user/UpLoad1',
     method:'post',
     data
   })

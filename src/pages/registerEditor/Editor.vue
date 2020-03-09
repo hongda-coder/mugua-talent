@@ -11,18 +11,18 @@
     <div class="c_talent_w" style="border: 1px solid #ccc;">
       <div class="container">
         <div class="perfect">
-          完善个人信息<span class="hint">（个人注册信息为猎头的唯一凭证，请按如实填写）</span>
+          完善个人信息<span class="hint">（个人注册信息为推荐师的唯一凭证，请按如实填写）</span>
         </div>
       </div>
       <div style="padding: 20px;background: #fff;">
-        <div style="padding: 30px 0; ">
-          <el-form label-width="80px" :model="editorForm">
+        <div style="padding: 30px 0; margin: auto;">
+          <el-form label-width="80px" :model="editorForm" :rules="rules" ref="editorForm">
             <el-row>
-              <el-col :span="10" style="padding: 0;margin-left: 100px">
-                <div style="float: left;margin-right: 38px;">
+              <div style="padding: 0;width: 300px;margin:auto;">
+                <!-- <div style="float: left;margin-right: 38px;">
                     <div style="width:100px;"><img src="@/assets/images/c-avatar.png" alt="" style="width: 100%;"></div>
                     <div style="color: #FEB12C;text-align: center; line-height: 30px;">修改<span style="font-size: 12px;color: #ccc;margin: 0 5px;">|</span>删除</div>
-                </div>
+                </div> -->
                 <div style="float: left;">
                   <div class="clearfix">
                     <div class="content-input">
@@ -69,18 +69,18 @@
                       </el-form-item>
                     </div>
                   </div>
-
+<!-- 
                   <div class="clearfix">
                     <div class="content-input">
                       <el-form-item label="邀请码" prop="othersinvitecode">
                         <el-input v-model="editorForm.othersinvitecode"></el-input>
                       </el-form-item>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
-              </el-col>
+              </div>
               
-              <el-col  :span="10" style="padding: 0;margin-left: 60px;">
+              <!-- <el-col  :span="10" style="padding: 0;margin-left: 60px;">
                 <div class="clearfix">
                   <div class="content-input">
                     <el-form-item label="证书名称" prop="imagename">
@@ -97,10 +97,9 @@
                           class="avatar-uploader"
                           :show-file-list="false"
                           :multiple="false"
-                          action="/api/user/PostUpload"
-                          :data="{guid: editorForm.guid,tel: editorForm.tel}"
+                          action="http://192.168.0.182:8003/api/user/PostUpload"
                           :on-change="handleChange"
-                          :http-request="uploadFile"
+                          :before-upload="beforeUpload"
                         >
                       <img v-if="imageUrl" :src="imageUrl" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -115,11 +114,11 @@
                     </el-form-item>
                   </div>
                 </div>
-              </el-col>
+              </el-col> -->
             </el-row>
 
             <div style="width: 150px;margin:60px auto 0 auto;">
-              <el-button style="background: #FEAD1C; color: #fff;width:100%; border: none;"  @click="saveInfo">保存</el-button>
+              <el-button style="background: #FEAD1C; color: #fff;width:100%; border: none;"  @click="saveInfo('editorForm')">保存</el-button>
             </div>
           </el-form>
         </div>
@@ -131,10 +130,8 @@
 </template>
 
 <script>
-import { perInfo2,uploadImg } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
-
+import { perInfo2,uploadImg,perInfo } from "@/api/serve"
+import { getTel,getToken } from "@/util"
 import Footer from "@/components/footer/Footer"
 export default {
   name: "Register",
@@ -155,46 +152,87 @@ export default {
         xtel: '',  // 联系电话
         create: '', // 生日
         email: '', // 邮箱
-        guid: '', //token
+        guid: 'ssc-token', //token
         tel: 'tel', // 加密手机号
         imageid: '' // 图片id
       },
       imageUrl: '', // 证书名称
+      file: '',
+      formData: {},
+      imagename: '',//  类型
+      rules: {
+        loginuser: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+        ],
+        TrueName: [
+          { required: true, message: '请输入真实姓名', trigger: 'blur' }
+        ],
+        sex: [
+          { required: true, message: '请选择性别', trigger: 'change' }
+        ],
+        create: [
+          { type: 'data', required: true, message: '请选择出生日前', trigger: 'change' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' }
+        ],
+        xtel: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
+        ]
+      }
     }
   },
   created () {
-    this.editorForm.guid = getToken()
     this.editorForm.tel = getTel(this.editorForm.tel)
-    console.log(this.editorForm.tel)
+    this.editorForm.guid = getToken(this.editorForm.guid)
   },
   methods: {
-    // 发送请求完善信息
-    saveInfo () {
-      console.log("456465")
-      perInfo2(this.editorForm).then ( res => {
-        if (res.data.Message == 'success') {
-          this.$router.push("./home")
+    saveInfo(formName) {
+      console.log(formName)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          perInfo(this.editorForm).then( res => {
+            if (res.data.Message == 'success') {
+              this.$router.push("./home")
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
     },
 
-      // 上传文件，获取文件流
-    handleChange(file) {
-      this.file = file.raw
-    },
-    // 上传
-    uploadFile () {
-      this.formData = new FormData()
-      this.formData.append('file', this.file)
-      this.formData.append('guid', this.editorForm.guid)
-      this.formData.append('tel', this.editorForm.tel)
-      // this.formData.append('imagename', this.editorForm.imagename)
-      uploadImg(this.formData).then(res => {
-        console.log(res)
-        this.imageUrl = res.data.url
-        this.editorForm.imageid = res.data.imageid
-        console.log(this.editorForm.imageid)
+    handleChange (imagename, fileList, item) {
+      this.getBase64(imagename.raw).then(res => {
+        this.imagepath = res
       })
+    },
+    beforeUpload (file) {
+    　　var _this = this;
+    　　var reader = new FileReader();
+    　　reader.readAsDataURL(file);
+    　　reader.onload = function(e) {
+    　　　　// 图片base64化
+    　　　　var newUrl = this.result;    //图片路径
+    　　　　_this.imagename = newUrl;
+    　　};
+    },
+    getBase64(imagename) {
+      return new Promise(function(resolve, reject) {
+        let reader = new FileReader();
+        reader.readAsDataURL(imagename);
+        reader.onload = function() {
+            this.imagename = reader.result;
+        };
+        reader.onerror = function(error) {
+            reject(error);
+        };
+        reader.onloadend = function() {
+            resolve(imagename);
+        };
+      });
     },
   }
 }
@@ -206,12 +244,10 @@ export default {
     width: 100%;
     background: #000;
   }
-
   .c_jzheaader {
     width: 1200px;
     margin: auto;
   }
-
   .c_jzlogo {
     width: 92px;
     float: left;
@@ -222,7 +258,6 @@ export default {
     width: 100%;
     vertical-align: middle;
   }
-
   .c_talent_soon {
     float: left;
     font-size: 18px;
@@ -230,18 +265,15 @@ export default {
     margin-left: 12px;
     line-height: 50px;
   }
-
-
       
   .c_talent_w {
     width: 1200px;
-    margin: 30px auto;
+    margin: 30px auto 300px auto;
+    position: relative;
   }
-
   .container {
     width: 100%;
   }
-
   .perfect {
     line-height: 50px;
     font-size: 16px;
@@ -249,27 +281,22 @@ export default {
     background: #F1F5FE;
     padding: 0 20px;
   }
-
   .hint {
     color: #ff5777;
   }
-
   .el-form-item {
     margin-bottom: 0;
   }
-
   /deep/ .el-input__inner {
     height: 30px;
     line-height: 30px;
   }
-
   /deep/ .el-radio-button__inner {
     width: 110px;
     height: 30px;
     line-height: 30px;
     padding: 0;
   }
-
  /deep/ .el-upload--picture-card {
     background-color: #fff;
     border: 2px solid #E9E9E9;
@@ -281,32 +308,26 @@ export default {
     line-height: 160px;
     vertical-align: top;
  }
-
  .el-upload--picture-card i {
     font-size: 50px;
     color: #FEAD1C;
   }
-
   /deep/ .el-form-item__content div{
     float: left;
   }
-
    /deep/  .el-input__icon {
      line-height: 30px;
   }
-
   /deep/ .el-radio-button__orig-radio:checked+.el-radio-button__inner {
     color: #FFF;
     background-color: #FEAD1C;
     border-color: #FEAD1C;
     box-shadow: -1px 0 0 0 #FEAD1C;
   }
-
   /deep/  .el-date-table td.current:not(.disabled) span {
     color: #FFF;
     background-color: #FEAD1C;
   }
-
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -329,5 +350,14 @@ export default {
     width: 140px;
     height: 160px;
     display: block;
+  }
+
+
+  /deep/ .el-form-item__error {
+    position: absolute;
+    width: 200px;
+    left: 230px;
+    top: 12px;
+    padding: 0;
   }
 </style>

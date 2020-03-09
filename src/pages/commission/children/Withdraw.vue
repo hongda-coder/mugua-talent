@@ -38,6 +38,11 @@
       <div class="deposit">
         <el-table :data="recordTable" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
           :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
+          <af-table-column prop="id" label="编号" align="center" width="70px">
+            <template slot-scope="scope">
+                {{scope.$index+1}}
+            </template>
+          </af-table-column>
           <af-table-column prop="orderno" label="流水号" align="center"></af-table-column>
           <af-table-column prop="time" label="申请时间" align="center"></af-table-column>
           <af-table-column prop="money" label="提现金额（￥）" align="center"></af-table-column>
@@ -82,13 +87,24 @@
         content="银行卡绑定成功">
       </el-popover>
     </div>
+    <!-- 分页 -->
+    <div style="width: 30%; min-width: 300px;margin: auto;">
+      <div class="block">
+        <el-pagination
+    
+          :page-size="100"
+          layout="prev, pager, next, jumper"
+          :total="1000">
+        </el-pagination>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
 import { bindBank,bankInfo, unbindBank,withdrawRecord } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { getTel,getToken } from "@/util"
 export default {
   name: 'Withdraw',
   data () {
@@ -100,11 +116,11 @@ export default {
         bank: '', //提现账户
         state: '' //状态
       }],
-      limit: '1', //总页数
-      curr: '1', // 当前页数
+      limit: '1', //当前页数
+      curr: '6', // 当前页多少条数
       dialogBank: false,
       lists: {
-        guid: '', // token
+        guid: 'ssc-token', // token
         tel: 'tel', // 加密号码
         name: '', // 持卡人姓名
         bank: '', //卡号
@@ -134,7 +150,7 @@ export default {
     }
   },
   created () {
-    this.lists.guid = getToken()
+    this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
     // 银行卡
@@ -194,8 +210,14 @@ export default {
     record () {
       withdrawRecord ({guid: this.lists.guid,tel: this.lists.tel,limit: this.limit,curr: this.curr}).then( res => {
         this.recordTable = res.data.data
-        // console.log(this.recordTable)
+        console.log(res)
       })
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
     }
   }
 }

@@ -6,7 +6,7 @@
           <div class="c-member-avatar"><img src="@/assets/images/c-my-member.png"></div>
           <div class="c-member-count">我的群成员<span> {{sscCount}}</span> </div>
           <div class="c-member-manage">
-            <button>管理</button>
+            <button @click="goGroup">管理</button>
           </div>
         </div>
       </el-col>
@@ -16,7 +16,7 @@
           <div class="c-member-count" style="margin-right: 0;">推荐到场 <span>{{dmCount}}</span></div>
           <div class="c-member-count">推荐面过 <span>{{tgCount}}</span></div>
           <div class="c-member-manage">
-            <button>查看</button>
+            <button @click="goRecommend">查看</button>
           </div>
         </div>
       </el-col>
@@ -26,7 +26,7 @@
           <div class="c-member-avatar"><img src="@/assets/images/c-my-earnings.png"></div>
           <div class="c-member-count">我的收益<span>{{inCome}}</span> </div>
           <div class="c-member-manage">
-            <button>提现</button>
+            <button @click="goCommission">提现</button>
           </div>
         </div>
       </el-col>
@@ -37,15 +37,14 @@
 <script>
 
 import { personEarnings } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { getTel,getToken } from "@/util"
 
 export default {
   name: 'CommeInfo',
   data () {
     return {
       lists: {
-        guid: '', //token
+        guid: 'ssc-token', //token
         tel: 'tel',  // 加密得电话号码
       },
       sscCount: '',  // 我的群成员
@@ -59,7 +58,7 @@ export default {
   },
   methods: {
     personEarnings () {
-      this.lists.guid = getToken()
+      this.lists.guid = getToken(this.lists.guid)
       this.lists.tel = getTel(this.lists.tel)
       personEarnings(this.lists).then( res => {
         this.sscCount = res.data.data.sscCount
@@ -68,6 +67,20 @@ export default {
         this.inCome = res.data.data.inCome
         // console.log(res)
       })
+    },
+
+    // 跑去群主管理
+    goGroup () {
+      this.$router.push("./group")
+    },
+
+    // 跑去推荐管理
+    goRecommend () {
+      this.$router.push("./recommend")
+    },
+    // 跑去群主管理
+    goCommission () {
+      this.$router.push("./commission")
     }
   }
 }

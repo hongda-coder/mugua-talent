@@ -7,7 +7,7 @@
     <div class="table-wrap">
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
-        <af-table-column prop="id" label="序号" align="center" width="70px">
+        <af-table-column prop="id" label="编号" align="center" width="70px">
         <template slot-scope="scope">
             {{scope.$index+1}}
         </template>
@@ -47,8 +47,15 @@
       :visible.sync="dialogVisible"
       width="30%"
       >
-      <div class="share"><input type="text" v-model="vshareConfig.share[0].bdUrl"></div>
-      <vshare :vshareConfig="vshareConfig"></vshare>
+      <!-- <div class="share"><input type="text" v-model="shareConfig.url"></div> -->
+
+      <!-- 插件位置 -->
+      <!-- <vshare :vshareConfig="vshareConfig.shareList"></vshare> -->
+
+      <vueVshare v-if="dialogVisible"></vueVshare>
+
+
+
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -58,13 +65,14 @@
 </template>
 
 <script>
-
+import vueVshare from './test'
 import { jobList,shareJob } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
-// import Share from "../share/Share"
+import { getTel,getToken } from "@/util"
 export default {
   name: 'OfferTable',
+  components: {
+    vueVshare
+  },
   data () {
     return {
       table: [{
@@ -81,24 +89,28 @@ export default {
         msid: '' // 分享id
       }],
       lists: {
-        guid: '', //token
+        guid: 'ssc-token', //token
         tel: 'tel',  // 加密得电话号码
         limit: '1' , // 当前页
         curr: '5' //当前页多少数据
       },
       dialogVisible: false, // 分享弹出层
-       vshareConfig: {
-        shareList: [ 'more','qzone','tsina','tqq','renren','weixin'],
-        common : {
-          //此处放置通用设置
+      tableIndex: '',
+      // JobUrl: '',
+      defaultConfig: {
+        shareList: ['more','qzone','tsina','tqq','renren','weixin'],
+        common:{
+          bdUrl: ''
         },
-        share: [{ bdUrl: '' }],
-        tableIndex: ''
+        share: [{bdSize: 24}],
+        slide: false,
+        image: false,
+        selectShare: false
       }
     }
   },
   created () {
-    this.lists.guid = getToken()
+    this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.jobList()
   },
@@ -110,13 +122,12 @@ export default {
     },
     // 分享
     share (row, column) {
-      this.dialogVisible = true
-      // console.log(this.table[row].msid)
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-        this.vshareConfig.share[0].bdUrl= res.data.data.urlpath
-        console.log(this.vshareConfig.share[0].bdUrl)
+        this.$store.commit('SAVE_URL',res.data.data.urlpath)
+        this.dialogVisible = true
       })
-    }
+    },
+   
   }
 }
 </script>

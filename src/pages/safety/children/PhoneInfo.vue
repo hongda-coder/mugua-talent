@@ -82,8 +82,7 @@
 <script>
 
 import { newPhone,newPwd,shortCode } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { getTel, getToken } from "@/util"
 
 export default {
   name: 'PhoneInfo',
@@ -96,16 +95,16 @@ export default {
         password: '451321685',
       },
       form: {
-        tel: '',
+        tel: 'tel',
         Xtel: '',
         code: '',
-        guid: '', //token
+        guid: 'ssc-token', //token
       },
       pwdForm: {
         pwd: '',
         xpwd: '',
         tel: 'tel',
-        guid: '', //token
+        guid: 'ssc-token', //token
       },
       dialogPhone: false,
       dialogPsd: false,
@@ -113,8 +112,8 @@ export default {
     }
   },
   created () {
-    this.form.guid = getToken()
-    this.pwdForm.guid = getToken()
+    this.form.guid = getToken(this.form.guid)
+    this.pwdForm.guid = getToken(this.pwdForm.guid)
     this.pwdForm.tel = getTel(this.pwdForm.tel)
   },
   methods: {
@@ -132,7 +131,7 @@ export default {
     confirm () {
       console.log("68456856")
       newPhone (this.form).then( res => {
-        console.log(res)
+        // console.log(res)
         this.dialogPhone = false
       })
     },
@@ -140,7 +139,7 @@ export default {
     // 确认修改密码
     confirmPwd () {
       newPwd(this.pwdForm).then( res => {
-        console.log(res)
+        // console.log(res)
       })
     },
   }

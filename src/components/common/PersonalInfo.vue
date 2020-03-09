@@ -89,8 +89,8 @@
               <div style="float: left;">
                 <div class="clearfix">
                   <div class="content-input">
-                    <el-form-item label="姓名" prop="name">
-                        <el-input v-model="editorForm.name"></el-input>
+                    <el-form-item label="姓名" prop="TrueName">
+                        <el-input v-model="editorForm.TrueName"></el-input>
                     </el-form-item>
                   </div>
                 </div>
@@ -98,23 +98,23 @@
                   <div class="content-input">
                     <el-form-item label="性别" prop="sex">
                       <el-radio-group v-model="editorForm.sex">
-                        <el-radio-button label="男" ></el-radio-button>
-                        <el-radio-button label="女"></el-radio-button>
+                        <el-radio-button label="1">男</el-radio-button>
+                        <el-radio-button label="2">女</el-radio-button>
                       </el-radio-group>
                     </el-form-item>
                   </div>
                 </div>
                 <div class="clearfix">
                   <div class="content-input">
-                    <el-form-item label="出生日期" prop="time">
-                        <el-date-picker v-model="editorForm.time" type="date" placeholder="选择日期"></el-date-picker>
+                    <el-form-item label="出生日期" prop="create">
+                        <el-date-picker v-model="editorForm.create" type="date" placeholder="选择日期"></el-date-picker>
                     </el-form-item>
                   </div>
                 </div>
                 <div class="clearfix">
                   <div class="content-input">
-                    <el-form-item label="联系方式" prop="contact">
-                      <el-input v-model="editorForm.contact"></el-input>
+                    <el-form-item label="联系方式" prop="xtel">
+                      <el-input v-model="editorForm.xtel"></el-input>
                     </el-form-item>
                   </div>
                 </div>
@@ -165,7 +165,7 @@
           </el-row>
 
           <div style="width: 210px;margin:30px auto;">
-            <el-button style="background: #FEAD1C; color: #fff;width: 95px; border: none;" @click="dialogEditor = false">保存</el-button>
+            <el-button style="background: #FEAD1C; color: #fff;width: 95px; border: none;" @click="saveInfo">保存</el-button>
             <el-button style="color: #959595;width: 95px;" @click="dialogEditor = false">取消</el-button>
           </div>
         </el-form>
@@ -177,9 +177,8 @@
 </template>
 
 <script>
-import { personInfo, personEarnings,uploadImg } from "@/api/serve"
-import { getToken } from "@/api/cookie"
-import { getTel } from "@/util"
+import { personInfo, personEarnings,uploadImg, perInfo } from "@/api/serve"
+import { getTel,getToken } from "@/util"
 export default {
   name: 'PersonalInfo',
   data () {
@@ -189,12 +188,16 @@ export default {
       dialogVisible: false,
       dialogEditor: false,
       editorForm: {
-        name: '陈小姐姐',
-        sex: '',
-        time: '1996-02-14',
-        contact: '123545266325',
-        email: '21235412@qq.com',
-        imagename: '蓝桥杯二等奖',
+        sex: '', // 性别
+        othersinvitecode: '', // 邀请码
+        loginuser : '', // 昵称 用户名
+        TrueName:'',  // 真实姓名
+        xtel: '',  // 联系电话
+        create: '', // 生日
+        email: '', // 邮箱
+        guid: 'ssc-token', //token
+        tel: 'tel', // 加密手机号
+        imageid: '' // 图片id
       },
       userInfo: {
         sex: '', // 性别
@@ -206,7 +209,7 @@ export default {
         imagename: '' // 证书名称
       },
       lists: {
-        guid: '', //token
+        guid: 'ssc-token', //token
         tel: 'tel',  // 加密得电话号码
       },
       jpcount: '', //参与人数
@@ -218,8 +221,13 @@ export default {
   },
 
   created () {
-    this.lists.guid = getToken()
+    this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
+
+    this.editorForm.guid =  this.lists.guid
+    this.editorForm.tel = this.lists.tel
+
+    // 个人基本信息
     this.personInfo()
     this.personEarnings()
   },
@@ -249,16 +257,18 @@ export default {
     },
 
    // 上传文件，获取文件流
-    handleChange(file) {
-      this.file = file.raw
+    handleChange(file) { 
+      this.file = file ;
     },
     // 上传
     uploadFile () {
-      this.formData = new FormData()
+      console.log(this.file);
+       this.formData = new FormData()
       this.formData.append('file', this.file)
       this.formData.append('guid', this.lists.guid)
       this.formData.append('tel', this.lists.tel)
-      this.formData.append('imagename', this.editorForm.imagename)
+      console.log(this.formData)
+      // this.formData.append('imagename', this.editorForm.imagename)
       uploadImg(this.formData).then(res => {
         // console.log(res)
         this.url = res.data.url
@@ -269,6 +279,16 @@ export default {
     editor () {
       this.dialogEditor = true
     },
+
+    saveInfo () {
+      perInfo (this.editorForm).then( res => {
+        if (res.data.Message == 'success') {
+          this.dialogEditor = false
+          
+        }
+       
+      }) 
+    }
   }
 }
 </script>
@@ -492,7 +512,7 @@ export default {
     padding: 0;
   }
 
-  /* /deep/ .el-upload {
+  /deep/ .el-upload {
     background-color: #fff;
     border: 2px solid #E9E9E9;
     border-radius: 6px;
@@ -522,7 +542,7 @@ export default {
     background-color: #FEAD1C;
     border-color: #FEAD1C;
     box-shadow: -1px 0 0 0 #FEAD1C;
-  } */
+  }
 
 .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;

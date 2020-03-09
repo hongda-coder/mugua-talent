@@ -25,6 +25,15 @@ export default new Router({
       name: 'editor',
       component: () => import('@/pages/registerEditor/Editor')
     },
+
+    {
+      path: '/test', // 测试
+      name: 'test',
+      component: () => import('@/pages/home/children/test.vue')
+    },
+
+
+
     {
       path: '/home', //首页
       redirect: '/home',
@@ -39,7 +48,7 @@ export default new Router({
           component: () => import('@/pages/home/Home'),
           meta: {
             title: '首页'
-          }
+          },
         }
       ]
     },
