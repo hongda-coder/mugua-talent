@@ -81,7 +81,6 @@ export default {
     },
     getAllotMoney () {
       allotMoney(this.dataForm).then(res => {
-        // console.log(res)
       })
     }
   }

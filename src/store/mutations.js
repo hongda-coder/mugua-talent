@@ -10,6 +10,9 @@ export default {
   },
   SAVE_URL(state,e){
     state.url = e
+  },
+  SAVE_USER(state,e){
+    state.loginuser = e
   }
 }
 

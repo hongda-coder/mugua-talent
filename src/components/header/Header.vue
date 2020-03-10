@@ -10,7 +10,7 @@
           <img src="../../assets/images/c-avatar.png" alt="">
         </div>
         <div class="c-user">
-          <span>cqcdwlbsm </span>|<span style="cursor: pointer;" @click="loginout">退出</span>
+          <span>{{this.$store.state.loginuser}} </span>|<span style="cursor: pointer;" @click="loginout">退出</span>
         </div>
       </div>
     </div>
@@ -42,6 +42,9 @@ export default {
     return {
       isLoginout: false
     }
+  },
+  mounted () {
+
   },
   methods: {
     loginout () {

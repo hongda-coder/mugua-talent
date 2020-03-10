@@ -36,6 +36,11 @@
                 <div class="c_talent_hint2">请输入密码</div>
               </div>
 
+              <div class="form-group">
+                <input type="text" placeholder="请输入邀请码" v-model="form.othersinvitecode">
+                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe60d;</i></div>
+              </div>
+
               <div class="form-group" style="margin-bottom: 15px;">
                   <div class="jc-component__range">
                     <div class="jc-range" :class="rangeStatus?'success':''" >
@@ -120,6 +125,7 @@ export default {
         tel: '',
         pwd: '',
         code: '',
+        othersinvitecode:'',
         guid: 0,
         type:1
       },
@@ -130,7 +136,6 @@ export default {
     }
   },
   methods: {
-
     // 发送ajax请求(向指定手机号发送验证码短信)
     getCode () {
       this.computeTime = 60
@@ -153,7 +158,7 @@ export default {
 
     // 注册
     registerBtn () {
-      register ({tel:this.form.tel,pwd:this.form.pwd,code:this.form.code}).then( res=> {
+      register ({tel:this.form.tel,pwd:this.form.pwd,code:this.form.code,othersinvitecode:this.form.othersinvitecode}).then( res=> {
         if (res.data.Message == 'success') {
           this.$router.push("./login")
         }
@@ -290,7 +295,7 @@ export default {
 .c_talent_form {
     width: 420px;
     margin-left: 60px;
-    margin-top: 60px;
+    margin-top: 25px;
     background: #fff;
     border-radius: 15px;
     padding: 20px;

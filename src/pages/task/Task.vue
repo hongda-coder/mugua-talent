@@ -5,20 +5,20 @@
       <li class="item" :class="{current: num == 2}" v-on:click="change(2)">我的任务</li>
     </ul>
     <div class="content">
-      <ShareTable v-show="num == 1"></ShareTable>
-      <CompeteTable v-show="num == 2"></CompeteTable>
+      <RewardTask v-show="num == 1"></RewardTask>
+      <MyTask v-show="num == 2"></MyTask>
     </div>
   </div>
 </template>
 
 <script>
-import ShareTable from './children/ShareTable'
-import CompeteTable from './children/CompeteTable'
+import RewardTask from './children/RewardTask'
+import MyTask from './children/MyTask'
 export default {
   name: 'Task',
   components: {
-    ShareTable,
-    CompeteTable
+    RewardTask,
+    MyTask
   },
   data() {
     return {

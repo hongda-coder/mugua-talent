@@ -2,7 +2,7 @@
   <div>
     <div class="c-people-title clearfix">
       <div class="c-info-name">最新竞聘情况</div>
-      <div class="c-info-editor">更多</div>
+      <div class="c-info-editor" @click="goCompete">更多</div>
     </div>
     <div class="table-wrap">
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
@@ -93,6 +93,9 @@ export default {
         case '竞聘中' :
           return 'StatusTypeColorD'
       }
+    },
+    goCompete () {
+      this.$router.push('./recommend')
     }
   }
 }

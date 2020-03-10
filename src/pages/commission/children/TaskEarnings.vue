@@ -82,7 +82,6 @@ export default {
     },
     getTastMoney () {
       taskMoney(this.dataForm).then(res => {
-        // console.log(res)
       })
     }
   }

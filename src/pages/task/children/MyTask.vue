@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
+      <el-table :data="table" height="440" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
         <af-table-column prop="id" label="编号" align="center" width="70px">
         <template slot-scope="scope">
@@ -13,8 +13,8 @@
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
         <af-table-column prop="working" label="工作经验" align="center"></af-table-column>
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
-        <af-table-column prop="mstime" label="竞聘结束日期" align="center"></af-table-column>
-        <af-table-column prop="jpetime" label="面试时间" align="center"></af-table-column>
+        <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
+        <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
         <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"  width="130">
           <template slot-scope="scope">
             ￥{{scope.row.aiMoenyOutside}}
@@ -34,8 +34,19 @@
         </af-table-column>
       </el-table>
     </div>
-        <!-- 分享 -->
-        <!-- 分享 -->
+
+
+    <!-- 分页 -->
+    <div class="block" style="width: 520px;margin: 15px auto;">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="lists.limit"
+        :page-size="lists.curr"
+        layout="prev, pager, next, jumper"
+        >
+      </el-pagination>
+    </div>
     <el-dialog
       title="提示"
       :visible.sync="dialogShare"
@@ -52,15 +63,16 @@
 
 <script>
 import vueVshare from '@/components/common/test'
-import { jobList,getTask, shareJob } from "@/api/serve"
+import { competeList,getTask, shareJob } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
-  name: 'CompeteTable',
+  name: 'MyTask',
   components: {
     vueVshare
   },
   data () {
     return {
+      rows:1, //数据总数量
       table: [{
         id: '',
         cname: "",
@@ -77,8 +89,8 @@ export default {
       lists: {
         guid: 'ssc-token', //token
         tel: 'tel',  // 加密得电话号码
-        limit: '1' , // 当前页
-        curr: '5' //当前页多少数据
+        limit: 1 , // 当前页
+        curr: 10 //当前页多少数据
       },
       dialogShare: false, // 分享
       defaultConfig: {
@@ -94,23 +106,23 @@ export default {
     }
   },
   created () {
-    this.jobList()
+    this.lists.guid = getToken(this.lists.guid)
+    this.lists.tel = getTel(this.lists.tel)
+    this.competeList()
   },
   methods: {
-    jobList () {
-      this.lists.guid = getToken(this.lists.guid)
-      this.lists.tel = getTel(this.lists.tel)
-      jobList(this.lists).then( res => {
+    competeList () {
+      competeList(this.lists).then( res => {
         this.table = res.data.data
-        // console.log(res)
+        this.rows = res.data.listcount
       })
     },
     // 领任务
     getTask (row) {
       getTask ({guid:this.lists.guid,tel:this.lists.tel,msid: this.table[row].msid}).then( res => {
-        // console.log(res)
       })
     },
+
     // 分享
     share (row, column) {
       this.dialogShare = true
@@ -118,6 +130,15 @@ export default {
         this.$store.commit('SAVE_URL',res.data.data.urlpath)
         this.dialogShare = true
       })
+    },
+      // 分页
+    handleSizeChange(val) {
+      this.lists.curr = val ||this.lists.curr;
+      this.jobList();//重新调用接口
+    },
+    handleCurrentChange(val) {
+      this.lists.limit = val ||this.lists.limit;
+      this.jobList();//重新调用接口
     }
   }
 }

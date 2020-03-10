@@ -60,7 +60,7 @@
         width="30%"
         center
        >
-        <el-form :label-position="labelPosition" label-width="80px" :model="lists" :rules="rules">
+        <el-form :label-position="labelPosition" label-width="80px" :model="lists" :rules="rules" ref="lists">
           <el-form-item label="持卡人" prop="name">
             <el-input v-model="lists.name"></el-input>
           </el-form-item>
@@ -70,11 +70,11 @@
           <el-form-item label="开户支行" prop="branch">
             <el-input v-model="lists.branch"></el-input>
           </el-form-item>
-          <el-form-item label="密码">
+          <el-form-item label="密码" prop="pwd">
             <el-input type="password" v-model="lists.pwd"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button  style="background: #FEAD1C; color: #fff;border: none;width: 100%;" @click="bindMyBank">立即绑定</el-button>
+            <el-button  style="background: #FEAD1C; color: #fff;border: none;width: 100%;" @click="bindMyBank('lists')">立即绑定</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -161,18 +161,32 @@ export default {
   },
   methods: {
       // 绑定银行卡
-    bindBlankBtn () {
-      this.dialogBank = true
-      // console.log(this.dialogBank)
-    },
-    // 绑定银行卡
-    bindMyBank () {
-      bindBank (this.lists).then( res => {
-        this.dialogBank = false
-        this.$message('绑定银行卡成功')
-        this.bankInfo()
+    bindMyBank (lists) {
+      this.$refs[lists].validate((valid) => {
+        if (valid) {
+            bindBank (this.lists).then( res => {
+              console.log(res)
+              this.dialogBank = false
+              this.$message('绑定银行卡成功')
+              this.bankInfo()
+          }).catch(error=>{
+            console.log(error)
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
       })
     },
+    // 绑定银行卡
+    // bindMyBank () {
+    //   bindBank (this.lists).then( res => {
+    //     console.log(res)
+    //     this.dialogBank = false
+    //     this.$message('绑定银行卡成功')
+    //     this.bankInfo()
+    //   })
+    // },
 
     // 银行卡信息
     bankInfo () {
@@ -182,6 +196,9 @@ export default {
       }) 
     },
 
+    bindBlankBtn () {
+      this.dialogBank = true
+    },
     // 解绑银行卡
     unbindBank () {
       this.$confirm('确定解除银行卡绑定?', '解除', {
@@ -191,7 +208,7 @@ export default {
         type: 'warning'
       }).then(() => {
         unbindBank ({bankid: this.bankid,guid:this.lists.guid}).then( res => {
-          // console.log(res)
+         this.bankInfo ()
         })
         this.$message({
           type: 'success',
@@ -257,10 +274,6 @@ export default {
     .icon img {
       width: 100%;
     }
-  /* .icon .iconfont {
-    font-size: 80px;
-    color: #FEAD1C;
-  } */
 
   .black-card {
     margin-top: 20px;
@@ -279,10 +292,6 @@ export default {
   /deep/ .el-dialog__title {
     color: #FEAF22;
   }
-
-
-
-
   .bank-card {
     background: #F2F2F2;
     width: 540px;

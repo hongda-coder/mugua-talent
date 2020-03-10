@@ -22,8 +22,9 @@
                 <div class="c-people-age">年龄：<span>{{getAge}}岁</span></div>
               </div>
               <div>联系方式：<span>{{userInfo.tel}}</span></div>
-              <div>电子邮箱：<span>{{userInfo.email}}</span></div>
-              <div>证书名称：<span></span></div>
+              <div>电子邮箱：<span>{{userInfo.eamil}}</span></div>
+              <div style="height: 29px;">     </div>
+              <!-- <div>证书名称：<span></span></div> -->
             </div>
           </div>
         </div>
@@ -89,8 +90,8 @@
               <div style="float: left;">
                 <div class="clearfix">
                   <div class="content-input">
-                    <el-form-item label="姓名" prop="TrueName">
-                        <el-input v-model="editorForm.TrueName"></el-input>
+                    <el-form-item label="用户名" prop="loginuser">
+                        <el-input v-model="editorForm.loginuser"></el-input>
                     </el-form-item>
                   </div>
                 </div>
@@ -120,8 +121,8 @@
                 </div>
                 <div class="clearfix">
                   <div class="content-input">
-                    <el-form-item label="电子邮箱" prop="email">
-                      <el-input v-model="editorForm.email"></el-input>
+                    <el-form-item label="电子邮箱" prop="eamil">
+                      <el-input v-model="editorForm.eamil"></el-input>
                     </el-form-item>
                   </div>
                 </div>
@@ -188,12 +189,10 @@ export default {
       dialogEditor: false,
       editorForm: {
         sex: '', // 性别
-        othersinvitecode: '', // 邀请码
         loginuser : '', // 昵称 用户名
-        TrueName:'',  // 真实姓名
         xtel: '',  // 联系电话
         create: '', // 生日
-        email: '', // 邮箱
+        eamil: '', // 邮箱
         guid: 'ssc-token', //token
         tel: 'tel', // 加密手机号
         imageid: '' // 图片id
@@ -205,7 +204,8 @@ export default {
         tel: '',  // 联系电话
         create: '', // 出生日期
         eamil: '', // 邮箱
-        imagename: '' // 证书名称
+        imagename: '', // 证书名称
+        othersinvitecode: '', // 邀请码
       },
       lists: {
         guid: 'ssc-token', //token
@@ -223,9 +223,8 @@ export default {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
-    this.editorForm.guid =  this.lists.guid
+    this.editorForm.guid = this.lists.guid
     this.editorForm.tel = this.lists.tel
-
     // 个人基本信息
     this.personInfo()
     this.personEarnings()
@@ -239,8 +238,11 @@ export default {
   },
 
   methods: {
+    // 信息
     personInfo () {
       personInfo(this.lists).then( res => {
+        console.log(res)
+        this.$store.commit('SAVE_USER',res.data.data.loginuser)
         this.userInfo = res.data.data
       })
     },
@@ -277,14 +279,16 @@ export default {
     editor () {
       this.dialogEditor = true
        personInfo(this.lists).then( res => {
-         console.log(res)
         this.editorForm = res.data.data
         this.editorForm.xtel = res.data.data.tel
+        this.editorForm.guid = this.lists.guid
+        this.editorForm.tel = this.lists.tel
       })
     },
 
     saveInfo () {
       perInfo (this.editorForm).then( res => {
+        console.log(res)
         if (res.data.Message == 'success') {
           this.dialogEditor = false
         }

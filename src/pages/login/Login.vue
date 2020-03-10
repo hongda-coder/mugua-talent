@@ -35,7 +35,7 @@
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
               </el-form-item>
               <el-form-item>
-                <el-button class="btn" @click="submitForm('form')">登录</el-button>
+                <el-button class="btn" @click="submitForm('form')" @keyup.enter="loginT">登录</el-button>
               </el-form-item>
               <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
             </el-form>
@@ -69,18 +69,20 @@ export default {
     Footer
   },
   methods: {
-    submitForm(form, tel) {
+    submitForm(form) {
+      console.log(this.$refs[form])
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('Login',this.form).then(res => {
+            console.log(res)
             if(res.data.Message == '-3') {
               this.isCode = true
             } else if (res.data.Message == '-4') {
               this.isPwd = true
             } else if(res.data.Message == 'ok') {
-              this.$router.push({name:'editor',params:{tel: tel}})
+              this.$router.push({name:'editor'})
             } else if(res.data.Message == 'success') {
-              this.$router.push({name:'home',params:{tel: tel}})
+              this.$router.push({name:'home'})
             }
           }).catch(error=>{
             console.log(error)
@@ -91,14 +93,20 @@ export default {
         }
       })
     },
-
     goRegister () {
        this.$router.push("./register")
     },
     changeCodeImg () {
       let num = Math.ceil( Math.random()*10) //生成一个随机数（防止缓存）
-// 　　　　this.codeImg='url?'+num;
-　　}
+　　},
+    // keyboardEvent () {
+    //   document.onkeydown = function(e) {
+    //     let ev = document.all ? window.event : e
+    //     if (ev.keyCode === 13) {
+    //         this.submitForm()
+    //     }
+    //   }
+    // }
   }
 }
 </script>

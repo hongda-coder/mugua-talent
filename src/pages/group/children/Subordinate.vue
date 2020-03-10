@@ -51,7 +51,6 @@ export default {
   methods: {
     getSubordinateInfo () {
       subordinate (this.form).then( res => {
-        console.log(res)
         this.lists.name = res.data.data.TrueName
         this.lists.contact = res.data.data.tel
       }) 

@@ -4,6 +4,7 @@ export default {
   token: getToken(),
   address: 'http://192.168.0.182',
   tel: getTel(),
-  url:''
+  url:'',
+  loginuser:''
 }
 

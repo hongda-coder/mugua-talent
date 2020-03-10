@@ -148,7 +148,7 @@ export default {
         sex: '', // 性别
         othersinvitecode: '', // 邀请码
         loginuser : '', // 昵称 用户名
-        TrueName:'',  // 真实姓名
+        TrueName: '',
         xtel: '',  // 联系电话
         create: '', // 生日
         email: '', // 邮箱
@@ -189,7 +189,6 @@ export default {
   },
   methods: {
     saveInfo(formName) {
-      console.log(formName)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           perInfo(this.editorForm).then( res => {

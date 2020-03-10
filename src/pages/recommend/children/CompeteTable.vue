@@ -64,7 +64,6 @@ export default {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.competeList()
-    console.log(this.table.length)
   },
   methods: {
     competeList () {

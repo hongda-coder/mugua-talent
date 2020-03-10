@@ -28,4 +28,9 @@ export default {
   #app {
     min-height: 100vh;
   }
+
+  ::-webkit-scrollbar {
+    height: 10px!important;
+    background: #fff;
+  }
 </style>
