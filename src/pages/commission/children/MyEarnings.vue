@@ -164,7 +164,7 @@ export default {
 
   .withdraw {
     float: right;
-    margin-right: 30px;
+    margin-right: 130px;
   }
   .withdraw button{
     width: 142px;

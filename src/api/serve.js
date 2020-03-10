@@ -1,5 +1,4 @@
 import ajax from './ajax'
-
 // 1、注册
 export function register(data){  
   return ajax({
@@ -223,7 +222,7 @@ export function subordinate(data){
 // 领任务
 export function getTask(data){  
   return ajax({
-    url:'account/Task_Add',
+    url:'zpjob/Task_Add',
     method:'post',
     data
   })

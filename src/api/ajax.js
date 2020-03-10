@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 import { getToken } from './cookie'
 
 const ajax = axios.create({
-  baseURL:'http://192.168.0.182:8002/api/',
+  baseURL:'http://192.168.0.182:8003/api/',
   timeout: 5000,
   withCredentials: true,  // 允许携带cookie
 })
@@ -26,7 +26,6 @@ ajax.interceptors.request.use(
 ajax.interceptors.response.use(
   response => {
     const res = response
-    ///console.log(response.data.status!==200)
     if (res.status != 200) {  //请求不正确
       Message({
         message: res.message || '服务器错误',

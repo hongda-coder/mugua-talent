@@ -1,5 +1,8 @@
 <template>
-  <div class="subordinate clearfix">
+
+
+<div>
+  <div  v-if="lists.name =''" class="subordinate clearfix">
     <div class="wrap">
       <div class="avatar"><img src="@/assets/images/c-avatar.png" alt=""></div>
       <div class="contact-people">
@@ -9,6 +12,16 @@
       <div class="contact-way">联系方式： {{lists.contact}}</div>
     </div>
   </div>
+
+  <div v-else style="background: #fff;">
+    <div class="wrap-big-samll">
+      <div class="no-my-big-samll"><img src="@/assets/images/no-my-big-small.png" alt=""></div>
+      <div>暂无上级</div>
+    </div>
+  </div>
+
+</div>
+
 </template>
 
 <script>
@@ -37,7 +50,6 @@ export default {
   methods: {
     getSuperiorInfo () {
       superior (this.form).then( res => {
-        console.log(res)
         this.lists.name = res.data.data.TrueName
         this.lists.contact = res.data.data.tel
       }) 
@@ -70,6 +82,22 @@ export default {
   display: inline-block;
   width: 30px;
   margin-left: 10px;
+} 
+
+.wrap-big-samll {
+  padding: 50px 0;
+  width: 250px;
+  margin: auto;
+  text-align: center;
+  color: #777;
+}
+
+.no-my-big-samll {
+  widows: 250px;
+}
+
+.no-my-big-samll img {
+  width: 100%;
 }
 
 </style>

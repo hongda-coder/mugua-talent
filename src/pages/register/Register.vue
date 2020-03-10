@@ -43,11 +43,6 @@
                       {{rangeStatus?successText:startText}}
                     </div>
                   </div>
-                <!-- <input type="text" placeholder="请输入图形验证码"  style="width: 280px;" v-model="form.check"> 
-                <div class="code">
-                  <img src="http://192.168.0.182/api/user/GenerateCheckCode" alt="captcha" @click="getCaptcha" ref="captcha"> 
-                </div>
-                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe60d;</i></div> -->
               </div>
 
               <div class="form-group">
@@ -77,7 +72,7 @@ import { register,shortCode } from "@/api/serve"
 import Footer from "@/components/footer/Footer"
 import Pic from '@/components/common/Pic'
 
-import Sliding from './children/Sliding'
+import Sliding from '@/components/common/Sliding'
 export default {
   name: "Register",
   components: {
@@ -138,7 +133,7 @@ export default {
 
     // 发送ajax请求(向指定手机号发送验证码短信)
     getCode () {
-      this.computeTime = 5
+      this.computeTime = 60
       this.isDisabled = true
       this.intervalId = setInterval(() => {
         this.computeTime--

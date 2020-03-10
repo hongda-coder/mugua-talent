@@ -23,7 +23,7 @@
               </div>
               <div>联系方式：<span>{{userInfo.tel}}</span></div>
               <div>电子邮箱：<span>{{userInfo.email}}</span></div>
-              <div>证书名称：<span>人力资源管理师二级</span></div>
+              <div>证书名称：<span></span></div>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@
             </el-col>
 
             
-            <el-col  :span="8" style="padding: 0;margin-left: 100px;min-width: 480px;">
+            <!-- <el-col  :span="8" style="padding: 0;margin-left: 100px;min-width: 480px;">
               <div class="clearfix">
                 <div class="content-input">
                   <el-form-item label="证书名称" prop="imagename">
@@ -137,7 +137,6 @@
                   </el-form-item>
                 </div>
               </div>
-   <!-- :http-request="uploadImg" -->
               <div class="clearfix">
                 <div class="content-input">
                   <el-form-item label="证件附件" prop="password" style="float: left;" >
@@ -161,7 +160,7 @@
                   </el-form-item>
                 </div>
               </div>
-            </el-col>
+            </el-col> -->
           </el-row>
 
           <div style="width: 210px;margin:30px auto;">
@@ -242,7 +241,6 @@ export default {
   methods: {
     personInfo () {
       personInfo(this.lists).then( res => {
-        console.log(res)
         this.userInfo = res.data.data
       })
     },
@@ -278,15 +276,18 @@ export default {
     // 编辑
     editor () {
       this.dialogEditor = true
+       personInfo(this.lists).then( res => {
+         console.log(res)
+        this.editorForm = res.data.data
+        this.editorForm.xtel = res.data.data.tel
+      })
     },
 
     saveInfo () {
       perInfo (this.editorForm).then( res => {
         if (res.data.Message == 'success') {
           this.dialogEditor = false
-          
         }
-       
       }) 
     }
   }

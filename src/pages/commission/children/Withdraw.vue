@@ -210,7 +210,7 @@ export default {
     record () {
       withdrawRecord ({guid: this.lists.guid,tel: this.lists.tel,limit: this.limit,curr: this.curr}).then( res => {
         this.recordTable = res.data.data
-        console.log(res)
+        // console.log(res)
       })
     },
     handleSizeChange(val) {

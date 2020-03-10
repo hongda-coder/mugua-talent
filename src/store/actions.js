@@ -17,5 +17,6 @@ export default  {
         reject(error)
       })
     })
-  },
+  }
+  
 }

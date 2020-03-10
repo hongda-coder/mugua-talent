@@ -1,8 +1,8 @@
 <template>
   <div class="myearnings">
-      <commonWithdraw></commonWithdraw>
+
     <div class="search-form">
-      <el-form ref="form" :inline="true" :model="dataForm" label-width="80px">
+      <!-- <el-form ref="form" :inline="true" :model="dataForm" label-width="80px">
         <el-form-item label="开始时间">
           <el-col :span="24">
             <el-date-picker type="date" placeholder="选择日期" v-model="dataForm.btime" style="width: 100%;"></el-date-picker>
@@ -18,7 +18,7 @@
           <el-button class="search" type="button" @click="search">查询</el-button>
         </el-form-item>
 
-      </el-form>
+      </el-form> -->
     </div>
     <div>
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import commonWithdraw from '../common/commonWithdraw'
 
 import { taskMoney } from "@/api/serve"
 import { getTel, getToken } from "@/util"
@@ -71,9 +70,6 @@ export default {
         commission2: '待面试'
       }]
     }
-  },
-  components: {
-    commonWithdraw
   },
   created () {
     this.dataForm.guid = getToken(this.dataForm.guid)

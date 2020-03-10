@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      num: 2
+      num: 1
     }
   },
   methods: {

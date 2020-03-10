@@ -25,25 +25,23 @@
             ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="name" label="操作" align="center">
-          <template slot-scope="scope" width="180">
+        <af-table-column prop="name" label="操作" align="center" width="150">
+          <template slot-scope="scope">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
-              <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-              <el-button type="text" size="small" @click="getTask(scope.$index,scope.row)"  class="commonColor">领任务</el-button>
-              <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
+            <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
             <el-button type="text" size="small"  class="commonColor">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
     </div>
         <!-- 分享 -->
+        <!-- 分享 -->
     <el-dialog
       title="提示"
       :visible.sync="dialogShare"
       width="30%"
       >
-      <div class="share"><input type="text" v-model="vshareConfig.share[0].bdUrl"></div>
-      <vshare :vshareConfig="vshareConfig"></vshare>
+      <vueVshare v-if="dialogShare"></vueVshare>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogShare = false">取 消</el-button>
         <el-button type="primary" @click="dialogShare = false">确 定</el-button>
@@ -53,10 +51,14 @@
 </template>
 
 <script>
+import vueVshare from '@/components/common/test'
 import { jobList,getTask, shareJob } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'CompeteTable',
+  components: {
+    vueVshare
+  },
   data () {
     return {
       table: [{
@@ -79,14 +81,16 @@ export default {
         curr: '5' //当前页多少数据
       },
       dialogShare: false, // 分享
-      vshareConfig: {
-        shareList: [ 'more','qzone','tsina','tqq','renren','weixin'],
-        common : {
-          //此处放置通用设置
+      defaultConfig: {
+        shareList: ['more','qzone','tsina','tqq','renren','weixin'],
+        common:{
+          bdUrl: ''
         },
-        share: [{ bdUrl: '' }],
-        tableIndex: ''
-      }
+        share: [{bdSize: 24}],
+        slide: false,
+        image: false,
+        selectShare: false
+      },
     }
   },
   created () {
@@ -111,8 +115,8 @@ export default {
     share (row, column) {
       this.dialogShare = true
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-        this.vshareConfig.share[0].bdUrl= res.data.data.urlpath
-        // console.log(this.vshareConfig.share[0].bdUrl)
+        this.$store.commit('SAVE_URL',res.data.data.urlpath)
+        this.dialogShare = true
       })
     }
   }

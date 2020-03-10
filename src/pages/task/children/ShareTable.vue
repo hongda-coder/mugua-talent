@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="search-form">
+    <!-- <div class="search-form">
       <el-row>
         <el-form :inline="true" label-width="80px">
           <el-col class="card" :xs="24" :sm="24" :md="12" :lg="8" :xl="7">
@@ -20,7 +20,7 @@
           </el-col>
         </el-form>
       </el-row>
-    </div>
+    </div> -->
     <div>
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
@@ -46,11 +46,11 @@
             ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="name" label="操作" align="center">
+        <af-table-column prop="name" label="操作" align="center"  width="150">
           <template slot-scope="scope" width="180">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
               <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-              <el-button type="text" size="small" class="commonColor" @click="getTask(scope.$index,scope.row)">领任务</el-button>
+              <el-button type="text" size="small" class="commonColor" @click="getTask(scope.$index,scope.row)" :disabled="disabled">{{scope.row.state | taskState}}</el-button>
               <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
             <el-button type="text" size="small"  class="commonColor">查看</el-button>
           </template>
@@ -58,14 +58,14 @@
       </el-table>
     </div>
 
-       <!-- 分享 -->
+
+    <!-- 分享 -->
     <el-dialog
       title="提示"
       :visible.sync="dialogShare"
       width="30%"
       >
-      <div class="share"><input type="text" v-model="vshareConfig.share[0].bdUrl"></div>
-      <vshare :vshareConfig="vshareConfig"></vshare>
+      <vueVshare v-if="dialogShare"></vueVshare>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogShare = false">取 消</el-button>
         <el-button type="primary" @click="dialogShare = false">确 定</el-button>
@@ -76,10 +76,14 @@
 </template>
 
 <script>
+import vueVshare from '@/components/common/test'
 import { jobList, getTask, shareJob } from "@/api/serve"
 import { getTel, getToken } from "@/util"
 export default {
   name: 'ShareTable',
+  components: {
+    vueVshare
+  },
   data () {
     return {
       table: [{
@@ -93,7 +97,8 @@ export default {
         jpetime: '',
         aiMoenyOutside: '',
         rdMoenyOutside: '',
-        msid: ''
+        msid: '',
+        state: ''
       }],
       lists: {
         guid: 'ssc-token', //token
@@ -139,18 +144,33 @@ export default {
         }
       ],
       dialogShare: false, // 分享
-      vshareConfig: {
-        shareList: [ 'more','qzone','tsina','tqq','renren','weixin'],
-        common : {
-          //此处放置通用设置
+      defaultConfig: {
+        shareList: ['more','qzone','tsina','tqq','renren','weixin'],
+        common:{
+          bdUrl: ''
         },
-        share: [{ bdUrl: '' }],
-        tableIndex: ''
-      }
+        share: [{bdSize: 24}],
+        slide: false,
+        image: false,
+        selectShare: false
+      },
+      disabled: false
     }
   },
   created () {
     this.jobList()
+  },
+  filters: {
+    taskState (type) {
+      switch (type) {
+        case 1:
+          return '领任务'
+        case 2:
+          return '已领任务'
+        default:
+          return type 
+      }
+    }
   },
   methods: {
     jobList () {
@@ -161,19 +181,35 @@ export default {
         // console.log(res)
       })
     },
-    getTask (row) {
-      getTask ({guid:this.lists.guid,tel:this.lists.tel,msid: this.table[row].msid}).then( res => {
-        // console.log(res)
-      })
-    },
+    // getTask (row) {
+    //   getTask ({guid:this.lists.guid,tel:this.lists.tel,msid: this.table[row].msid}).then( res => {
+    //     // console.log(res)
+    //   })
+    // },
     share (row) {
       this.dialogShare = true
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-        this.vshareConfig.share[0].bdUrl= res.data.data.urlpath
-        // console.log(this.vshareConfig.share[0].bdUrl)
-        
+       this.$store.commit('SAVE_URL',res.data.data.urlpath)
+        this.dialogShare = true
       })
-    }
+    },
+    getTask (row, column) {
+      getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
+        if (res.data.Message = 'success') {
+          this.disabled = true
+          this.$alert('领取任务成功', {
+            confirmButtonText: '确定',
+            center: true,
+            callback: action => {
+              this.$message({
+                type: 'info',
+                message: `action: ${ action }`
+              });
+            }
+          });
+        }
+      })
+    },
   }
 }
 

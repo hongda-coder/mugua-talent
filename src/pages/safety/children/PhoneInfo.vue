@@ -37,7 +37,9 @@
 
       <!-- 修改号码 -->
       <div class="dialog" v-show="dialogPhone">
+        
         <div class="dialogPhone">
+          <div class="c-off-pup" @click="dialogPhone = false"><img src="@/assets/images/c-off-pup.png" alt=""></div>
           <div class="c-title">更换手机号</div>
           <form action="">
             <div class="item">
@@ -49,9 +51,19 @@
               <input type="text" v-model="form.Xtel">
             </div>
             <div class="item">
+              <label>滑动验证</label>
+              <div class="jc-component__range" style="margin-left: 20px;display: inline-block;">
+                <div class="jc-range" :class="rangeStatus?'success':''"  style="display: inline-block;width: 311px;">
+                  <i @mousedown="rangeMove" :class="rangeStatus?successIcon:startIcon"></i>
+                  {{rangeStatus?successText:startText}}
+                </div>
+              </div>
+            </div>
+            <div class="item">
               <label>验证码</label>
               <input type="text" v-model="form.code">
-              <button>获取验证码</button>
+              <button class="code" type="button" :disabled="isDisabled" 
+                @click="getCode()"> {{computeTime>0 ? `已发送(${computeTime}s)` : '获取验证码'}}</button>
             </div>
             <div class="sure" @click="confirm">确定</div>
           </form>
@@ -60,7 +72,9 @@
 
       <!-- 修改密码 -->
       <div class="dialog" v-show="dialogPsd">
+        <div class="c-off-pup" @click="dialogPsd = false"><img src="@/assets/images/c-off-pup.png" alt=""></div>
         <div class="dialogPhone">
+          <div class="c-off-pup" @click="dialogPsd = false"><img src="@/assets/images/c-off-pup.png" alt=""></div>
           <div class="c-title">修改密码</div>
           <form action="">
             <div class="item">
@@ -84,8 +98,47 @@
 import { newPhone,newPwd,shortCode } from "@/api/serve"
 import { getTel, getToken } from "@/util"
 
+import Sliding from '@/components/common/Sliding'
+
 export default {
   name: 'PhoneInfo',
+  components: {
+    Sliding
+  },
+  props: {
+    // 成功之后的函数
+    successFun: {
+      type: Function
+    },
+    //成功图标
+    successIcon: {
+      type: String,
+      default: 'el-icon-success'
+    },
+    //成功文字
+    successText: {
+      type: String,
+      default: '验证成功'
+    },
+    //开始的图标
+    startIcon: {
+      type: String,
+      default: 'el-icon-d-arrow-right'
+    },
+    //开始的文字
+    startText: {
+      type: String,
+      default: '拖动滑块到最右边'
+    },
+    //失败之后的函数
+    errorFun: {
+      type: Function
+    },
+    //或者用值来进行监听
+    status: {
+      type: String
+    }
+  },
   data () {
     return {
       phoneForm:{ 
@@ -95,7 +148,7 @@ export default {
         password: '451321685',
       },
       form: {
-        tel: 'tel',
+        tel: '',
         Xtel: '',
         code: '',
         guid: 'ssc-token', //token
@@ -103,18 +156,21 @@ export default {
       pwdForm: {
         pwd: '',
         xpwd: '',
-        tel: 'tel',
+        tel: '',
         guid: 'ssc-token', //token
       },
       dialogPhone: false,
       dialogPsd: false,
-      formLabelWidth: '80px'
+      formLabelWidth: '80px',
+      rangeStatus: false,
+      isDisabled: true,
+      computeTime: 0
     }
   },
   created () {
-    this.form.guid = getToken(this.form.guid)
+    this.form.guid = getToken('tel')
     this.pwdForm.guid = getToken(this.pwdForm.guid)
-    this.pwdForm.tel = getTel(this.pwdForm.tel)
+    this.pwdForm.tel = getTel('tel')
   },
   methods: {
     // 修改电话号码
@@ -131,8 +187,23 @@ export default {
     confirm () {
       console.log("68456856")
       newPhone (this.form).then( res => {
-        // console.log(res)
         this.dialogPhone = false
+      })
+    },
+
+    getCode () {
+      this.computeTime = 60
+      this.isDisabled = true
+      this.intervalId = setInterval(() => {
+        this.computeTime--
+        if(this.computeTime<=0) {
+          // 停止计时
+          clearInterval(this.intervalId)
+          this.isDisabled = false
+        }
+      }, 1000)
+      shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.Xtel}).then(res => {
+        // console.log(res)
       })
     },
 
@@ -142,11 +213,72 @@ export default {
         // console.log(res)
       })
     },
+
+    //滑块移动
+		rangeMove(e){
+      if (this.form.tel == "" || this.form.Xtel == "") {
+        return false 
+      } else {
+      let ele = e.target;
+			let startX = e.clientX;
+			let eleWidth = ele.offsetWidth;
+			let parentWidth =  ele.parentElement.offsetWidth;
+			let MaxX = parentWidth - eleWidth;
+      if(this.rangeStatus){//不运行
+        this.isDisabled = true
+				return false;
+			}
+			document.onmousemove = (e) => {
+				let endX = e.clientX;
+				this.disX = endX - startX;
+				if(this.disX<=0){
+					this.disX = 0;
+				}
+				if(this.disX>=MaxX-eleWidth){//减去滑块的宽度,体验效果更好
+					this.disX = MaxX;
+				}
+				ele.style.transition = '.1s all';
+				ele.style.transform = 'translateX('+this.disX+'px)';
+				e.preventDefault();
+			}
+			document.onmouseup = ()=> {
+				if(this.disX !== MaxX){
+					ele.style.transition = '.5s all';
+					ele.style.transform = 'translateX(0)';
+					//执行成功的函数
+					this.errorFun && this.errorFun();
+				}else{
+          this.isDisabled = false
+					this.rangeStatus = true;
+					if(this.status){
+						this.$parent[this.status] = true;
+					}
+					//执行成功的函数
+					this.successFun && this.successFun();
+				}
+				document.onmousemove = null;
+				document.onmouseup = null;
+			}
+      }
+		}
   }
 }
 </script>
 
 <style scoped>
+
+  .c-off-pup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    z-index: 9999;
+    opacity: .3;
+  }
+
+  .c-off-pup img {
+    width: 100%;
+  }
 
   .PhoneInfo {
     background: #fff;
@@ -260,19 +392,22 @@ export default {
     box-sizing: border-box;
   }
 
-  .item:nth-of-type(3) input {
+  .item:nth-of-type(4) input {
     width: 202px;
   }
 
   .item button {
-    background: #FEAD1C;
-    border: none;
-    color: #fff;
     line-height: 38px;
     border-radius: 5px;
     margin-left: 6px;
     width: 100px;
+    border: 1px solid #ccc;
     text-align: center;
+    box-sizing: border-box;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    background: #fff;
   }
 
   .sure {
@@ -292,5 +427,42 @@ export default {
       border-color: #FEAD1C;
       border-radius: 5px;
     }
+
+
+      /**滑块 */
+.jc-range{
+	background-color: #FFCCCC;
+	position: relative;
+	transition: 1s all;
+	user-select: none;
+	color: #333;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 45px; 
+  border-radius: 4px;
+  text-align: center;
+}
+.jc-range i{
+	position: absolute;
+	left: 0;
+	width: 60px;/*no*/
+	height: 100%;
+	color: #919191;
+	background-color: #fff;
+	border: 1px solid #bbb;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  border-radius: 4px;
+}
+.jc-range.success{
+	background-color: #7AC23C;
+	color: #fff;
+}
+.jc-range.success i{
+	color: #7AC23C;
+}
 
 </style>

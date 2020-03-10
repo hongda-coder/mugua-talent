@@ -33,6 +33,8 @@
           <template slot-scope="scope">
             <el-button type="text" size="small" class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
+            <el-button  type="text" size="small" class="commonColor" @click="getTask(scope.$index,scope.row)" :disabled="disabled">{{scope.row.state | taskState}}</el-button>
+            <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
             <el-button  type="text" size="small" class="commonColor">查看</el-button>
           </template>
         </af-table-column>
@@ -47,15 +49,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       >
-      <!-- <div class="share"><input type="text" v-model="shareConfig.url"></div> -->
-
-      <!-- 插件位置 -->
-      <!-- <vshare :vshareConfig="vshareConfig.shareList"></vshare> -->
-
       <vueVshare v-if="dialogVisible"></vueVshare>
-
-
-
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -65,8 +59,8 @@
 </template>
 
 <script>
-import vueVshare from './test'
-import { jobList,shareJob } from "@/api/serve"
+import vueVshare from '@/components/common/test'
+import { jobList,shareJob, getTask } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'OfferTable',
@@ -86,7 +80,8 @@ export default {
         jpetime: '',
         aiMoenyOutside: '',
         rdMoenyOutside: '',
-        msid: '' // 分享id
+        msid: '', // 分享id
+        state: ''
       }],
       lists: {
         guid: 'ssc-token', //token
@@ -106,13 +101,26 @@ export default {
         slide: false,
         image: false,
         selectShare: false
-      }
+      },
+       disabled: false
     }
   },
   created () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.jobList()
+  },
+  filters: {
+    taskState (type) {
+      switch (type) {
+        case 1:
+          return '领任务'
+        case 2:
+          return '已领任务'
+        default:
+          return type 
+      }
+    }
   },
   methods: {
     jobList () {
@@ -127,7 +135,25 @@ export default {
         this.dialogVisible = true
       })
     },
-   
+
+     // 领任务
+    getTask (row, column) {
+      getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
+        if (res.data.Message = 'success') {
+          this.disabled = true
+          this.$alert('领取任务成功', {
+            confirmButtonText: '确定',
+            center: true,
+            callback: action => {
+              this.$message({
+                type: 'info',
+                message: `action: ${ action }`
+              });
+            }
+          });
+        }
+      })
+    },
   }
 }
 </script>
@@ -158,6 +184,7 @@ export default {
   font-size: 15px;
   margin-right: 20px;
   color: #FEB12C;
+  cursor: pointer;
 }
 
 .c-info-name::before {
@@ -178,4 +205,5 @@ export default {
 .share input{
   width: 300px;
 }
+
 </style>

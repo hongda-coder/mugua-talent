@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div v-show="table.length>0">
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
         <af-table-column prop="id" label="编号" align="center" width="70px">
@@ -23,6 +23,12 @@
           </template>
         </af-table-column>
       </el-table>
+    </div>
+    <div v-show="table.length==0">
+      <div class="no-wrap">
+        <div class="no-record"><img src="@/assets/images/no-record.png" alt=""></div>
+        <div style="line-height: 80px;">暂无数据</div>
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +89,21 @@ export default {
 
 .commonColor {
   color: #FEAD1C;
+}
+
+.no-wrap {
+  width: 280px;
+  margin: 50px auto;
+  text-align: center;
+  color: #959595;
+}
+
+.no-record {
+  width: 280px;
+}
+
+.no-record img {
+  width: 100%;
 }
 
 </style>

@@ -122,6 +122,7 @@ export default {
   font-size: 15px;
   margin-right: 20px;
   color: #FEB12C;
+  cursor: pointer;
 }
 
 .c-info-name::before {

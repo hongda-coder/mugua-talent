@@ -1,19 +1,28 @@
 <template>
-  <div class="subordinate clearfix">
+<div>
+  <div v-if="lists.name =''"  class="subordinate clearfix">
     <el-row :gutter="10">
-      <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4" class="xl-5">
-      <div class="wrap" >
+      <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4" class="xl-5" v-for="(item, index) in lists" :key="index">
+        <div class="wrap" >
           <div class="avatar"><img src="@/assets/images/c-avatar.png" alt=""></div>
           <div class="contact-people">
-            {{lists.name}}
+            {{item.name}}
           <span class="level"><img src="@/assets/images/c-level.png" alt=""></span>
           </div>
-          <div class="contact-way">联系方式： {{lists.contact}}</div>
+          <div class="contact-way">联系方式： {{item.contact}}</div>
         </div>
       </el-col>
     </el-row>
-
   </div>
+
+  <div  v-else style="background: #fff;">
+    <div class="wrap-big-samll">
+      <div class="no-my-big-samll"><img src="@/assets/images/no-my-big-small.png" alt=""></div>
+      <div>暂无下级</div>
+    </div>
+  </div>
+</div>
+
 </template>
 
 <script>
@@ -24,10 +33,10 @@ export default {
   name: 'Subordinate',
   data () {
     return {
-      lists:{
+      lists:[{
           name: '',
           contact: "+6"
-        },
+        }],
       form: {
         guid: 'ssc-token',
         tel: 'tel'
@@ -89,5 +98,20 @@ export default {
   width: 100%;
 }
 
+.wrap-big-samll {
+  padding: 50px 0;
+  width: 250px;
+  margin: auto;
+  text-align: center;
+  color: #777;
+}
+
+.no-my-big-samll {
+  widows: 250px;
+}
+
+.no-my-big-samll img {
+  width: 100%;
+}
 
 </style>
