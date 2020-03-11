@@ -2,7 +2,7 @@
   <div>
     <div class="c-people-title clearfix">
       <div class="c-info-name">最新分享情况</div>
-      <div class="c-info-editor">更多</div>
+      <div class="c-info-editor" @click="goMore">更多</div>
     </div>
     <div class="table-wrap">
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
@@ -19,7 +19,7 @@
         <af-table-column prop="jpetime" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="mstime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="start_data" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="msnumber" label="人数" align="center"></af-table-column>
+        <af-table-column prop="msnumber" label="浏览人数" align="center"></af-table-column>
         <af-table-column prop="state" label="竞聘状态" align="center"></af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
           <template slot-scope="scope">
@@ -72,6 +72,10 @@ export default {
         this.table = res.data.data
         // console.log(res.data)
       })
+    },
+
+    goMore () {
+      this.$router.push('recommend')
     }
   }
 }

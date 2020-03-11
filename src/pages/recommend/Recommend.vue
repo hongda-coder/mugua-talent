@@ -26,7 +26,7 @@ export default {
     }
   },
   methods: {
-    change: function(index) {
+    change (index) {
       this.num = index
     }
   }

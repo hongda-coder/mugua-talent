@@ -38,19 +38,19 @@
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
         <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"  width="130">
           <template slot-scope="scope">
-            ￥{{scope.row.aiMoenyOutside}}
+            ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
         <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center" width="130">
             <template slot-scope="scope">
-            ￥{{scope.row.rdMoenyOutside}}
+            ￥{{scope.row.aiMoenyOutside}}
           </template>
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center"  width="150">
           <template slot-scope="scope" width="180">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
               <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-              <el-button type="text" size="small" class="commonColor" @click="getTask(scope.$index,scope.row)" :disabled="disabled">{{scope.row.state | taskState}}</el-button>
+              <el-button  type="text" size="small" :class="scope.row.state | addclassStatus" @click="getTask(scope.$index,scope.row)" :disabled="scope.row.state | isClick">{{scope.row.state | taskState}}</el-button>
               <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
             <el-button type="text" size="small"  class="commonColor">查看</el-button>
           </template>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- 分页 -->
-    <div class="block" style="width: 520px;margin: 15px auto;">
+    <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -184,6 +184,26 @@ export default {
         default:
           return type 
       }
+    },
+    addclassStatus (type) {
+      switch (type) {
+        case 1:
+          return 'StatusTypeColorA'
+        case 2:
+          return 'StatusTypeColorB'
+        default:
+          return type 
+      }
+    },
+    isClick (type) {
+      switch (type) {
+        case 1:
+          return false
+        case 2:
+          return true
+        default:
+          return type 
+      }
     }
   },
   methods: {
@@ -249,4 +269,11 @@ export default {
   color: #FEAD1C;
 }
 
+.StatusTypeColorA {
+  color: #FEAD1C;
+}
+
+.StatusTypeColorB {
+  color: #959595;
+}
 </style>

@@ -64,8 +64,8 @@
                   </div>
                   <div class="clearfix">
                     <div class="content-input">
-                      <el-form-item label="电子邮箱" prop="email">
-                        <el-input v-model="editorForm.email"></el-input>
+                      <el-form-item label="电子邮箱" prop="eamil">
+                        <el-input v-model="editorForm.eamil"></el-input>
                       </el-form-item>
                     </div>
                   </div>
@@ -151,7 +151,7 @@ export default {
         TrueName: '',
         xtel: '',  // 联系电话
         create: '', // 生日
-        email: '', // 邮箱
+        eamil: '', // 邮箱
         guid: 'ssc-token', //token
         tel: 'tel', // 加密手机号
         imageid: '' // 图片id
@@ -166,7 +166,8 @@ export default {
           { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
         ],
         TrueName: [
-          { required: true, message: '请输入真实姓名', trigger: 'blur' }
+          { required: true, message: '请输入真实姓名', trigger: 'blur' },
+          { type: 'int', message: '真实姓名不可以是数字', trigger: 'blur' }
         ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'change' }

@@ -64,13 +64,13 @@
           <el-form-item label="持卡人" prop="name">
             <el-input v-model="lists.name"></el-input>
           </el-form-item>
-          <el-form-item label="银行卡号" prop="bank">
+          <el-form-item label="银行卡号" prop="bank" autocomplete="off">
             <el-input v-model="lists.bank"></el-input>
           </el-form-item>
-          <el-form-item label="开户支行" prop="branch">
+          <el-form-item label="开户支行" prop="branch" autocomplete="off">
             <el-input v-model="lists.branch"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="pwd">
+          <el-form-item label="密码" prop="pwd" autocomplete="off">
             <el-input type="password" v-model="lists.pwd"></el-input>
           </el-form-item>
           <el-form-item>
@@ -98,6 +98,21 @@
         </el-pagination>
       </div>
     </div>
+
+
+    <!-- 解除银行卡绑定 -->
+
+    <el-dialog
+      title="解除银行卡绑定"
+      :visible.sync="dialogUnbank"
+      width="30%"
+      >
+      <div style="text-align: center;">确定解除银行卡</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogUnbank = false">取 消</el-button>
+        <el-button type="primary" @click="confirmUnbank">确 定</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -133,6 +148,7 @@ export default {
         bank: '111'
       },
       bankid: '', // 解绑卡号id
+      dialogUnbank: false, // 解除绑定
       rules: {
         name: [
           { required: true, message: '请输入持卡人姓名', trigger: 'blur' },
@@ -165,7 +181,6 @@ export default {
       this.$refs[lists].validate((valid) => {
         if (valid) {
             bindBank (this.lists).then( res => {
-              console.log(res)
               this.dialogBank = false
               this.$message('绑定银行卡成功')
               this.bankInfo()
@@ -178,15 +193,6 @@ export default {
         }
       })
     },
-    // 绑定银行卡
-    // bindMyBank () {
-    //   bindBank (this.lists).then( res => {
-    //     console.log(res)
-    //     this.dialogBank = false
-    //     this.$message('绑定银行卡成功')
-    //     this.bankInfo()
-    //   })
-    // },
 
     // 银行卡信息
     bankInfo () {
@@ -201,26 +207,14 @@ export default {
     },
     // 解绑银行卡
     unbindBank () {
-      this.$confirm('确定解除银行卡绑定?', '解除', {
-        center: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        unbindBank ({bankid: this.bankid,guid:this.lists.guid}).then( res => {
-         this.bankInfo ()
-        })
-        this.$message({
-          type: 'success',
-          message: '解绑成功!'
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消解绑'
-        });          
-      });
-
+      this.dialogUnbank = true
+    },
+    confirmUnbank () {
+      unbindBank ({bankid: this.bankid,guid:this.lists.guid}).then( res => {
+        this.$message('解绑银行卡成功')
+        this.bankInfo()
+        this.dialogUnbank = false
+      })
     },
 
     // 提现记录
@@ -235,7 +229,10 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-    }
+    },
+    winReload (cond){
+      window.location.reload();
+    },
   }
 }
 </script>

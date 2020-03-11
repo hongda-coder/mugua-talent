@@ -70,11 +70,9 @@ export default {
   },
   methods: {
     submitForm(form) {
-      console.log(this.$refs[form])
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('Login',this.form).then(res => {
-            console.log(res)
             if(res.data.Message == '-3') {
               this.isCode = true
             } else if (res.data.Message == '-4') {

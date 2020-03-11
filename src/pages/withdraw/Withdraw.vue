@@ -13,7 +13,7 @@
           <div class="all-money" @click="allMoney">全部提现</div>
         </div>
         <div class="input-count">
-          <input type="text" placeholder="请输入提现金额" v-model="form.money">
+          <input type="text" placeholder="请输入提现金额" v-model="form.money" autocomplete="new-password">
         </div>
         <div class="title-bank">提现至一下银行卡</div>
         <div class="bank-card clearfix">
@@ -31,7 +31,7 @@
           <div class="all-money">忘记密码？</div>
         </div>
         <div class="with-password">
-          <input type="password" placeholder="请输入提现密码" v-model="form.pwd">
+          <input type="password" placeholder="请输入提现密码" v-model="form.pwd" autocomplete="new-password">
           <div class="hint" style="color:red;line-height: 30px;" v-show="isPwd">请输入正确提现密码</div>
         </div>
 

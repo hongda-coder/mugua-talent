@@ -2,7 +2,7 @@
   <div>
     <div class="c-people-title clearfix">
       <div class="c-info-name">最新悬赏任务</div>
-      <div class="c-info-editor">更多</div>
+      <div class="c-info-editor" @click="goTask">更多</div>
     </div>
     <div class="table-wrap">
       <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
@@ -17,23 +17,23 @@
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
         <af-table-column prop="working" label="工作经验" align="center"></af-table-column>
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
-        <af-table-column prop="mstime" label="竞聘结束日期" align="center"></af-table-column>
-        <af-table-column prop="jpetime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"  width="130">
+        <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
+        <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
+        <af-table-column prop="rdMoenyOutside" label="到场所获佣金" align="center"  width="130">
           <template slot-scope="scope">
-            ￥{{scope.row.aiMoenyOutside}}
+            ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center" width="130">
+        <af-table-column prop="aiMoenyOutside" label="面过所获佣金" align="center" width="130">
             <template slot-scope="scope">
-            ￥{{scope.row.rdMoenyOutside}}
+            ￥{{scope.row.aiMoenyOutside}}
           </template>
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button type="text" size="small" class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <el-button  type="text" size="small" class="commonColor" @click="getTask(scope.$index,scope.row)" :disabled="disabled">{{scope.row.state | taskState}}</el-button>
+            <el-button  type="text" size="small" :class="scope.row.state | addclassStatus" @click="getTask(scope.$index,scope.row)" :disabled="scope.row.state | isClick">{{scope.row.state | taskState}}</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
             <el-button  type="text" size="small" class="commonColor">查看</el-button>
           </template>
@@ -46,13 +46,13 @@
     <!-- 分享 -->
     <el-dialog
       title="提示"
-      :visible.sync="dialogVisible"
+      :visible.sync="shareTalbe"
       width="30%"
       >
-      <vueVshare v-if="dialogVisible"></vueVshare>
+      <vueVshare v-if="shareTalbe"></vueVshare>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button @click="shareCancle">取 消</el-button>
+        <el-button type="primary" @click="shareComfirm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -60,7 +60,7 @@
 
 <script>
 import vueVshare from '@/components/common/test'
-import { jobList,shareJob, getTask } from "@/api/serve"
+import { jobList,shareJob, getTask, competeList } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'OfferTable',
@@ -89,7 +89,7 @@ export default {
         limit: '1' , // 当前页
         curr: '5' //当前页多少数据
       },
-      dialogVisible: false, // 分享弹出层
+      shareTalbe: false, // 分享弹出层
       tableIndex: '',
       // JobUrl: '',
       defaultConfig: {
@@ -120,6 +120,26 @@ export default {
         default:
           return type 
       }
+    },
+    addclassStatus (type) {
+      switch (type) {
+        case 1:
+          return 'StatusTypeColorA'
+        case 2:
+          return 'StatusTypeColorB'
+        default:
+          return type 
+      }
+    },
+    isClick (type) {
+      switch (type) {
+        case 1:
+          return false
+        case 2:
+          return true
+        default:
+          return type 
+      }
     }
   },
   methods: {
@@ -132,14 +152,26 @@ export default {
     share (row, column) {
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
         this.$store.commit('SAVE_URL',res.data.data.urlpath)
-        this.dialogVisible = true
+        this.shareTalbe = true
       })
+    },
+
+    shareComfirm () {
+      this.shareTalbe = false
+      this.winReload()
+    },
+
+    shareCancle () {
+      this.shareTalbe = false
+      this.winReload()
     },
 
      // 领任务
     getTask (row, column) {
       getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
         if (res.data.Message = 'success') {
+          this.jobList()
+          this.winReload()
           this.disabled = true
           this.$alert('领取任务成功', {
             confirmButtonText: '确定',
@@ -154,6 +186,15 @@ export default {
         }
       })
     },
+
+    winReload (cond){
+      window.location.reload();
+    },
+
+    // 跳转到更多
+    goTask  () {
+      this.$router.push('task')
+    }
   }
 }
 </script>
@@ -206,4 +247,11 @@ export default {
   width: 300px;
 }
 
+.StatusTypeColorA {
+  color: #FEAD1C;
+}
+
+.StatusTypeColorB {
+  color: #959595;
+}
 </style>

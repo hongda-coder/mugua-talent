@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-show="table.length>0">
-      <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
+    <div >
+      <el-table :data="table" height="440" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
         <af-table-column prop="id" label="编号" align="center" width="70px">
         <template slot-scope="scope">
@@ -15,7 +15,7 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="msnumber" label="人数" align="center"></af-table-column>
+        <af-table-column prop="msnumber" label="浏览人数" align="center"></af-table-column>
         <af-table-column prop="state" label="竞聘状态" align="center"></af-table-column>
         <af-table-column prop="name" label="操作" align="center">
           <template slot-scope="scope">
@@ -24,12 +24,12 @@
         </af-table-column>
       </el-table>
     </div>
-    <div v-show="table.length==0">
+    <!-- <div v-show="table.length==0">
       <div class="no-wrap">
         <div class="no-record"><img src="@/assets/images/no-record.png" alt=""></div>
         <div style="line-height: 80px;">暂无数据</div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

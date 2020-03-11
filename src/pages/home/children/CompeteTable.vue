@@ -19,13 +19,13 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="commission1" label="人数" align="center"></af-table-column>
-        <af-table-column prop="commission2" label="竞聘状态" align="center">
+        <af-table-column prop="number" label="报名人数" align="center"></af-table-column>
+        <af-table-column prop="state" label="竞聘状态" align="center">
           <template slot-scope="scope">
-            <span :class="addclassStatus(scope.row.state)">
-            <i class="iconfont">&#xe649;</i>
-            {{scope.row.state}}
-            </span>
+            <div :class="scope.row.state | addclassStatus">
+              <span style="margin-right: 5px;"><i class="iconfont" :class="scope.row.state | iconType"></i></span>
+              <span>{{scope.row.state}}</span>
+            </div>
           </template>
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
@@ -57,6 +57,7 @@ export default {
         education: '',
         record: '',
         jpetime: '',
+        number: '',
         state: '',
         aiMoenyOutside: '',
         rdMoenyOutside: ''
@@ -74,13 +75,7 @@ export default {
     this.lists.tel = getTel(this.lists.tel)
     this.competeList()
   },
-  methods: {
-    competeList () {
-      competeList(this.lists).then( res => {
-        this.table = res.data.data
-      })
-    },
-
+  filters: {
     // class状态
     addclassStatus (value) {
       switch (value) {
@@ -88,14 +83,35 @@ export default {
           return 'StatusTypeColorA'
         case '面试中':
           return 'StatusTypeColorB'
-        case '已完成': 
+        case '面试结束': 
           return 'StatusTypeColorC'
         case '竞聘中' :
           return 'StatusTypeColorD'
       }
     },
+
+    iconType (value) {
+      switch (value) {
+        case '待面试':
+          return 'icon-dingdan-daimianshi'
+        case '面试中':
+          return 'icon-shouye'
+        case '面试结束': 
+          return 'icon-jieshu'
+        case '竞聘中' :
+          return 'icon-sign'
+      }
+    }
+  },
+  methods: {
+    competeList () {
+      competeList(this.lists).then( res => {
+        this.table = res.data.data
+      })
+    },
+
     goCompete () {
-      this.$router.push('./recommend')
+      this.$router.push('recommend')
     }
   }
 }

@@ -2,7 +2,7 @@
 
 
 <div>
-  <div  v-if="lists.name =''" class="subordinate clearfix">
+  <div v-show="lists.name != null" class="subordinate clearfix">
     <div class="wrap">
       <div class="avatar"><img src="@/assets/images/c-avatar.png" alt=""></div>
       <div class="contact-people">
@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <div v-else style="background: #fff;">
+  <div v-show="lists.name == null " style="background: #fff;">
     <div class="wrap-big-samll">
       <div class="no-my-big-samll"><img src="@/assets/images/no-my-big-small.png" alt=""></div>
       <div>暂无上级</div>

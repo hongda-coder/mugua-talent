@@ -1,21 +1,21 @@
 <template>
 <div>
-  <div v-if="lists.name =''"  class="subordinate clearfix">
+  <div v-show="lists.length > 0"  class="subordinate clearfix">
     <el-row :gutter="10">
       <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4" class="xl-5" v-for="(item, index) in lists" :key="index">
         <div class="wrap" >
           <div class="avatar"><img src="@/assets/images/c-avatar.png" alt=""></div>
           <div class="contact-people">
-            {{item.name}}
+            {{item.TrueName}}
           <span class="level"><img src="@/assets/images/c-level.png" alt=""></span>
           </div>
-          <div class="contact-way">联系方式： {{item.contact}}</div>
+          <div class="contact-way">联系方式： {{item.tel}}</div>
         </div>
       </el-col>
     </el-row>
   </div>
 
-  <div  v-else style="background: #fff;">
+  <div v-show="lists.length == 0" style="background: #fff;">
     <div class="wrap-big-samll">
       <div class="no-my-big-samll"><img src="@/assets/images/no-my-big-small.png" alt=""></div>
       <div>暂无下级</div>
@@ -34,8 +34,8 @@ export default {
   data () {
     return {
       lists:[{
-          name: '',
-          contact: "+6"
+          TrueName: '',
+          tel: ""
         }],
       form: {
         guid: 'ssc-token',
@@ -51,8 +51,8 @@ export default {
   methods: {
     getSubordinateInfo () {
       subordinate (this.form).then( res => {
-        this.lists.name = res.data.data.TrueName
-        this.lists.contact = res.data.data.tel
+        console.log(res)
+        this.lists = res.data.data
       }) 
     }
   }

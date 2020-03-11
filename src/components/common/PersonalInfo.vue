@@ -241,7 +241,6 @@ export default {
     // 信息
     personInfo () {
       personInfo(this.lists).then( res => {
-        console.log(res)
         this.$store.commit('SAVE_USER',res.data.data.loginuser)
         this.userInfo = res.data.data
       })
