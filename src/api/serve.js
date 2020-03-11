@@ -195,7 +195,7 @@ export function taskMoney(data){
 // 分销佣金
 export function allotMoney(data){  
   return ajax({
-    url:'account/Transactionflow',
+    url:'account/Retail',
     method:'post',
     data
   })

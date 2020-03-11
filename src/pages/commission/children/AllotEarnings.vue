@@ -20,22 +20,35 @@
       </el-form> -->
     </div>
     <div>
-      <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
+      <el-table :data="table" height="440" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
         :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
         <af-table-column prop="id" label="编号" align="center" width="70px">
         <template slot-scope="scope">
             {{scope.$index+1}}
         </template>
         </af-table-column>
-        <af-table-column prop="guild" label="流水号" align="center"></af-table-column>
-        <af-table-column prop="name" label="所属企业" align="center"></af-table-column>
-        <af-table-column prop="address" label="职位名称" align="center"></af-table-column>
-        <af-table-column prop="experience" label="到场人数" align="center"></af-table-column>
-        <af-table-column prop="education" label="面过人数" align="center"></af-table-column>
-        <af-table-column prop="end_data" label="面过所获佣金" align="center"></af-table-column>
-        <af-table-column prop="start_data" label="共获佣金" align="center"></af-table-column>
-        <af-table-column prop="commission1" label="创建时间" align="center"></af-table-column>
+        <af-table-column prop="orderno" label="流水号" align="center"></af-table-column>
+        <af-table-column prop="personalinvitecode" label="所属成员" align="center"></af-table-column>
+        <af-table-column prop="dmnumber" label="到场人数" align="center"></af-table-column>
+        <af-table-column prop="tgnumber" label="面过人数" align="center"></af-table-column>
+        <af-table-column prop="tgnumber" label="到场所获佣金" align="center"></af-table-column>
+        <af-table-column prop="dmmoney" label="面过所获佣金" align="center"></af-table-column>
+        <af-table-column prop="money" label="共获佣金" align="center"></af-table-column>
+        <af-table-column prop="time" label="创建时间" align="center"></af-table-column>
       </el-table>
+    </div>
+
+
+      <!-- 分页 -->
+    <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="dataForm.limit"
+        :page-size="dataForm.curr"
+        layout="prev, pager, next, jumper"
+        :total="rows">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -49,24 +62,22 @@ export default {
   name: 'AllotEarnings',
   data() {
     return {
+      rows:1, //数据总数量
       dataForm: {
-        btime: '', // 开始时间
-        etime: '', // 结束时间
-        limit: '1',// 当前数据条数
-        curr: '1', // 当钱页数
+        limit: 1,// 当前数据条数
+        curr: 10, // 当钱页数
         tel: 'tel', //加密手机号
         guid: 'ssc-token'  // token
       },
       table: [{
-        guild: '',
-        name: '',
-        address: '',
-        experience: '',
-        education: '',
-        end_data: '',
-        start_data: '',
-        commission1: '',
-        commission2: ''
+        orderno:'', // 流水号
+        personalinvitecode: '', // 所属企业
+        dmnumber: '', // 到场人数
+        tgnumber: '', // 面过人数
+        dmmoney: '', // 到场所获佣金
+        tgmoney: '', // 面过所获佣金
+        money: '', // 总钱
+        time: '',
       }]
     }
   },
@@ -81,7 +92,19 @@ export default {
     },
     getAllotMoney () {
       allotMoney(this.dataForm).then(res => {
+        this.table = res.data.data
+        this.rows = res.data.listcount
       })
+    },
+        // 分页
+    handleSizeChange(val) {
+      console.log(val)
+      this.dataForm.curr = val ||this.dataForm.curr 
+      this.getAllotMoney() //重新调用接口
+    },
+    handleCurrentChange(val) {
+      this.dataForm.limit = val ||this.dataForm.limit 
+      this.getAllotMoney() //重新调用接口
     }
   }
   
