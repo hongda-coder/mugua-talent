@@ -15,14 +15,16 @@
         <div class="input-count">
           <input type="text" placeholder="请输入提现金额" v-model="form.money" autocomplete="new-password">
         </div>
-        <div class="title-bank">提现至一下银行卡</div>
+        <div class="title-bank">提现至以下银行卡</div>
         <div class="bank-card clearfix">
           <div class="bank-img"><img src="@/assets/images/c-bank-img.png" alt=""></div>
           <div class="bank-type">
-            <div>中国建设银行 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;储蓄卡</div>
+            <div>{{bankForm.branch}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;储蓄卡</div>
             <div>
-              <span><img  alt=""></span>
-              <span>8354</span>
+              <span class="c-omit-count"><img src="@/assets/images/c-omit-count.png" alt=""></span>
+              <span class="c-omit-count"><img src="@/assets/images/c-omit-count.png" alt=""></span>
+              <span class="c-omit-count"><img src="@/assets/images/c-omit-count.png" alt=""></span>
+              <span>{{bankForm.bank}}</span>
               </div>
           </div>
         </div>
@@ -54,7 +56,7 @@
   </div>
 </template>
 <script>
-import { earningsManage,withdrawMoney } from "@/api/serve"
+import { earningsManage,withdrawMoney, bankInfo } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'Withdraw',
@@ -69,21 +71,34 @@ export default {
         guid: 'ssc-token',
         tel: 'tel'
       },
+      bankForm:{
+        branch: '',
+        bank: ''
+      },
       dialogMyMoney: false, // 提现提示
       isPwd: false  // 是否显示提示
     }
   },
-  created() {
+  mounted() {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
     // 可提现
     this.haveMoney()
+
+    this.bankInfo()
   },
   methods: {
     //提现
     comfirmMoney () {
       this.dialogMyMoney = true
+    },
+
+    bankInfo () {
+      bankInfo ({guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+        console.log(res)
+        this.bankForm = res.data.data
+      }) 
     },
 
     // 确认提现
@@ -180,13 +195,23 @@ export default {
   }
 
   .bank-card {
-    background: #F2F2F2;
     width: 316px;
     height: 68px;
     border-radius: 4px;
     padding: 5px 20px;
     box-sizing: border-box;
     margin-bottom: 12px;
+    background: url("../../assets/images/c-bank-bg.png") no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .c-omit-count {
+    display: inline-block;
+    width: 30px;
+    margin-right: 5px;
+  }
+  .c-omit-count img {
+    width: 100%;
   }
 
   .bank-img {
@@ -200,6 +225,7 @@ export default {
     padding: 8px 0;
     line-height: 20px;
     box-sizing: border-box;
+    color: #fff;
   }
 
   .title-bank {

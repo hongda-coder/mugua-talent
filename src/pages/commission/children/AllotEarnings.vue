@@ -31,15 +31,14 @@
         <af-table-column prop="personalinvitecode" label="所属成员" align="center"></af-table-column>
         <af-table-column prop="dmnumber" label="到场人数" align="center"></af-table-column>
         <af-table-column prop="tgnumber" label="面过人数" align="center"></af-table-column>
-        <af-table-column prop="tgnumber" label="到场所获佣金" align="center"></af-table-column>
-        <af-table-column prop="dmmoney" label="面过所获佣金" align="center"></af-table-column>
+        <af-table-column prop="dmmoney" label="到场所获佣金" align="center"></af-table-column>
+        <af-table-column prop="tgmoney" label="面过所获佣金" align="center"></af-table-column>
         <af-table-column prop="money" label="共获佣金" align="center"></af-table-column>
         <af-table-column prop="time" label="创建时间" align="center"></af-table-column>
       </el-table>
     </div>
 
-
-      <!-- 分页 -->
+    <!-- 分页 -->
     <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
       <el-pagination
         @size-change="handleSizeChange"
@@ -71,7 +70,7 @@ export default {
       },
       table: [{
         orderno:'', // 流水号
-        personalinvitecode: '', // 所属企业
+        personalinvitecode: '', //分销码
         dmnumber: '', // 到场人数
         tgnumber: '', // 面过人数
         dmmoney: '', // 到场所获佣金
@@ -81,7 +80,7 @@ export default {
       }]
     }
   },
-  created () {
+  mounted () {
     this.dataForm.guid = getToken(this.dataForm.guid)
     this.dataForm.tel = getTel(this.dataForm.tel)
     this.getAllotMoney()

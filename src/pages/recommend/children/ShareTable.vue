@@ -16,10 +16,17 @@
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
         <af-table-column prop="msnumber" label="浏览人数" align="center"></af-table-column>
-        <af-table-column prop="state" label="竞聘状态" align="center"></af-table-column>
-        <af-table-column prop="name" label="操作" align="center">
+        <af-table-column prop="state" label="竞聘状态" align="center" width="110">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">查看</el-button>
+            <div :class="scope.row.state | addclassStatus">
+              <span style="margin-right: 5px;"><i class="iconfont" :class="scope.row.state | iconType"></i></span>
+              <span>{{scope.row.state}}</span>
+            </div>
+          </template>
+        </af-table-column>
+        <af-table-column prop="name" label="操作" align="center"  width="110">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -50,6 +57,7 @@ export default {
         mstime: '',
         msnumber: '',
         state: '',
+        href:''
       }],
       lists: {
         guid: 'ssc-token', //token
@@ -59,16 +67,45 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.shareList()
+  },
+  filters: {
+    addclassStatus (value) {
+      switch (value) {
+        case '待面试':
+          return 'StatusTypeColorA'
+        case '面试中':
+          return 'StatusTypeColorB'
+        case '面试结束': 
+          return 'StatusTypeColorC'
+        case '竞聘中' :
+          return 'StatusTypeColorD'
+      }
+    },
+    iconType (value) {
+      switch (value) {
+        case '待面试':
+          return 'icon-dingdan-daimianshi'
+        case '面试中':
+          return 'icon-shouye'
+        case '面试结束': 
+          return 'icon-jieshu'
+        case '竞聘中' :
+          return 'icon-sign'
+      }
+    }
   },
   methods: {
     shareList () {
       shareList(this.lists).then( res => {
         this.table = res.data.data
       })
+    },
+    goOut (row) {
+      window.open(this.table[row].href,"_blank")
     }
   }
 }
@@ -105,5 +142,24 @@ export default {
 .no-record img {
   width: 100%;
 }
+
+
+/*状态 */
+.StatusTypeColorA {
+  color: #FF6002;
+}
+
+.StatusTypeColorB {
+  color: #FEAD1D;
+}
+
+.StatusTypeColorC{
+  color: #0FD286;
+}
+
+.StatusTypeColorD {
+  color: #FE0000;
+}
+
 
 </style>

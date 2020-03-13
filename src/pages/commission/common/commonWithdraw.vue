@@ -72,7 +72,7 @@ export default {
       },
     }
   },
-  created() {
+  mounted() {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 

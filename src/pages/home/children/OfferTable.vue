@@ -35,7 +35,7 @@
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
             <el-button  type="text" size="small" :class="scope.row.state | addclassStatus" @click="getTask(scope.$index,scope.row)" :disabled="scope.row.state | isClick">{{scope.row.state | taskState}}</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <el-button  type="text" size="small" class="commonColor">查看</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -47,6 +47,7 @@
     <el-dialog
       title="提示"
       :visible.sync="shareTalbe"
+      @close='closeDialog'
       width="30%"
       >
       <vueVshare v-if="shareTalbe"></vueVshare>
@@ -64,6 +65,7 @@ import { jobList,shareJob, getTask, competeList } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'OfferTable',
+  inject:['reload'], 
   components: {
     vueVshare
   },
@@ -81,7 +83,8 @@ export default {
         aiMoenyOutside: '',
         rdMoenyOutside: '',
         msid: '', // 分享id
-        state: ''
+        state: '',
+        href:''
       }],
       lists: {
         guid: 'ssc-token', //token
@@ -91,7 +94,6 @@ export default {
       },
       shareTalbe: false, // 分享弹出层
       tableIndex: '',
-      // JobUrl: '',
       defaultConfig: {
         shareList: ['more','qzone','tsina','tqq','renren','weixin'],
         common:{
@@ -105,10 +107,11 @@ export default {
        disabled: false
     }
   },
-  created () {
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.jobList()
+    // this.keyup()
   },
   filters: {
     taskState (type) {
@@ -143,7 +146,7 @@ export default {
     }
   },
   methods: {
-    jobList () {
+    jobList (index) {
       jobList(this.lists).then( res => {
         this.table = res.data.data
       })
@@ -155,17 +158,6 @@ export default {
         this.shareTalbe = true
       })
     },
-
-    shareComfirm () {
-      this.shareTalbe = false
-      this.winReload()
-    },
-
-    shareCancle () {
-      this.shareTalbe = false
-      this.winReload()
-    },
-
      // 领任务
     getTask (row, column) {
       getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
@@ -187,13 +179,40 @@ export default {
       })
     },
 
+    closeDialog () {
+      this.winReload()
+    },
+
     winReload (cond){
       window.location.reload();
     },
 
+    shareComfirm () {
+      this.shareTalbe = false
+      this.winReload()
+    },
+
+    shareCancle () {
+      this.shareTalbe = false
+      this.winReload()
+    },
+    // keyup () { 
+    //   let that = this
+    //   document.onkeydown = function (event) {
+    //     let e = event || window.event || arguments.callee.caller.arguments[0];
+    //     if (e && e.keyCode == 27) {
+    //       that.winReload()    //调用下面的函数，注意This
+    //     }
+    //   };
+    // },
+
     // 跳转到更多
     goTask  () {
       this.$router.push('task')
+    },
+      // 跳到外部
+    goOut (row) {
+      window.open(this.table[row].href,"_blank")
     }
   }
 }

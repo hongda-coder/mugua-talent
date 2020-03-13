@@ -82,7 +82,7 @@ export default {
       }]
     }
   },
-  created () {
+  mounted () {
     this.dataForm.guid = getToken(this.dataForm.guid)
     this.dataForm.tel = getTel(this.dataForm.tel)
     this.getTastMoney()
@@ -93,7 +93,6 @@ export default {
     },
     getTastMoney () {
       taskMoney(this.dataForm).then(res => {
-        console.log(res)
         this.table = res.data.data 
         this.rows = res.data.listcount
       })

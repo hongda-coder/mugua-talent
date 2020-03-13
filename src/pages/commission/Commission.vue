@@ -7,7 +7,7 @@
       <li class="item" :class="{current: num == 4}" v-on:click="change(4)">提现管理</li>
     </ul>
     <div class="content">
-      <MyEarnings v-show="num == 1"></MyEarnings>
+      <MyEarnings v-show="num == 1" @getMoney="getMoney"></MyEarnings>
       <TaskEarnings v-show="num == 2"></TaskEarnings>
       <AllotEarnings v-show="num == 3"></AllotEarnings>
       <Withdraw v-show="num == 4"></Withdraw>
@@ -34,8 +34,15 @@ export default {
     }
   },
   methods: {
-    change: function(index) {
-      this.num = index
+    getMoney (val) {
+      if (this.$store.state.bankNumber ==  '-3') {
+        this.num = val
+      } else {
+        this.$router.push('withdraw')
+      }
+    },
+    change (num) {
+      this.num = num
     }
   }
 }

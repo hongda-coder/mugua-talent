@@ -36,7 +36,7 @@
         <div class="account">提现记录</div>
       </div>
       <div class="deposit">
-        <el-table :data="recordTable" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
+        <el-table :data="recordTable" height="246" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
           :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
           <af-table-column prop="id" label="编号" align="center" width="70px">
             <template slot-scope="scope">
@@ -88,15 +88,15 @@
       </el-popover>
     </div>
     <!-- 分页 -->
-    <div style="width: 30%; min-width: 300px;margin: auto;">
-      <div class="block">
-        <el-pagination
-    
-          :page-size="100"
-          layout="prev, pager, next, jumper"
-          :total="1000">
-        </el-pagination>
-      </div>
+    <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="limit"
+        :page-size="curr"
+        layout="prev, pager, next, jumper"
+        :total="rows">
+      </el-pagination>
     </div>
 
 
@@ -124,6 +124,7 @@ export default {
   name: 'Withdraw',
   data () {
     return {
+      rows:1, //数据总数量
       recordTable: [{
         orderno: '', //流水号
         time: '', //申请时间
@@ -131,8 +132,8 @@ export default {
         bank: '', //提现账户
         state: '' //状态
       }],
-      limit: '1', //当前页数
-      curr: '6', // 当前页多少条数
+      limit: 1, //当前页数
+      curr: 6, // 当前页多少条数
       dialogBank: false,
       lists: {
         guid: 'ssc-token', // token
@@ -144,8 +145,8 @@ export default {
       },
       labelPosition: 'right',
       bankForm:{
-        branch: '111',
-        bank: '111'
+        branch: '',
+        bank: ''
       },
       bankid: '', // 解绑卡号id
       dialogUnbank: false, // 解除绑定
@@ -165,7 +166,7 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
@@ -197,6 +198,7 @@ export default {
     // 银行卡信息
     bankInfo () {
       bankInfo ({guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+        this.$store.commit('SAVE_BANK',res.data.Message)
         this.bankForm = res.data.data
         this.bankid = res.data.data.id
       }) 
@@ -213,6 +215,7 @@ export default {
       unbindBank ({bankid: this.bankid,guid:this.lists.guid}).then( res => {
         this.$message('解绑银行卡成功')
         this.bankInfo()
+ 
         this.dialogUnbank = false
       })
     },
@@ -221,14 +224,19 @@ export default {
     record () {
       withdrawRecord ({guid: this.lists.guid,tel: this.lists.tel,limit: this.limit,curr: this.curr}).then( res => {
         this.recordTable = res.data.data
-        // console.log(res)
+        this.rows = res.data.listcount
+        console.log(res)
       })
     },
+    // 分页
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      console.log(val)
+      this.curr = val ||this.curr 
+      this.record() //重新调用接口
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.limit = val ||this.limit 
+      this.record()  //重新调用接口
     },
     winReload (cond){
       window.location.reload();

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view v-if="isRouterAlive"></router-view>
   </div>
 </template>
 
@@ -10,6 +10,16 @@
 
 export default {
   name: 'app',
+  provide () {
+    return {
+      reload: this.reload   
+    }
+  },
+  data () {
+    return {
+      isRouterAlive: true  
+    }
+  }, 
   watch:{
     '$route':function(to,from){
       this.currentRouter=to.path;
@@ -17,6 +27,14 @@ export default {
   },
   beforeMount(){
     this.currentRouter=this.$route.path;
+  },
+  methods: {
+    reload () {
+      this.isRouterAlive = false;            //先关闭，
+      this.$nextTick(function () {
+        this.isRouterAlive = true;         //再打开
+      }) 
+    }
   }
 }
 </script>

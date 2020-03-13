@@ -17,7 +17,7 @@
         <el-menu-item index="/group" class="item">
           <span slot="title">群组管理</span>
         </el-menu-item>
-        <el-menu-item index="/commission" class="item">
+        <el-menu-item  index='/commission' class="item">
           <span slot="title">佣金管理</span>
         </el-menu-item>
         <el-menu-item index="/safety" class="item">
@@ -36,11 +36,12 @@
 <script>
 export default {
   name: 'SibeNav',
-    methods: {
-    // pre (path) {
-    //   this.$router.push(path)
+    // methods: {
+    // // 跑去收益 
+    // goCommission () {
+    //   this.$router.push({name: 'commission', goNumber: 1})
     // }
-  }
+  // }
 }
 </script>
 

@@ -96,15 +96,18 @@ export default {
       form: {
         much: '', //提现金额
         pwd: '' // 提现密码
-      }
+      },
+      tmp: ''
     }
   },
-  created() {
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
     // 我的收益
     this.Myearnings()
+    // this.$store.state.bankNumber
+    console.log()
   },
   methods: {
     Myearnings () {
@@ -114,9 +117,8 @@ export default {
     },
         // 提现
     getMoney () {
-      this.$router.push('/withdraw')
+      this.$emit('getMoney',this.tmp = 4)
     },
-
   }
   
 }

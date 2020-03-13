@@ -5,6 +5,7 @@ export default {
   address: 'http://192.168.0.182',
   tel: getTel(),
   url:'',
-  loginuser:''
+  loginuser:'',
+  bankNumber: '',
 }
 

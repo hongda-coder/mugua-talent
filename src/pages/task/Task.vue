@@ -6,7 +6,7 @@
     </ul>
     <div class="content">
       <RewardTask v-show="num == 1"></RewardTask>
-      <MyTask v-show="num == 2"></MyTask>
+      <MyTask v-show="num == 2" @closeDialog="closeDialog"></MyTask>
     </div>
   </div>
 </template>
@@ -28,6 +28,11 @@ export default {
   methods: {
     change: function(index) {
       this.num = index
+    },
+    closeDialog (valNumber) {
+      this.$router.go(0)
+      this.num = valNumber
+      console.log(this.num)
     }
   }
 }

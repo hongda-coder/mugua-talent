@@ -13,6 +13,9 @@ export default {
   },
   SAVE_USER(state,e){
     state.loginuser = e
+  },
+  SAVE_BANK(state,e){
+    state.bankNumber = e
   }
 }
 

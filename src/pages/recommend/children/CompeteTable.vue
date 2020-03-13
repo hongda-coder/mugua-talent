@@ -26,7 +26,7 @@
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">查看</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -63,6 +63,7 @@ export default {
         mstime: '',
         number: '',
         state: '',
+        href:''
       }],
       lists: {
         guid: 'ssc-token', //token
@@ -73,7 +74,7 @@ export default {
       rows:1, //数据总数量
     }
   },
-  created () {
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.competeList()
@@ -121,6 +122,9 @@ export default {
     handleCurrentChange(val) {
       this.lists.limit = val ||this.lists.limit 
       this.competeList() //重新调用接口
+    },
+    goOut (row) {
+      window.open(this.table[row].href,"_blank")
     }
   }
 }

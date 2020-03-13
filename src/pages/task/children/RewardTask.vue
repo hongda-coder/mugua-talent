@@ -49,10 +49,10 @@
         <af-table-column prop="name" label="操作" align="center"  width="150">
           <template slot-scope="scope" width="180">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
-              <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-              <el-button  type="text" size="small" :class="scope.row.state | addclassStatus" @click="getTask(scope.$index,scope.row)" :disabled="scope.row.state | isClick">{{scope.row.state | taskState}}</el-button>
-              <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <el-button type="text" size="small"  class="commonColor">查看</el-button>
+            <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
+            <el-button  type="text" size="small" :class="scope.row.state | addclassStatus" @click="getTask(scope.$index,scope.row)" :disabled="scope.row.state | isClick">{{scope.row.state | taskState}}</el-button>
+            <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -74,12 +74,13 @@
     <el-dialog
       title="提示"
       :visible.sync="dialogShare"
+      @close='closeDialog'
       width="30%"
       >
       <vueVshare v-if="dialogShare"></vueVshare>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogShare = false">取 消</el-button>
-        <el-button type="primary" @click="dialogShare = false">确 定</el-button>
+        <el-button @click="cancelDialog">取 消</el-button>
+        <el-button type="primary" @click="confirmDialog">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -110,6 +111,7 @@ export default {
         aiMoenyOutside: '',
         rdMoenyOutside: '',
         msid: '',
+        href:'',
         state: ''
       }],
       lists: {
@@ -166,10 +168,10 @@ export default {
         image: false,
         selectShare: false
       },
-      disabled: false
+      disabled: false,
     }
   },
-  created () {
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.jobList()
@@ -246,6 +248,24 @@ export default {
     handleCurrentChange(val) {
       this.lists.limit = val ||this.lists.limit;
       this.jobList();//重新调用接口
+    },
+
+    // 分享关闭刷新
+    closeDialog () {
+      this.$router.go(0)
+      console.log("5646546")
+    },
+    cancelDialog () {
+      this.dialogShare = false
+      this.$router.go(0)
+    },
+    confirmDialog () {
+      this.dialogShare = false
+      this.$router.go(0)
+    },
+        // 跳到外部
+    goOut (row) {
+      window.open(this.table[row].href,"_blank")
     }
   }
 }

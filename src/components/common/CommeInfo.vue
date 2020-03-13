@@ -26,7 +26,7 @@
           <div class="c-member-avatar"><img src="@/assets/images/c-my-earnings.png"></div>
           <div class="c-member-count">我的收益<span>{{inCome}}</span> </div>
           <div class="c-member-manage">
-            <button @click="goCommission">提现</button>
+            <button @click="goCommission">查看</button>
           </div>
         </div>
       </el-col>
@@ -50,7 +50,8 @@ export default {
       sscCount: '',  // 我的群成员
       dmCount: '',   // 推荐到场
       tgCount: '',  // 推荐面过
-      inCome: ''  // 我的收益
+      inCome: '',  // 我的收益
+      goNumber: 4
     }
   },
   created () {
@@ -78,9 +79,9 @@ export default {
     goRecommend () {
       this.$router.push("./recommend")
     },
-    // 跑去群主管理
+    // 跑去收益 
     goCommission () {
-      this.$router.push("./commission")
+      this.$router.push({name: 'commission', goNumber: 4})
     }
   }
 }

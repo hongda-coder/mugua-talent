@@ -15,13 +15,13 @@
             <div class="c-people-data">
               <div class="clearfix">
                 <div class="c-people-name" style="margin-right: 15px;font-size: 20px;">{{userInfo.TrueName}}</div>
-                <div class="c-people-icon"><i class="iconfont">&#xe668;</i>已认证</div>
+                <!-- <div class="c-people-icon"><i class="iconfont">&#xe668;</i>已认证</div> -->
               </div>
               <div class="clearfix" style="line-height: 35px;">
-                <div class="c-people-sex" style="margin-right: 20px;">性别：<span>{{userInfo.sex}}</span></div>
+                <div class="c-people-sex" style="margin-right: 20px;">性别：<span>{{userInfo.sex | userSex }}</span></div>
                 <div class="c-people-age">年龄：<span>{{getAge}}岁</span></div>
               </div>
-              <div>联系方式：<span>{{userInfo.tel}}</span></div>
+              <div>联系方式：<span>{{userInfo.xtel}}</span></div>
               <div>电子邮箱：<span>{{userInfo.eamil}}</span></div>
               <div style="height: 29px;">     </div>
               <!-- <div>证书名称：<span></span></div> -->
@@ -52,11 +52,11 @@
                   <div>参与人数</div>
                 </div>
                 <div class="c-pass-odds">
-                  <div style="margin: 5px 0;">{{dmprobability}}</div>
+                  <div style="margin: 5px 0;">{{tgprobability}}</div>
                   <div>通过率</div>
                 </div>
                 <div class="c-make-odds">
-                  <div style="margin: 5px 0;">{{tgprobability}}</div>
+                  <div style="margin: 5px 0;">{{dmprobability}}</div>
                   <div>到面率</div>
                 </div>
               </div>
@@ -76,7 +76,6 @@
     </el-row>
     
     <!-- 编辑 -->
-
     <div  v-show="dialogEditor" style="padding: 20px;background: #fff;">
       <div style="border: 1px solid #FEAF1D; padding: 30px 0; background: #FAFAFA;">
                       
@@ -201,7 +200,7 @@ export default {
         sex: '', // 性别
         loginuser: '', // 用户名
         TrueName: '', // 真实姓名
-        tel: '',  // 联系电话
+        xtel: '',  // 联系电话
         create: '', // 出生日期
         eamil: '', // 邮箱
         imagename: '', // 证书名称
@@ -236,7 +235,18 @@ export default {
       return d.getFullYear() - new Date(this.userInfo.create).getFullYear() - (d.getMonth() < new Date(this.userInfo.create).getMonth() || (d.getMonth() == new Date(this.userInfo.create).getMonth() && d.getDate() < new Date(this.userInfo.create).getDate()) ? 1 : 0)
     } 
   },
-
+  filters: {
+    userSex (type) {
+      switch (type) {
+        case '1':
+          return '男'
+        case '2':
+          return '女'
+        default:
+          return type 
+      }
+    }
+  },
   methods: {
     // 信息
     personInfo () {
@@ -266,10 +276,7 @@ export default {
       this.formData.append('file', this.file)
       this.formData.append('guid', this.lists.guid)
       this.formData.append('tel', this.lists.tel)
-      console.log(this.formData)
-      // this.formData.append('imagename', this.editorForm.imagename)
       uploadImg(this.formData).then(res => {
-        // console.log(res)
         this.url = res.data.url
       })
     },
@@ -278,6 +285,7 @@ export default {
     editor () {
       this.dialogEditor = true
        personInfo(this.lists).then( res => {
+        console.log(res)
         this.editorForm = res.data.data
         this.editorForm.xtel = res.data.data.tel
         this.editorForm.guid = this.lists.guid
@@ -287,9 +295,9 @@ export default {
 
     saveInfo () {
       perInfo (this.editorForm).then( res => {
-        console.log(res)
         if (res.data.Message == 'success') {
           this.dialogEditor = false
+          this.personInfo()
         }
       }) 
     }

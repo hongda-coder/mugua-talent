@@ -29,7 +29,7 @@
           <template slot-scope="scope">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <el-button type="text" size="small"  class="commonColor">查看</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -48,16 +48,18 @@
       </el-pagination>
     </div>
 
-    <!-- 分页 -->
+
+    <!-- 分享 -->
     <el-dialog
       title="提示"
       :visible.sync="dialogShare"
+      @close='closeDialog'
       width="30%"
       >
       <vueVshare v-if="dialogShare"></vueVshare>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogShare = false">取 消</el-button>
-        <el-button type="primary" @click="dialogShare = false">确 定</el-button>
+        <el-button @click="cancelDialog">取 消</el-button>
+        <el-button type="primary" @click="confirmDialog">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -74,6 +76,7 @@ export default {
   },
   data () {
     return {
+      valNumber: 2,
       rows:1, //数据总数量
       table: [{
         id: '',
@@ -86,6 +89,7 @@ export default {
         jpetime: '',
         aiMoenyOutside: '',
         rdMoenyOutside: '',
+        href: '',
         msid: ''
       }],
       lists: {
@@ -107,7 +111,10 @@ export default {
       },
     }
   },
-  created () {
+  beforeCreate () {
+    window._bd_share_main = ''
+  },
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.competeList()
@@ -133,6 +140,20 @@ export default {
         this.dialogShare = true
       })
     },
+
+    // 分享关闭刷新
+    closeDialog () {
+      this.$emit('closeDialog', this.valNumber)
+      
+    },
+    cancelDialog () {
+      this.dialogShare = false
+      this.$router.go(0)
+    },
+    confirmDialog () {
+      this.dialogShare = false
+      this.$router.go(0)
+    },
       // 分页
     handleSizeChange(val) {
       this.lists.curr = val ||this.lists.curr;
@@ -141,6 +162,10 @@ export default {
     handleCurrentChange(val) {
       this.lists.limit = val ||this.lists.limit;
       this.jobList();//重新调用接口
+    },
+        // 跳到外部
+    goOut (row) {
+      window.open(this.table[row].href,"_blank")
     }
   }
 }

@@ -42,7 +42,7 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.form.guid = getToken(this.form.guid)
     this.form.tel = getTel(this.form.tel)
     this.getSuperiorInfo()

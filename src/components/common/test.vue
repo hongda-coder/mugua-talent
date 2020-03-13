@@ -26,9 +26,6 @@ export default {
   props: ['vshareConfig'],
   mounted () {
     console.log(this.vshareConfig)
-        // this.defaultConfig.common.bdUrl = this.JobUrl
-        console.log("index###",this.defaultConfig.common.bdUrl)
-        // console.log(this.JobUrl)
     if (this.vshareConfig) {
       this.vshareConfig.shareList ? this.defaultConfig.shareList = this.vshareConfig.shareList :'';
       if (this.vshareConfig.shareList) {

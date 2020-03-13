@@ -29,8 +29,8 @@
           </template>
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
-          <template slot-scope="scope" >
-            <el-button @click.native.prevent="deleteRow(scope.$index, tableData4)" type="text" size="small" class="commonColor">查看</el-button>
+          <template slot-scope="scope">
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -60,7 +60,8 @@ export default {
         number: '',
         state: '',
         aiMoenyOutside: '',
-        rdMoenyOutside: ''
+        rdMoenyOutside: '',
+        href:''
       }],
       lists: {
         guid: 'ssc-token', //token
@@ -70,7 +71,7 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
     this.competeList()
@@ -112,6 +113,13 @@ export default {
 
     goCompete () {
       this.$router.push('recommend')
+    },
+    goOut (row) {
+      window.open(this.table[row].href,"_blank")
+    },
+          // 跳到外部
+    goOut (row) {
+      window.open(this.table[row].href,"_blank")
     }
   }
 }

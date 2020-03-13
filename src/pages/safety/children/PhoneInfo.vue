@@ -167,7 +167,7 @@ export default {
       computeTime: 0
     }
   },
-  created () {
+  mounted () {
     this.form.guid = getToken('tel')
     this.pwdForm.guid = getToken(this.pwdForm.guid)
     this.pwdForm.tel = getTel('tel')

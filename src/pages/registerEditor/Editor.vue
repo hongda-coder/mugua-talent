@@ -34,7 +34,7 @@
                   <div class="clearfix">
                     <div class="content-input">
                       <el-form-item label="真实姓名" prop="TrueName">
-                          <el-input v-model="editorForm.TrueName"></el-input>
+                          <el-input v-model="editorForm.TrueName" onKeypress="return(/^[\u0391-\uFFE5A-Za-z]+$/.test(String.fromCharCode(event.keyCode)))"></el-input>
                       </el-form-item>
                     </div>
                   </div>
@@ -58,7 +58,7 @@
                   <div class="clearfix">
                     <div class="content-input">
                       <el-form-item label="联系方式" prop="xtel">
-                        <el-input v-model="editorForm.xtel"></el-input>
+                        <el-input v-model="editorForm.xtel"  onkeyup="value=value.replace(/[^\d]/g,'')" ></el-input> 
                       </el-form-item>
                     </div>
                   </div>
@@ -151,6 +151,11 @@ export default {
         TrueName: '',
         xtel: '',  // 联系电话
         create: '', // 生日
+        // pickerOptions: {
+        //   disabledDate (time) {
+        //     return time.getTime() < new Date()
+        //   }
+        // },
         eamil: '', // 邮箱
         guid: 'ssc-token', //token
         tel: 'tel', // 加密手机号
@@ -167,7 +172,6 @@ export default {
         ],
         TrueName: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
-          { type: 'int', message: '真实姓名不可以是数字', trigger: 'blur' }
         ],
         sex: [
           { required: true, message: '请选择性别', trigger: 'change' }
@@ -179,12 +183,12 @@ export default {
           { required: true, message: '请输入邮箱', trigger: 'blur' }
         ],
         xtel: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' }
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
         ]
       }
     }
   },
-  created () {
+  mounted () {
     this.editorForm.tel = getTel(this.editorForm.tel)
     this.editorForm.guid = getToken(this.editorForm.guid)
   },

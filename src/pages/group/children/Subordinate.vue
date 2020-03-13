@@ -43,7 +43,7 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.form.guid = getToken(this.form.guid)
     this.form.tel = getTel(this.form.tel)
     this.getSubordinateInfo()
@@ -51,7 +51,6 @@ export default {
   methods: {
     getSubordinateInfo () {
       subordinate (this.form).then( res => {
-        console.log(res)
         this.lists = res.data.data
       }) 
     }
