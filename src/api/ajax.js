@@ -6,7 +6,7 @@ import { getToken } from './cookie'
 const ajax = axios.create({
   baseURL:'http://192.168.0.182:8003/api/',
   timeout: 5000,
-  withCredentials: true,  // 允许携带cookie
+  withCredentials: true,  // 允许携带cookie 'http://api.jobyes.com/api/'
 })
 
 //  添加请求拦截器

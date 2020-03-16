@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10088937",
+      "name": "取消下达",
+      "font_class": "icon_function_quxiaoxiada",
+      "unicode": "e88b",
+      "unicode_decimal": 59531
+    },
+    {
       "icon_id": "825060",
       "name": "手机",
       "font_class": "shouji54",

@@ -20,7 +20,14 @@
         <af-table-column prop="mstime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="start_data" label="面试时间" align="center"></af-table-column>
         <af-table-column prop="number" label="浏览人数" align="center"></af-table-column>
-        <af-table-column prop="state" label="竞聘状态" align="center"></af-table-column>
+        <af-table-column prop="state" label="竞聘状态" align="center">
+          <template slot-scope="scope">
+            <div :class="scope.row.state | addclassStatus">
+              <span style="margin-right: 5px;"><i class="iconfont" :class="scope.row.state | iconType"></i></span>
+              <span>{{scope.row.state}}</span>
+            </div>
+          </template>
+        </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
@@ -67,9 +74,43 @@ export default {
     this.lists.tel = getTel(this.lists.tel)
     this.shareList()
   },
+  filters: {
+    // class状态
+    addclassStatus (value) {
+      switch (value) {
+        case '待面试':
+          return 'StatusTypeColorA'
+        case '面试中':
+          return 'StatusTypeColorB'
+        case '已完成': 
+          return 'StatusTypeColorC'
+        case '竞聘中' :
+          return 'StatusTypeColorD'
+        case '已取消' :
+          return 'StatusTypeColorE'
+      }
+    },
+    iconType (value) {
+      switch (value) {
+        case '待面试':
+          return 'icon-dingdan-daimianshi'
+        case '面试中':
+          return 'icon-shouye'
+        case '已完成': 
+          return 'icon-jieshu'
+        case '竞聘中' :
+          return 'icon-sign'
+        case '已取消':
+          return '&#xe88b;'
+      }
+    }
+  },
   methods: {
     shareList () {
       shareList(this.lists).then( res => {
+        if(res.Message == "-2") {
+          this.$router.push("login")
+        }
         this.table = res.data.data
       })
     },
@@ -126,4 +167,25 @@ export default {
 .commonColor {
   color: #FEAD1C;
 }
+
+/*状态 */
+.StatusTypeColorA {
+  color: #FF6002;
+}
+
+.StatusTypeColorB {
+  color: #FEAD1D;
+}
+
+.StatusTypeColorC{
+  color: #0FD286;
+}
+
+.StatusTypeColorD {
+  color: #FE0000;
+}
+.StatusTypeColorE {
+  color: #959595;
+}
+
 </style>

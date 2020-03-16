@@ -84,10 +84,12 @@ export default {
           return 'StatusTypeColorA'
         case '面试中':
           return 'StatusTypeColorB'
-        case '面试结束': 
+        case '已完成': 
           return 'StatusTypeColorC'
         case '竞聘中' :
           return 'StatusTypeColorD'
+        case '已取消' :
+          return 'StatusTypeColorE'
       }
     },
 
@@ -99,14 +101,19 @@ export default {
           return 'icon-shouye'
         case '面试结束': 
           return 'icon-jieshu'
-        case '竞聘中' :
+        case '竞聘中':
           return 'icon-sign'
+        case '已取消':
+          return '&#xe88b;'
       }
     }
   },
   methods: {
     competeList () {
       competeList(this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.table = res.data.data
       })
     },
@@ -182,6 +189,9 @@ export default {
 
 .StatusTypeColorD {
   color: #FE0000;
+}
+.StatusTypeColorE {
+  color: #959595;
 }
 
 </style>

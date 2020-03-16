@@ -45,7 +45,11 @@
           </af-table-column>
           <af-table-column prop="orderno" label="流水号" align="center"></af-table-column>
           <af-table-column prop="time" label="申请时间" align="center"></af-table-column>
-          <af-table-column prop="money" label="提现金额（￥）" align="center"></af-table-column>
+          <af-table-column prop="money" label="提现金额" align="center">
+            <template slot-scope="scope">
+              ￥{{scope.row.money}}
+            </template>
+          </af-table-column>
           <af-table-column prop="bank" label="提现账户" align="center"></af-table-column>
           <af-table-column prop="state" label="提现状态" align="center"></af-table-column>
         </el-table>
@@ -214,18 +218,20 @@ export default {
     confirmUnbank () {
       unbindBank ({bankid: this.bankid,guid:this.lists.guid}).then( res => {
         this.$message('解绑银行卡成功')
-        this.bankInfo()
- 
+        this.bankid = ''
         this.dialogUnbank = false
+        this.bankInfo()
       })
     },
 
     // 提现记录
     record () {
       withdrawRecord ({guid: this.lists.guid,tel: this.lists.tel,limit: this.limit,curr: this.curr}).then( res => {
+        if(res.Message == "-2") {
+          this.$router.push("login")
+        }
         this.recordTable = res.data.data
         this.rows = res.data.listcount
-        console.log(res)
       })
     },
     // 分页
@@ -268,13 +274,13 @@ export default {
     background: #F9F9F9;
     margin: 15px auto;
     text-align: center;
-
   }
 
   .icon {
     padding-top: 45px;
     width: 80px;
     margin: auto;
+    cursor: pointer;
   }
     .icon img {
       width: 100%;
@@ -361,6 +367,7 @@ export default {
     margin: auto;
     text-align: center;
     color: #fff;
+    cursor: pointer;
   }
 
   /* /deep/ .el-button--primar {

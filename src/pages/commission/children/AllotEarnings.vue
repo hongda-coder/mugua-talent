@@ -91,6 +91,9 @@ export default {
     },
     getAllotMoney () {
       allotMoney(this.dataForm).then(res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.table = res.data.data
         this.rows = res.data.listcount
       })

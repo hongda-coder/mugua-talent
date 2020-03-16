@@ -50,6 +50,9 @@ export default {
   methods: {
     getSuperiorInfo () {
       superior (this.form).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.lists.name = res.data.data.TrueName
         this.lists.contact = res.data.data.tel
       }) 

@@ -227,3 +227,18 @@ export function getTask(data){
     data
   })
 } 
+
+// 新需求
+export function oldUser(data){  
+  return ajax({
+      url:'user/perfect1',
+      method:'post',
+       data
+  })
+}
+
+
+
+
+
+

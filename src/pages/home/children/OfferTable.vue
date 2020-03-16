@@ -19,12 +19,12 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="到场所获佣金" align="center"  width="130">
+        <af-table-column prop="rdMoenyOutside" label="到面佣金" align="center"  width="130">
           <template slot-scope="scope">
             ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="面过所获佣金" align="center" width="130">
+        <af-table-column prop="aiMoenyOutside" label="面过佣金" align="center" width="130">
             <template slot-scope="scope">
             ￥{{scope.row.aiMoenyOutside}}
           </template>
@@ -148,12 +148,19 @@ export default {
   methods: {
     jobList (index) {
       jobList(this.lists).then( res => {
+        if(res.Message == "-2") {
+          this.$router.push("login")
+        }
         this.table = res.data.data
       })
     },
     // 分享
     share (row, column) {
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+        console.log(res)
+        if(res.Message == "-2") {
+          this.$router.push("login")
+        }
         this.$store.commit('SAVE_URL',res.data.data.urlpath)
         this.shareTalbe = true
       })
@@ -196,16 +203,6 @@ export default {
       this.shareTalbe = false
       this.winReload()
     },
-    // keyup () { 
-    //   let that = this
-    //   document.onkeydown = function (event) {
-    //     let e = event || window.event || arguments.callee.caller.arguments[0];
-    //     if (e && e.keyCode == 27) {
-    //       that.winReload()    //调用下面的函数，注意This
-    //     }
-    //   };
-    // },
-
     // 跳转到更多
     goTask  () {
       this.$router.push('task')

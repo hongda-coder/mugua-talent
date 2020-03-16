@@ -35,8 +35,7 @@
       </el-table>
     </div>
 
-
-        <!-- 分页 -->
+    <!-- 分页 -->
     <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
       <el-pagination
         @size-change="handleSizeChange"
@@ -47,8 +46,6 @@
         :total="rows">
       </el-pagination>
     </div>
-
-
     <!-- 分享 -->
     <el-dialog
       title="提示"
@@ -122,6 +119,9 @@ export default {
   methods: {
     competeList () {
       competeList(this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.table = res.data.data
         this.rows = res.data.listcount
       })
@@ -129,6 +129,9 @@ export default {
     // 领任务
     getTask (row) {
       getTask ({guid:this.lists.guid,tel:this.lists.tel,msid: this.table[row].msid}).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
       })
     },
 

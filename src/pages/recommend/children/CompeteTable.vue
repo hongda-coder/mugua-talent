@@ -8,7 +8,7 @@
             {{scope.$index+1}}
         </template>
         </af-table-column>
-        <af-table-column prop="cname" label="所属行业" align="center"></af-table-column>
+        <af-table-column prop="cname" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="jobname" label="职位名称" align="center"></af-table-column>
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
         <af-table-column prop="working" label="工作经验" align="center"></af-table-column>
@@ -31,8 +31,7 @@
         </af-table-column>
       </el-table>
     </div>
-
-        <!-- 分页 -->
+    <!-- 分页 -->
     <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
       <el-pagination
         @size-change="handleSizeChange"
@@ -87,10 +86,12 @@ export default {
           return 'StatusTypeColorA'
         case '面试中':
           return 'StatusTypeColorB'
-        case '面试结束': 
+        case '已完成': 
           return 'StatusTypeColorC'
         case '竞聘中' :
           return 'StatusTypeColorD'
+        case '已取消' :
+          return 'StatusTypeColorE'
       }
     },
 
@@ -100,16 +101,22 @@ export default {
           return 'icon-dingdan-daimianshi'
         case '面试中':
           return 'icon-shouye'
-        case '面试结束': 
+        case '已完成': 
           return 'icon-jieshu'
         case '竞聘中' :
           return 'icon-sign'
+        case '已取消':
+          return '&#xe88b;'
       }
     }
   },
   methods: {
     competeList () {
       competeList(this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
+        
         this.table = res.data.data
         this.rows = res.data.listcount
       })
@@ -178,5 +185,9 @@ export default {
 
 .StatusTypeColorD {
   color: #FE0000;
+}
+
+.StatusTypeColorE {
+  color: #959595;
 }
 </style>

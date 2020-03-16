@@ -19,6 +19,7 @@
     <div class="wrap-big-samll">
       <div class="no-my-big-samll"><img src="@/assets/images/no-my-big-small.png" alt=""></div>
       <div>暂无下级</div>
+      <div>注：分享分销码添加下级，可额外赚取收益</div>
     </div>
   </div>
 </div>
@@ -51,6 +52,9 @@ export default {
   methods: {
     getSubordinateInfo () {
       subordinate (this.form).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.lists = res.data.data
       }) 
     }
@@ -98,14 +102,16 @@ export default {
 
 .wrap-big-samll {
   padding: 50px 0;
-  width: 250px;
+  width: 450px;
   margin: auto;
   text-align: center;
   color: #777;
+  line-height: 30px;
 }
 
 .no-my-big-samll {
-  widows: 250px;
+  width: 250px;
+  margin: auto;
 }
 
 .no-my-big-samll img {

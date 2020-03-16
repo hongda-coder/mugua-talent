@@ -19,7 +19,7 @@
     <img src="../../assets/images/c-bannner.png" alt="">
   </div>
 
-    <el-dialog
+  <el-dialog
     title="退出登陆"
     :visible.sync="isLoginout"
     width="30%"
@@ -113,8 +113,13 @@ export default {
 }
 
 .loginout {
+  margin-top: 20px;
   text-align: center;
   font-size: 18px;
   letter-spacing: 1px;
+}
+
+/deep/ .el-dialog__header {
+  display: none;
 }
 </style>

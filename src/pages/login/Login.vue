@@ -38,27 +38,59 @@
                 <el-button class="btn" @click="submitForm('form')" @keyup.enter="loginT">登录</el-button>
               </el-form-item>
               <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
+              <div class="c_talent_forget" @click="addInfo">老用户</div>
             </el-form>
           </div>
         </div>
       </div>
     </div>
+
+    <el-dialog title="管理员修改" :visible.sync="dialogEditVisible" width="600px" center>
+      <el-form :model="oldForm">
+        <el-form-item label="真实姓名" :label-width="formLabelWidth">
+          <el-input v-model="oldForm.TrueName" autocomplete="off" placeholder="请输入真实姓名" onKeypress="return(/^[\u0391-\uFFE5A-Za-z]+$/.test(String.fromCharCode(event.keyCode)))"></el-input>
+        </el-form-item>
+        <el-form-item label="上级分销码" :label-width="formLabelWidth">
+          <el-input v-model="oldForm.othersinvitecode" autocomplete="off" placeholder="请输入上级分销码" onkeyup="value=value.replace(/[^\d]/g,'')" ></el-input>
+        </el-form-item>
+        <el-form-item label="电话号码" :label-width="formLabelWidth">
+          <el-input v-model="oldForm.tel" autocomplete="off" placeholder="请输入电话号码" onkeyup="value=value.replace(/[^\d]/g,'')" ></el-input>
+        </el-form-item>
+        <el-form-item label="密钥" :label-width="formLabelWidth">
+          <el-input type="password" v-model="oldForm.loginuser" autocomplete="off" placeholder="请输入密钥"></el-input>
+        </el-form-item>
+
+        <div style="width: 389px;margin-left: 100px;">
+          <el-button style="background: #FEAD1C; color: #fff;width: 100%; line-height: 24px;  border: none;" @click="saveInfo">保存</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
+
     <!-- banner登录区 -->
+
     <Pic></Pic>
     <Footer></Footer>
   </div>
 </template>
 <script>
-
+import { oldUser } from "@/api/serve"
 import Footer from "@/components/footer/Footer"
 import Pic from '@/components/common/Pic'
 export default {
   name: "Login",
   data () {
     return {
+      formLabelWidth: '100px',
+      dialogEditVisible: false,
       form: {
         loginuser: '',
         pwd: ''
+      },
+      oldForm: {  
+        TrueName: '', // 真实姓名
+        othersinvitecode: '',  //邀请码
+        tel: '',// 电话号码
+        loginuser: '' // 密钥
       },
       isCode: false,
       isPwd: false,
@@ -97,14 +129,15 @@ export default {
     changeCodeImg () {
       let num = Math.ceil( Math.random()*10) //生成一个随机数（防止缓存）
 　　},
-    // keyboardEvent () {
-    //   document.onkeydown = function(e) {
-    //     let ev = document.all ? window.event : e
-    //     if (ev.keyCode === 13) {
-    //         this.submitForm()
-    //     }
-    //   }
-    // }
+    addInfo () {
+      this.dialogEditVisible = true
+    },
+    saveInfo () {
+      this.dialogEditVisible = false
+      oldUser (this.oldForm).then( res => {
+        console.log(res)
+      })
+    }
   }
 }
 </script>
@@ -267,6 +300,7 @@ export default {
   margin-top: 10px;
   color: #999999;
   font-size: 14px;
+  cursor: pointer;
 }
 
   .code {
@@ -305,6 +339,14 @@ export default {
     top: 38px;
     left: 5px;
     color:red;
+  }
+
+  /deep/ .el-input {
+    display: inline;
+  }
+
+  /deep/ .el-input__inner {
+    width: 390px;
   }
 
 </style>

@@ -62,6 +62,10 @@ export default {
       this.lists.guid = getToken(this.lists.guid)
       this.lists.tel = getTel(this.lists.tel)
       personEarnings(this.lists).then( res => {
+        console.log(res)
+        if(res.data.Message == "-2") {
+           this.$router.push("./login")
+        }
         this.sscCount = res.data.data.sscCount
         this.dmCount = res.data.data.dmCount
         this.tgCount = res.data.data.tgCount
@@ -116,4 +120,16 @@ export default {
   margin:20px auto;
   line-height: 60px;
 }
+
+
+/* @media screen and(max-width: 1660px) {
+  .card {
+    width: 530px;
+  }
+}
+@media screen and(min-width: 1120px) {
+  .card {
+    width: 530px;
+  }
+} */
 </style>

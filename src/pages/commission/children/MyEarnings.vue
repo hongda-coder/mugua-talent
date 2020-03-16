@@ -112,6 +112,9 @@ export default {
   methods: {
     Myearnings () {
       earningsManage (this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.monye = res.data.data
       })
     },

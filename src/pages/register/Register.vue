@@ -26,19 +26,22 @@
                 欢迎来到人才推荐中心！
               </div>
               <div class="form-group">
-                <input type="text" placeholder="请输入账号" v-model="form.tel">
+                <input type="text" placeholder="请输入账号" v-model="form.tel" @blur="handlerPhone">
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
-                <div class="c_talent_hint1">请输入账号</div>
+                <div class="c_talent_hint" v-show="isShowTel">请输入账号</div>
+                <div class="c_talent_hint" v-show="isShowReg">改账号已经注册</div>
               </div>
               <div class="form-group">
-                <input type="password" placeholder="请输入密码" v-model="form.pwd">
+                <input type="password" placeholder="请输入密码" v-model="form.pwd" @blur="handlerPwd">
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
-                <div class="c_talent_hint2">请输入密码</div>
+                <div class="c_talent_hint" v-show="isShowPwd">请输入密码</div>
               </div>
 
               <div class="form-group">
-                <input type="text" placeholder="请输入邀请码" v-model="form.othersinvitecode">
+                <input type="text" placeholder="请输入邀请码" v-model="form.othersinvitecode" @blur="handlerCode">
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe60d;</i></div>
+                <div class="c_talent_hint" v-show="isShowOthersinvitecode">请输入邀请码</div>
+                <div class="c_talent_hint" v-show="isShowCode">您输入的邀请码不正确</div>
               </div>
 
               <div class="form-group" style="margin-bottom: 15px;">
@@ -63,11 +66,11 @@
         </div>
       </div>
     </div>
+    <el-button @click="openVn" v-show="false"></el-button>
     <!-- banner登录区 -->
     <Pic></Pic>
     <Footer></Footer>
   </div>
-
 
 </template>
 
@@ -121,6 +124,11 @@ export default {
   },
   data () {
     return {
+      isShowTel: false,
+      isShowPwd: false,
+      isShowOthersinvitecode: false,
+      isShowReg: false,
+      isShowCode: false,
       form: {
         tel: '',
         pwd: '',
@@ -132,7 +140,8 @@ export default {
       computeTime: 0, // 计时的时间
       isDisabled: true,
       disX : 0,
-			rangeStatus: false
+      rangeStatus: false,
+      duration: '5000'
     }
   },
   methods: {
@@ -149,7 +158,10 @@ export default {
         }
       }, 1000)
       shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.tel}).then(res => {
-        // console.log(res)
+        console.log(res)
+        if ( res.data.Message == -4 ) {
+          this.isShowReg = true
+        }
       })
     },
     goLogin () {
@@ -159,15 +171,28 @@ export default {
     // 注册
     registerBtn () {
       register ({tel:this.form.tel,pwd:this.form.pwd,code:this.form.code,othersinvitecode:this.form.othersinvitecode}).then( res=> {
+        console.log(res)
         if (res.data.Message == 'success') {
-          this.$router.push("./login")
+          this.openVn()
+          setInterval (function () {
+            this.$router.push("login")
+          }, this.duration)
         }
       })
     },
     //滑块移动
 		rangeMove(e){
-      if (this.form.tel == "" || this.form.pwd == "") {
+      if (this.form.tel == "") {
+        this.isShowTel = true
         return false 
+      } else if (this.form.pwd == ""){
+         console.log("65")
+        this.isShowPwd = true
+        return false
+      } else if (this.form.othersinvitecode == ""){
+         console.log("65")
+        this.isShowOthersinvitecode = true
+        return false
       } else {
       let ele = e.target;
 			let startX = e.clientX;
@@ -210,7 +235,44 @@ export default {
 				document.onmouseup = null;
 			}
       }
-		}
+    },
+    openVn() {
+      const h = this.$createElement;
+      this.$message({
+        duration: this.duration,
+        message: h('p', null, [
+          h('span', null),
+          h('i', { style: 'color: teal' }, '注册成功！ 5s后自动跳到登录页')
+        ])
+      });
+    },
+
+    // 注册账号
+    handlerPhone () {
+      this.isShowReg = false
+      if(this.form.tel == '') {
+        this.isShowTel = true
+      } else {
+        this.isShowTel = false
+        
+      }
+    },
+    // 注册密码
+    handlerPwd () {
+      if(this.form.Pwd == '') {
+        this.isShowPwd = true
+      } else {
+        this.isShowPwd = false
+      }
+    },
+    // 注册邀请码
+    handlerCode () {
+      if(this.form.othersinvitecode == '') {
+        this.isShowOthersinvitecode = true
+      } else {
+        this.isShowOthersinvitecode = false
+      }
+    }
   }
 }
 </script>
@@ -295,7 +357,7 @@ export default {
 .c_talent_form {
     width: 420px;
     margin-left: 60px;
-    margin-top: 25px;
+    margin-top: 12px;
     background: #fff;
     border-radius: 15px;
     padding: 20px;
@@ -311,7 +373,8 @@ export default {
 }
 
 .c_talent_form  .form-group {
-    position: relative;
+  position: relative;
+  margin-bottom: 5px;
 }
 
 .c_talent_form input {
@@ -339,13 +402,12 @@ export default {
     color: #FE5C1C;
 }
 
-.c_talent_hint1,.c_talent_hint2{
-    display: none;
-    position: absolute;
-    top: 52px;
-    left: 8px;
-    color: red;
-    font-size: 13px;
+.c_talent_hint{
+  position: absolute;
+  top: 52px;
+  left: 8px;
+  color: red;
+  font-size: 13px;
 }
 
 .c_talent_form .btn{

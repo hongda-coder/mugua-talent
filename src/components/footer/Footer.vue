@@ -1,41 +1,39 @@
 <template>
     <div>
-          <div class="Job-footer clearfix">
-    <div class="Jobf-content">
-      <div class="Jobco-left"><img src="@/assets/images/jzlogo.png"></div>
-      <div class="Jobco-help">
-        <ul>
-          <li>帮助</li>
-          <li><a href="#">使用帮助</a></li>
-          <li><a href="#">用户协议</a></li>
-          <li><a href="#">职位发布规则</a></li>
-          <li><a href="#">求职者竞聘规则</a></li>
-          <li><a href="#">法律声明</a></li>
-        </ul>
-      </div>
-      <div class="Jobco-help">
-        <ul>
-          <li>共赢</li>
-          <li><a href="#">合作共赢</a></li>
-          <li><a href="#">关于我们</a></li>
-          <li><a href="#">加入我们</a></li>
-          <li><a href="#">产品服务</a></li>
-          <li><a href="#">意见反馈</a></li>
-        </ul>
-      </div>				
-      <div class="Jobco-wei">
-        <span>扫描关注公众号</span>
-        <img src="@/assets/images/qrcode_jz.jpg">
-      </div>
-      <div class="Jobco-tel">
-        <div class="xian">招聘服务热线</div>
-        <div class="phone">020-81747580</div>
-        <div class="xian">工作日 </div>
-        <div class="time">9:00-19:00</div>
+      <div class="Job-footer clearfix">
+      <div class="Jobf-content">
+        <div class="Jobco-left"><a href="http://www.jobyes.com/index" target="_blank"  style="width: 89px; display:block;"><img src="@/assets/images/jzlogo.png" style="width: 100%;"></a></div>
+        <div class="Jobco-help">
+          <ul>
+            <li><a href="http://www.jobyes.com/info/RecruitmentServiceAgreement" target="_blank">招聘服务协议</a></li>
+            <li><a href="http://www.jobyes.com/info/JobPublishingRule" target="_blank">职位发布规则</a></li>
+            <li><a href="http://www.jobyes.com/info/UserCompetitionRules" target="_blank">求职者竞聘规则</a></li>
+            <li><a href="http://www.jobyes.com/info/Privacypolicy" target="_blank">隐私政策</a></li>
+            <li><a href="http://www.jobyes.com/info/LegalStatement" target="_blank">法律声明</a></li>
+          </ul>
+        </div>
+        <div class="Jobco-help">
+          <ul>
+            <li><a href="http://www.jobyes.com/info/Winwincooperation" target="_blank">合作共赢</a></li>
+            <li><a href="http://www.jobyes.com/info/About" target="_blank">关于我们</a></li>
+            <li><a href="http://www.jobyes.com/info/JoinUs" target="_blank">加入我们</a></li>
+            <li><a href="http://www.jobyes.com/info/ProductService" target="_blank">产品服务</a></li>
+            <li><a href="#">意见反馈</a></li>
+          </ul>
+        </div>
+        <div class="Jobco-wei">
+          <span>扫描关注公众号</span>
+          <img src="@/assets/images/qrcode_jz.jpg" />
+        </div>
+        <div class="Jobco-tel">
+          <div class="xian">招聘服务热线</div>
+          <div class="phone">020-81747580</div>
+          <div class="xian">工作日 </div>
+          <div class="time">9:00-19:00</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="Job-Copyright">Copyright © 20019-2029 www.jobyes.com All Rights Reserved  粤ICP备17158699号-2</div>
+    <div class="Job-Copyright">Copyright © 20019-2029 www.jobyes.com All Rights Reserved  <a href="http://www.beian.gov.cn/portal/index">粤公网安备 44010502001414号</a>  </div>
     </div>
 </template>
 

@@ -4,7 +4,6 @@
       <div class="c-people-title clearfix">
         <div class="c-info-name">我的收益  > 提现</div>
       </div>
-
       <div style="padding: 20px 40px;">
         <div class="get-money">可提现金额（元）：<span class="money-count">{{canGetMoney}}</span></div>
         <div class="get-money">提现金额（元）</div>
@@ -36,11 +35,9 @@
           <input type="password" placeholder="请输入提现密码" v-model="form.pwd" autocomplete="new-password">
           <div class="hint" style="color:red;line-height: 30px;" v-show="isPwd">请输入正确提现密码</div>
         </div>
-
         <div class="comfire" @click="comfirmMoney">确认提现</div>
       </div>
     </div>
-
     <el-dialog
       title="确定提现"
       :visible.sync="dialogMyMoney"
@@ -85,7 +82,6 @@ export default {
 
     // 可提现
     this.haveMoney()
-
     this.bankInfo()
   },
   methods: {
@@ -93,18 +89,21 @@ export default {
     comfirmMoney () {
       this.dialogMyMoney = true
     },
-
+    // 银行卡信息
     bankInfo () {
       bankInfo ({guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-        console.log(res)
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.bankForm = res.data.data
       }) 
     },
-
     // 确认提现
     comfirmGet () {
       withdrawMoney({guid:this.lists.guid, tel:this.lists.tel, money:this.form.money,pwd:this.form.pwd }).then( res => {
-        console.log(res)
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         if (res.data.Message == 'success') {
           this.dialogMyMoney = false
           this.isPwd = false
@@ -121,13 +120,18 @@ export default {
     // 全部提现
     allMoney () {
       earningsManage (this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.form.money = res.data.data.cumulativewithdraw
       })
     },
-
     // 可提现
     haveMoney () {
       earningsManage (this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.canGetMoney = res.data.data.cumulativewithdraw
       })
     },     

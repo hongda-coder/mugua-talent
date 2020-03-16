@@ -33,7 +33,7 @@
         <div class="c_consult_w">
           <div class="c_consult clearfix">
             <div>
-              想了解加盟详情,请咨询:020-81747588 
+              想了解加盟详情,请咨询:020-81747580 
             </div>
             <button class="c_consult_service">咨询客服</button>
           </div>

@@ -8,7 +8,7 @@
             {{scope.$index+1}}
         </template>
         </af-table-column>
-        <af-table-column prop="cname" label="所属行业" align="center"></af-table-column>
+        <af-table-column prop="cname" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="jobname" label="职位名称" align="center"></af-table-column>
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
         <af-table-column prop="working" label="工作经验" align="center"></af-table-column>
@@ -37,6 +37,18 @@
         <div style="line-height: 80px;">暂无数据</div>
       </div>
     </div> -->
+
+        <!-- 分页 -->
+    <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="lists.limit"
+        :page-size="lists.curr"
+        layout="prev, pager, next, jumper"
+        :total="rows">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -47,6 +59,7 @@ export default {
   name: 'ShareTable',
   data() {
     return {
+      rows:1, //数据总数量
       table: [{
         cname: '',
         jobname: '',
@@ -62,8 +75,8 @@ export default {
       lists: {
         guid: 'ssc-token', //token
         tel: 'tel',  // 加密得电话号码
-        limit: '1' , // 当前页
-        curr: '5' //当前页多少数据
+        limit: 1 , // 当前页
+        curr: 10 //当前页多少数据
       }
     }
   },
@@ -79,10 +92,12 @@ export default {
           return 'StatusTypeColorA'
         case '面试中':
           return 'StatusTypeColorB'
-        case '面试结束': 
+        case '已完成': 
           return 'StatusTypeColorC'
         case '竞聘中' :
           return 'StatusTypeColorD'
+        case '已取消' :
+          return 'StatusTypeColorE'
       }
     },
     iconType (value) {
@@ -91,22 +106,38 @@ export default {
           return 'icon-dingdan-daimianshi'
         case '面试中':
           return 'icon-shouye'
-        case '面试结束': 
+        case '已完成': 
           return 'icon-jieshu'
         case '竞聘中' :
           return 'icon-sign'
+        case '已取消':
+          return '&#xe88b;'
       }
     }
   },
   methods: {
     shareList () {
       shareList(this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.table = res.data.data
+        this.rows = res.data.listcount
       })
     },
     goOut (row) {
       window.open(this.table[row].href,"_blank")
-    }
+    },
+
+    handleSizeChange(val) {
+      console.log(val)
+      this.lists.curr = val ||this.lists.curr 
+      this.competeList() //重新调用接口
+    },
+    handleCurrentChange(val) {
+      this.lists.limit = val ||this.lists.limit 
+      this.competeList() //重新调用接口
+    },
   }
 }
 </script>
@@ -161,5 +192,8 @@ export default {
   color: #FE0000;
 }
 
+.StatusTypeColorE {
+  color: #959595;
+}
 
 </style>

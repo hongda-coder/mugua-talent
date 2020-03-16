@@ -51,14 +51,14 @@
                   <div class="clearfix">
                     <div class="content-input">
                       <el-form-item label="出生日期" prop="create ">
-                          <el-date-picker v-model="editorForm.create " type="date" placeholder="选择日期"></el-date-picker>
+                        <el-date-picker v-model="editorForm.create" type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                       </el-form-item>
                     </div>
                   </div>
                   <div class="clearfix">
                     <div class="content-input">
                       <el-form-item label="联系方式" prop="xtel">
-                        <el-input v-model="editorForm.xtel"  onkeyup="value=value.replace(/[^\d]/g,'')" ></el-input> 
+                        <el-input v-model="editorForm.xtel" onkeyup="value=value.replace(/[^\d]/g,'')" ></el-input> 
                       </el-form-item>
                     </div>
                   </div>
@@ -146,20 +146,14 @@ export default {
       imageUrl: '',
       editorForm: {
         sex: '', // 性别
-        othersinvitecode: '', // 邀请码
+        pickerOptions: {},
         loginuser : '', // 昵称 用户名
         TrueName: '',
         xtel: '',  // 联系电话
         create: '', // 生日
-        // pickerOptions: {
-        //   disabledDate (time) {
-        //     return time.getTime() < new Date()
-        //   }
-        // },
         eamil: '', // 邮箱
         guid: 'ssc-token', //token
         tel: 'tel', // 加密手机号
-        imageid: '' // 图片id
       },
       imageUrl: '', // 证书名称
       file: '',
@@ -188,9 +182,17 @@ export default {
       }
     }
   },
-  mounted () {
+  created () {
     this.editorForm.tel = getTel(this.editorForm.tel)
     this.editorForm.guid = getToken(this.editorForm.guid)
+
+    // 禁用时间
+    this.pickerOptions = {
+      disabledDate(time) {
+        return time.getTime() > Date.now();
+      }
+    }
+     
   },
   methods: {
     saveInfo(formName) {
@@ -214,14 +216,14 @@ export default {
       })
     },
     beforeUpload (file) {
-    　　var _this = this;
-    　　var reader = new FileReader();
-    　　reader.readAsDataURL(file);
-    　　reader.onload = function(e) {
-    　　　　// 图片base64化
-    　　　　var newUrl = this.result;    //图片路径
-    　　　　_this.imagename = newUrl;
-    　　};
+      var _this = this;
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(e) {
+      // 图片base64化
+      var newUrl = this.result;    //图片路径
+      _this.imagename = newUrl;
+      };
     },
     getBase64(imagename) {
       return new Promise(function(resolve, reject) {
@@ -237,7 +239,7 @@ export default {
             resolve(imagename);
         };
       });
-    },
+    }
   }
 }
 </script>

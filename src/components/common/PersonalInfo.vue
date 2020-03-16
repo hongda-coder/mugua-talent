@@ -14,7 +14,7 @@
             </div>
             <div class="c-people-data">
               <div class="clearfix">
-                <div class="c-people-name" style="margin-right: 15px;font-size: 20px;">{{userInfo.TrueName}}</div>
+                <div class="c-people-name" style="margin-right: 15px;font-size: 20px;">{{userInfo.loginuser}}</div>
                 <!-- <div class="c-people-icon"><i class="iconfont">&#xe668;</i>已认证</div> -->
               </div>
               <div class="clearfix" style="line-height: 35px;">
@@ -107,7 +107,7 @@
                 <div class="clearfix">
                   <div class="content-input">
                     <el-form-item label="出生日期" prop="create">
-                        <el-date-picker v-model="editorForm.create" type="date" placeholder="选择日期"></el-date-picker>
+                      <el-date-picker v-model="editorForm.create" type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                     </el-form-item>
                   </div>
                 </div>
@@ -188,6 +188,7 @@ export default {
       dialogEditor: false,
       editorForm: {
         sex: '', // 性别
+        pickerOptions: {},
         loginuser : '', // 昵称 用户名
         xtel: '',  // 联系电话
         create: '', // 生日
@@ -227,6 +228,13 @@ export default {
     // 个人基本信息
     this.personInfo()
     this.personEarnings()
+
+      // 禁用时间
+    this.pickerOptions = {
+      disabledDate(time) {
+        return time.getTime() > Date.now();
+      }
+    }
   },
 
   computed: {
@@ -251,6 +259,9 @@ export default {
     // 信息
     personInfo () {
       personInfo(this.lists).then( res => {
+                if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.$store.commit('SAVE_USER',res.data.data.loginuser)
         this.userInfo = res.data.data
       })
@@ -259,6 +270,9 @@ export default {
     // 通过
     personEarnings () {
       personEarnings(this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.jpcount = res.data.data.jpcount
         this.dmprobability = res.data.data.dmprobability
         this.tgprobability = res.data.data.tgprobability
@@ -285,7 +299,9 @@ export default {
     editor () {
       this.dialogEditor = true
        personInfo(this.lists).then( res => {
-        console.log(res)
+                if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.editorForm = res.data.data
         this.editorForm.xtel = res.data.data.tel
         this.editorForm.guid = this.lists.guid
@@ -294,9 +310,12 @@ export default {
     },
 
     saveInfo () {
+      this.dialogEditor = false
       perInfo (this.editorForm).then( res => {
+                if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         if (res.data.Message == 'success') {
-          this.dialogEditor = false
           this.personInfo()
         }
       }) 
@@ -352,6 +371,11 @@ export default {
 .c-people-data,.c-personal,.c-people-name,.c-people-icon,.c-people-sex {
   float: left;
 }
+
+.c-people-age {
+  float: left;
+}
+
 
 .c-people-data {
   margin-left: 20px;

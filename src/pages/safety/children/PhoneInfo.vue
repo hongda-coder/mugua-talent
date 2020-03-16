@@ -17,7 +17,6 @@
           </div>
         </div>
       </el-form>
-
       <el-form ref="pswForm" :model="pswForm" class="c-form" label-width="80px">
         <div class="clearfix">
           <div class="icon"><i class="iconfont">&#xe60a;</i></div>
@@ -33,11 +32,8 @@
           </div>
         </div>
       </el-form>
-
-
       <!-- 修改号码 -->
       <div class="dialog" v-show="dialogPhone">
-        
         <div class="dialogPhone">
           <div class="c-off-pup" @click="dialogPhone = false"><img src="@/assets/images/c-off-pup.png" alt=""></div>
           <div class="c-title">更换手机号</div>
@@ -69,7 +65,6 @@
           </form>
         </div>
       </div>
-
       <!-- 修改密码 -->
       <div class="dialog" v-show="dialogPsd">
         <div class="c-off-pup" @click="dialogPsd = false"><img src="@/assets/images/c-off-pup.png" alt=""></div>
@@ -164,7 +159,8 @@ export default {
       formLabelWidth: '80px',
       rangeStatus: false,
       isDisabled: true,
-      computeTime: 0
+      computeTime: 0,
+      durationTime: 5000
     }
   },
   mounted () {
@@ -185,9 +181,10 @@ export default {
 
     // 确定修改号码
     confirm () {
-      console.log("68456856")
       newPhone (this.form).then( res => {
-        this.dialogPhone = false
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
       })
     },
 
@@ -203,17 +200,33 @@ export default {
         }
       }, 1000)
       shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.Xtel}).then(res => {
-        // console.log(res)
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
       })
     },
 
     // 确认修改密码
     confirmPwd () {
       newPwd(this.pwdForm).then( res => {
-        // console.log(res)
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
+        if (res.data.Message == 'success') {
+          this.dialogPsd = false
+          this.$router.push("login")
+        }
       })
     },
 
+    updataPwd () {
+      this.$message({
+        showClose: true,
+        duration: this.durationTime,
+        message: '恭喜你，修改密码成功 {{this.durationTime}}',
+        type: 'success'
+      });
+    },
     //滑块移动
 		rangeMove(e){
       if (this.form.tel == "" || this.form.Xtel == "") {
@@ -420,6 +433,7 @@ export default {
     margin-left: 180px;
     margin-top: 30px;
     margin-bottom: 30px;
+    cursor: pointer;
   }
 
 

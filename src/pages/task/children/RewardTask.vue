@@ -36,12 +36,12 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="到场所获佣金" align="center"  width="130">
+        <af-table-column prop="aiMoenyOutside" label="到面佣金" align="center"  width="130">
           <template slot-scope="scope">
             ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="面过所获佣金" align="center" width="130">
+        <af-table-column prop="rdMoenyOutside" label="面过佣金" align="center" width="130">
             <template slot-scope="scope">
             ￥{{scope.row.aiMoenyOutside}}
           </template>
@@ -57,7 +57,6 @@
         </af-table-column>
       </el-table>
     </div>
-
     <!-- 分页 -->
     <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
       <el-pagination
@@ -69,7 +68,6 @@
         :total="rows">
       </el-pagination>
     </div>
-
     <!-- 分享 -->
     <el-dialog
       title="提示"
@@ -83,7 +81,6 @@
         <el-button type="primary" @click="confirmDialog">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -211,6 +208,9 @@ export default {
   methods: {
     jobList () {
       jobList(this.lists).then( res => {
+        if(res.data.Message == "-2") {
+          this.$router.push("login")
+        }
         this.table = res.data.data
         this.rows = res.data.listcount
       })
@@ -230,6 +230,7 @@ export default {
             confirmButtonText: '确定',
             center: true,
             callback: action => {
+              this.$router.go(0)
               this.$message({
                 type: 'info',
                 message: `action: ${ action }`
