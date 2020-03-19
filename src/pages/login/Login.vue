@@ -72,6 +72,8 @@
     <Footer></Footer>
   </div>
 </template>
+
+
 <script>
 import { oldUser } from "@/api/serve"
 import Footer from "@/components/footer/Footer"
@@ -83,8 +85,8 @@ export default {
       formLabelWidth: '100px',
       dialogEditVisible: false,
       form: {
-        loginuser: '',
-        pwd: ''
+        loginuser: '18977784437',
+        pwd: '123456'
       },
       oldForm: {  
         TrueName: '', // 真实姓名
@@ -105,6 +107,7 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('Login',this.form).then(res => {
+            console.log(res)
             if(res.data.Message == '-3') {
               this.isCode = true
             } else if (res.data.Message == '-4') {

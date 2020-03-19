@@ -12,7 +12,7 @@
             {{scope.$index+1}}
         </template>
         </af-table-column>
-        <af-table-column prop="cname" label="所属行业" align="center"></af-table-column>
+        <af-table-column prop="cname" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="jobname" label="职位名称" align="center"></af-table-column>
         <af-table-column prop="address" label="工作地点" align="center"></af-table-column>
         <af-table-column prop="record" label="工作经验" align="center"></af-table-column>
@@ -101,7 +101,7 @@ export default {
         case '竞聘中' :
           return 'icon-sign'
         case '已取消':
-          return '&#xe88b;'
+          return 'icon-icon_function_quxiaoxiada'
       }
     }
   },

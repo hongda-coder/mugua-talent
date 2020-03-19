@@ -215,18 +215,23 @@ export default {
         if (res.data.Message == 'success') {
           this.dialogPsd = false
           this.$router.push("login")
+          // setTimeout (function () {
+          //   this.$router.push("login")
+          // }, this.durationTime)
         }
       })
     },
 
-    updataPwd () {
-      this.$message({
-        showClose: true,
-        duration: this.durationTime,
-        message: '恭喜你，修改密码成功 {{this.durationTime}}',
-        type: 'success'
-      });
-    },
+    // updataPwd () {
+    //   const h = this.$createElement;
+    //   this.$message({
+    //     duration: this.durationTime,
+    //     message: h('p', null, [
+    //       h('span', null),
+    //       h('i', { style: 'color: teal' }, `修改密码成功！ ${ this.durationTime }后自动跳到回登录页`)
+    //     ])
+    //   });
+    // },
     //滑块移动
 		rangeMove(e){
       if (this.form.tel == "" || this.form.Xtel == "") {

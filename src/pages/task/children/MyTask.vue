@@ -15,12 +15,12 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="到场所获佣金" align="center"  width="130">
+        <af-table-column prop="rdMoenyOutside" label="到面佣金" align="center"  width="130">
           <template slot-scope="scope">
             ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="面过所获佣金" align="center" width="130">
+        <af-table-column prop="aiMoenyOutside" label="面过佣金" align="center" width="130">
             <template slot-scope="scope">
             ￥{{scope.row.aiMoenyOutside}}
           </template>
@@ -29,7 +29,8 @@
           <template slot-scope="scope">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
+            <!-- <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button> -->
+            <el-button type="text" size="small" class="commonColor" @click="goOut">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -96,16 +97,7 @@ export default {
         curr: 10 //当前页多少数据
       },
       dialogShare: false, // 分享
-      defaultConfig: {
-        shareList: ['more','qzone','tsina','tqq','renren','weixin'],
-        common:{
-          bdUrl: ''
-        },
-        share: [{bdSize: 24}],
-        slide: false,
-        image: false,
-        selectShare: false
-      },
+      check: true,
     }
   },
   beforeCreate () {
@@ -139,7 +131,11 @@ export default {
     share (row, column) {
       this.dialogShare = true
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
+        console.log(res)
         this.$store.commit('SAVE_URL',res.data.data.urlpath)
+
+        // console.log(this.$store.state.url)
+        //        this.defaultConfig.common.bdUrl = this.$store.state.url
         this.dialogShare = true
       })
     },
@@ -168,7 +164,8 @@ export default {
     },
         // 跳到外部
     goOut (row) {
-      window.open(this.table[row].href,"_blank")
+      this.$emit('goDetails',this.check)
+      // window.open(this.table[row].href,"_blank")
     }
   }
 }

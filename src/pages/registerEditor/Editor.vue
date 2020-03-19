@@ -178,6 +178,7 @@ export default {
         ],
         xtel: [
           { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { min: 11, max: 11, message: '长度必须是11个字符', trigger: 'blur' }
         ]
       }
     }

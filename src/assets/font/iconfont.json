@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "444566",
+      "name": "分类",
+      "font_class": "fenlei",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "1053833",
+      "name": "个人",
+      "font_class": "webicon08",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "4488843",
+      "name": "工作地点",
+      "font_class": "gongzuodidian",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "7191776",
+      "name": "企业",
+      "font_class": "qiye",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
       "icon_id": "10088937",
       "name": "取消下达",
       "font_class": "icon_function_quxiaoxiada",

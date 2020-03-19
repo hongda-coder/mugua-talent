@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <Header />
     <section style="min-width: 760px;margin-left: 0;margin-right: 0;">
       <el-row :gutter="10">

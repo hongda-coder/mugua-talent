@@ -111,7 +111,7 @@ export default {
         case '竞聘中' :
           return 'icon-sign'
         case '已取消':
-          return '&#xe88b;'
+          return 'icon-icon_function_quxiaoxiada'
       }
     }
   },

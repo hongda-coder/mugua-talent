@@ -155,16 +155,16 @@ export default {
         }
       ],
       dialogShare: false, // 分享
-      defaultConfig: {
-        shareList: ['more','qzone','tsina','tqq','renren','weixin'],
-        common:{
-          bdUrl: ''
-        },
-        share: [{bdSize: 24}],
-        slide: false,
-        image: false,
-        selectShare: false
-      },
+      // defaultConfig: {
+      //   shareList: ['more','qzone','tsina','tqq','renren','weixin'],
+      //   common:{
+      //     bdUrl: ''
+      //   },
+      //   share: [{bdSize: 24}],
+      //   slide: false,
+      //   image: false,
+      //   selectShare: false
+      // },
       disabled: false,
     }
   },
@@ -219,6 +219,8 @@ export default {
       this.dialogShare = true
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
        this.$store.commit('SAVE_URL',res.data.data.urlpath)
+      //  this.defaultConfig.common.bdUrl = this.$store.state.url
+      //   console.log(this.defaultConfig.common.bdUrl)
         this.dialogShare = true
       })
     },

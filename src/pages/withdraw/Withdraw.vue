@@ -2,7 +2,7 @@
   <div>
     <div style="background: #fff; margin-top: 20px;">
       <div class="c-people-title clearfix">
-        <div class="c-info-name">我的收益  > 提现</div>
+        <div class="c-info-name"> <span class="go-myMonye" @click="goMonye">我的收益</span>   > 提现</div>
       </div>
       <div style="padding: 20px 40px;">
         <div class="get-money">可提现金额（元）：<span class="money-count">{{canGetMoney}}</span></div>
@@ -134,7 +134,11 @@ export default {
         }
         this.canGetMoney = res.data.data.cumulativewithdraw
       })
-    },     
+    },   
+    
+    goMonye () {
+      this.$router.push("commission")
+    }
   }
 }
 </script>
@@ -267,5 +271,9 @@ export default {
     color: #fff;
     background: #FEAD1C;
     border-radius: 4px;
+  }
+
+  .go-myMonye {
+    cursor: pointer;
   }
 </style>

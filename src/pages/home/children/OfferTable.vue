@@ -94,16 +94,16 @@ export default {
       },
       shareTalbe: false, // 分享弹出层
       tableIndex: '',
-      defaultConfig: {
-        shareList: ['more','qzone','tsina','tqq','renren','weixin'],
-        common:{
-          bdUrl: ''
-        },
-        share: [{bdSize: 24}],
-        slide: false,
-        image: false,
-        selectShare: false
-      },
+      // defaultConfig: {
+      //   shareList: ['more','qzone','tsina','tqq','renren','weixin'],
+      //   common:{
+      //     bdUrl: ''
+      //   },
+      //   share: [{bdSize: 24}],
+      //   slide: false,
+      //   image: false,
+      //   selectShare: false
+      // },
        disabled: false
     }
   },

@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <el-button @click="openVn" v-show="false"></el-button>
+    <!-- <el-button @click="openVn" v-show="false"></el-button> -->
     <!-- banner登录区 -->
     <Pic></Pic>
     <Footer></Footer>
@@ -141,7 +141,7 @@ export default {
       isDisabled: true,
       disX : 0,
       rangeStatus: false,
-      duration: '5000'
+      // durationTime: '5000'
     }
   },
   methods: {
@@ -173,10 +173,11 @@ export default {
       register ({tel:this.form.tel,pwd:this.form.pwd,code:this.form.code,othersinvitecode:this.form.othersinvitecode}).then( res=> {
         console.log(res)
         if (res.data.Message == 'success') {
-          this.openVn()
-          setInterval (function () {
-            this.$router.push("login")
-          }, this.duration)
+          this.$router.push("login")
+          // this.openVn()
+          // setTimeout (function () {
+          //   this.$router.push("login")
+          // }, this.durationTime)
         }
       })
     },
@@ -236,16 +237,17 @@ export default {
 			}
       }
     },
-    openVn() {
-      const h = this.$createElement;
-      this.$message({
-        duration: this.duration,
-        message: h('p', null, [
-          h('span', null),
-          h('i', { style: 'color: teal' }, '注册成功！ 5s后自动跳到登录页')
-        ])
-      });
-    },
+    // openVn() {
+    //   const h = this.$createElement;
+    //   this.$message({
+    //     duration: this.durationTime,
+    //     message: h('p', null, [
+    //       h('span', null),
+    //       h('i', { style: 'color: teal' }, `注册成功！ ${ this.durationTime/1000 }s后自动跳到登录页`)
+    //     ])
+    //   });
+    // },
+
 
     // 注册账号
     handlerPhone () {

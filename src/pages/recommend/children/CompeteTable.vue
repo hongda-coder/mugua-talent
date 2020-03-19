@@ -106,13 +106,14 @@ export default {
         case '竞聘中' :
           return 'icon-sign'
         case '已取消':
-          return '&#xe88b;'
+          return 'icon-icon_function_quxiaoxiada'
       }
     }
   },
   methods: {
     competeList () {
       competeList(this.lists).then( res => {
+        console.log(res)
         if(res.data.Message == "-2") {
           this.$router.push("login")
         }

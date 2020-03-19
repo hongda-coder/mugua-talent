@@ -41,6 +41,7 @@ export default {
   }
   #app {
     min-height: 100vh;
+    min-width: 1200px;
   }
 
   ::-webkit-scrollbar {

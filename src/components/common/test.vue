@@ -14,7 +14,7 @@ export default {
       defaultConfig: {
         shareList: ['more','qzone','tsina','tqq','renren','weixin'],
         common:{
-          bdUrl: this.$store.state.url
+          bdUrl: this.$store.state.url,
         },
         share: [{bdSize: 24}],
         slide: false,
@@ -45,6 +45,11 @@ export default {
     }
     window._bd_share_config = this.defaultConfig
     document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)
-  }
+  },
+  // methods: {
+  //   onBeforeClick () {
+  //     console.log(this.defaultConfig.common.bdUrl)
+  //   }
+  // }
 }
 </script>
