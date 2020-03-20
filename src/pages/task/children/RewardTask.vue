@@ -117,55 +117,9 @@ export default {
         limit: 1 , // 当前页
         curr: 10 //当前页多少数据
       },
-      cities: [{
-        value: 'zhinan',
-        label: '广东省',
-        children: [{
-          value: 'guangzhoushi',
-          label: '广州市',
-          children: [{
-            value: 'haizhiqu',
-            label: '海珠区'
-          }, {
-            value: 'baiyunqu',
-            label: '白云区'
-          }, {
-            value: 'yuexiuqu',
-            label: '越秀区'
-          }, {
-            value: 'tianhequ',
-            label: '天河区'
-          }]
-        }, {
-          value: 'shenzhenshi',
-          label: '深圳市',
-          children: [{
-            value: 'nanshanqu',
-            label: '南山区'
-          }, {
-            value: 'baoanqu',
-            label: '宝安区'
-          }]
-        }]
-      }],
-      guilds: [
-        {
-          value: 'zhinan',
-          label: '广东省',
-        }
-      ],
       dialogShare: false, // 分享
-      // defaultConfig: {
-      //   shareList: ['more','qzone','tsina','tqq','renren','weixin'],
-      //   common:{
-      //     bdUrl: ''
-      //   },
-      //   share: [{bdSize: 24}],
-      //   slide: false,
-      //   image: false,
-      //   selectShare: false
-      // },
       disabled: false,
+      checkTask: true //查看详情页
     }
   },
   mounted () {
@@ -206,6 +160,7 @@ export default {
     }
   },
   methods: {
+    // 页面数据
     jobList () {
       jobList(this.lists).then( res => {
         if(res.data.Message == "-2") {
@@ -215,15 +170,19 @@ export default {
         this.rows = res.data.listcount
       })
     },
+
+    // 分享
     share (row) {
       this.dialogShare = true
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-       this.$store.commit('SAVE_URL',res.data.data.urlpath)
-      //  this.defaultConfig.common.bdUrl = this.$store.state.url
-      //   console.log(this.defaultConfig.common.bdUrl)
+        this.$store.commit('SAVE_URL',res.data.data.urlpath)
         this.dialogShare = true
+        console.log(res.data.data.urlpath)
+        console.log(this.$store.state.url)
       })
     },
+
+    //领任务
     getTask (row, column) {
       getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
         if (res.data.Message = 'success') {
@@ -268,11 +227,12 @@ export default {
     },
         // 跳到外部
     goOut (row) {
-      window.open(this.table[row].href,"_blank")
+      this.$store.commit('SAVE_TASK',this.checkTask)
+      // console.log(this.$store.state.checkTask)
+      // window.open(this.table[row].href,"_blank")
     }
   }
 }
-
 </script>
 
 <style scoped>

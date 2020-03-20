@@ -263,6 +263,7 @@ export default {
           this.$router.push("login")
         }
         this.$store.commit('SAVE_USER',res.data.data.loginuser)
+        // this.$store.commit('SAVE_CODE',res.data.data.othersinvitecode)
         this.userInfo = res.data.data
       })
     },

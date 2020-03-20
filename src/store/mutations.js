@@ -8,14 +8,24 @@ export default {
   SET_TEL (state, tel) {
     state.tel = tel
   },
-  SAVE_URL(state,e){
-    state.url = e
+  SAVE_SHARE(state, shareUrl) {
+    state.shareUrl = shareUrl
   },
-  SAVE_USER(state,e){
-    state.loginuser = e
+  SAVE_URL(state,url){
+    state.url = url
   },
-  SAVE_BANK(state,e){
-    state.bankNumber = e
-  }
+  // SAVE_CODE(state,code){
+  //   state.code = code
+  // },
+  SAVE_USER(state,loginuser){
+    state.loginuser = loginuser
+  },
+  SAVE_BANK(state,bankNumber){
+    state.bankNumber = bankNumber
+  },
+  SAVE_TASK(state,checkTask){
+    state.checkTask = checkTask
+  },
+
 }
 

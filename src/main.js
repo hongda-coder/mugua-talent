@@ -10,6 +10,13 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/font/iconfont.css'
 import './assets/css/reset.css'
 
+ 
+
+
+import Share from 'vue-social-share'
+import 'vue-social-share/dist/client.css'
+Vue.use(Share)
+
 // import axios from 'axios'
 // axios.defaults.baseURL = 'http://192.168.0.182/api/'
 Vue.use(AFTableColumn)

@@ -48,7 +48,18 @@
       </el-pagination>
     </div>
     <!-- 分享 -->
+
     <el-dialog
+      title="提示"
+      :visible.sync="dialogShare"
+      @close='closeDialog'
+      width="30%"
+      >
+      <JobShare></JobShare>
+
+    </el-dialog>
+
+    <!-- <el-dialog
       title="提示"
       :visible.sync="dialogShare"
       @close='closeDialog'
@@ -59,18 +70,18 @@
         <el-button @click="cancelDialog">取 消</el-button>
         <el-button type="primary" @click="confirmDialog">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
-import vueVshare from '@/components/common/test'
+import JobShare from '@/components/common/JobShare'
 import { competeList,getTask, shareJob } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'MyTask',
   components: {
-    vueVshare
+    JobShare
   },
   data () {
     return {
@@ -97,11 +108,19 @@ export default {
         curr: 10 //当前页多少数据
       },
       dialogShare: false, // 分享
-      check: true,
+      checkTask: true,
+      // config: {
+      //   url: this.$store.state.url, // 网址，默认使用 window.location.href
+      //   source: '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
+      //   title: '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
+      //   description: '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
+      //   image: '', // 图片, 默认取网页中第一个img标签
+      //   sites: ['qzone', 'wechat', 'douban'], // 启用的站点
+      //   // disabled: ['google'], // 禁用的站点
+      //   wechatQrcodeTitle: '微信扫一扫：分享', // 微信二维码提示文字
+      //   wechatQrcodeHelper: '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
+      // }
     }
-  },
-  beforeCreate () {
-    window._bd_share_main = ''
   },
   mounted () {
     this.lists.guid = getToken(this.lists.guid)
@@ -109,6 +128,7 @@ export default {
     this.competeList()
   },
   methods: {
+     // 页面数据
     competeList () {
       competeList(this.lists).then( res => {
         if(res.data.Message == "-2") {
@@ -128,14 +148,10 @@ export default {
     },
 
     // 分享
-    share (row, column) {
-      this.dialogShare = true
+    share (row) {
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-        console.log(res)
-        this.$store.commit('SAVE_URL',res.data.data.urlpath)
-
-        // console.log(this.$store.state.url)
-        //        this.defaultConfig.common.bdUrl = this.$store.state.url
+        this.$store.commit('SAVE_SHARE',res.data.data.urlpath)
+        console.log(this.$store.state.shareUrl)
         this.dialogShare = true
       })
     },
@@ -149,22 +165,27 @@ export default {
       this.dialogShare = false
       this.$router.go(0)
     },
+
     confirmDialog () {
       this.dialogShare = false
       this.$router.go(0)
     },
-      // 分页
+
+    // 分页
     handleSizeChange(val) {
       this.lists.curr = val ||this.lists.curr;
       this.jobList();//重新调用接口
     },
+    
     handleCurrentChange(val) {
       this.lists.limit = val ||this.lists.limit;
       this.jobList();//重新调用接口
     },
-        // 跳到外部
+      // 跳到外部
     goOut (row) {
-      this.$emit('goDetails',this.check)
+      this.$store.commit('SAVE_TASK',this.checkTask)
+      console.log(this.$store.state.checkTask)
+      // this.$emit('goDetails',this.check)
       // window.open(this.table[row].href,"_blank")
     }
   }

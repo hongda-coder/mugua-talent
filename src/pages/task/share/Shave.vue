@@ -25,6 +25,7 @@ export default {
   },
   props: ['vshareConfig'],
   mounted () {
+    console.log(this.vshareConfig)
     if (this.vshareConfig) {
       this.vshareConfig.shareList ? this.defaultConfig.shareList = this.vshareConfig.shareList :'';
       if (this.vshareConfig.shareList) {
@@ -44,6 +45,7 @@ export default {
     }
     window._bd_share_config = this.defaultConfig
     document.getElementsByTagName('body')[0].appendChild(document.createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)
-  }
+  },
+
 }
 </script>

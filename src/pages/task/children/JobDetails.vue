@@ -176,14 +176,18 @@
 
 <script>
 export default {
-  
+  name: 'JobDetails',
+  data () {
+    return {
+      
+    }
+  }
 }
 </script>
 
 
 
 <style scoped>
-
   .job-info {
     margin-top: 20px;
     background: #fff;

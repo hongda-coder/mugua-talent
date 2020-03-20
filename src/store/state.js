@@ -5,7 +5,10 @@ export default {
   address: 'http://192.168.0.182',
   tel: getTel(),
   url:'',
+  shareUrl: '',
+  // code:'',
   loginuser:'',
   bankNumber: '',
+  checkTask: false
 }
 
