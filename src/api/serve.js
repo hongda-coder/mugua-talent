@@ -83,7 +83,7 @@ export function perInfo2(data){
 }
 
 
-// 9、个人信息
+// 9、推荐信息
 export function personEarnings(data){  
   return ajax({
     url:'zpjob/synthesize',
@@ -237,8 +237,23 @@ export function oldUser(data){
   })
 }
 
+// 报名列表
+export function applyList(data){  
+  return ajax({
+      url:'zpjob/UserShareList',
+      method:'post',
+       data
+  })
+}
 
-
+// 职位详情
+export function jobDetails(data){  
+  return ajax({
+      url:'zpjob/JobSelect',
+      method:'post',
+       data
+  })
+}
 
 
 

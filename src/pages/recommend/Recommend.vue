@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="!check">
+    <div>
       <ul class="tab clearfix">
       <li class="item" :class="{current: num == 1}" v-on:click="change(1)">分享情况</li>
       <li class="item" :class="{current: num == 2}" v-on:click="change(2)">竞聘情况</li>
@@ -9,11 +9,6 @@
         <ShareTable v-show="num == 1"></ShareTable>
         <CompeteTable v-show="num == 2"></CompeteTable>
       </div>
-    </div>
-
-    <div v-show="check">
-      <Apply v-show="apply"></Apply>
-      <Browse v-show="!apply"></Browse>
     </div>
   </div>
 </template>
@@ -34,8 +29,8 @@ export default {
   data() {
     return {
       num: 1,
-      check: true,
-      apply:false
+      check: false,
+      apply:true
     }
   },
   methods: {

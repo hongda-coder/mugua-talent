@@ -79,7 +79,7 @@
     <div  v-show="dialogEditor" style="padding: 20px;background: #fff;">
       <div style="border: 1px solid #FEAF1D; padding: 30px 0; background: #FAFAFA;">
                       
-        <el-form label-width="80px" :model="editorForm" >
+        <el-form label-width="80px" :model="editorForm" :rules="rules" ref="editorForm">
           <el-row>
             <el-col :span="10" style="padding: 0;margin-left: 100px;min-width: 480px;">
               <div style="float: left;margin-right: 38px;">
@@ -127,56 +127,21 @@
                 </div>
               </div>
             </el-col>
-
-            
-            <!-- <el-col  :span="8" style="padding: 0;margin-left: 100px;min-width: 480px;">
-              <div class="clearfix">
-                <div class="content-input">
-                  <el-form-item label="证书名称" prop="imagename">
-                    <el-input v-model="editorForm.imagename"></el-input>
-                  </el-form-item>
-                </div>
-              </div>
-              <div class="clearfix">
-                <div class="content-input">
-                  <el-form-item label="证件附件" prop="password" style="float: left;" >
-                     <el-upload
-                      class="avatar-uploader"
-                      :show-file-list="false"
-                      :multiple="false"
-                      action="/api/user/PostUpload"
-                      :data="lists"
-                      :on-change="handleChange"
-                      :http-request="uploadFile"
-                      >
-                      <img v-if="imageUrl" :src="url" class="avatar">
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                  </el-form-item>
-                  <el-form-item label="示例" prop="password" style="float: left;">
-                    <div style="width: 140px; margin-left: 20px; padding:15px 25px;;box-sizing: border-box;float:left; border: 2px solid #E9E9E9;line-height:0;">
-                      <img width="100%" src="@/assets/images/upload-img.png" alt="">
-                    </div>
-                  </el-form-item>
-                </div>
-              </div>
-            </el-col> -->
           </el-row>
 
           <div style="width: 210px;margin:30px auto;">
-            <el-button style="background: #FEAD1C; color: #fff;width: 95px; border: none;" @click="saveInfo">保存</el-button>
+            <el-button style="background: #FEAD1C; color: #fff;width: 95px; border: none;"  @click="saveInfo('editorForm')">保存</el-button>
             <el-button style="color: #959595;width: 95px;" @click="dialogEditor = false">取消</el-button>
           </div>
         </el-form>
       </div>
     </div> 
-
     </div>
   </div>
 </template>
 
 <script>
-import { personInfo, personEarnings,uploadImg, perInfo } from "@/api/serve"
+import { personInfo,uploadImg, perInfo } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'PersonalInfo',
@@ -215,7 +180,26 @@ export default {
       dmprobability: '', // 通过
       tgprobability: '', // 到面
       formData: {},
-      url: ''
+      url: '',
+      rules: {
+        loginuser: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+        ],
+        sex: [
+          { required: true, message: '请选择性别', trigger: 'change' }
+        ],
+        create: [
+          { required: true, message: '请选择出生日期', trigger: 'change' }
+        ],
+        eamil: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' }
+        ],
+        xtel: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { min: 11, max: 11, message: '长度必须是11个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
 
@@ -227,17 +211,17 @@ export default {
     this.editorForm.tel = this.lists.tel
     // 个人基本信息
     this.personInfo()
-    this.personEarnings()
 
       // 禁用时间
     this.pickerOptions = {
       disabledDate(time) {
-        return time.getTime() > Date.now();
+        return time.getTime() > Date.now() - 567648000000;
       }
     }
   },
 
   computed: {
+    // 年龄  通过生日计算年龄
     getAge () {
       var d = new Date()
       return d.getFullYear() - new Date(this.userInfo.create).getFullYear() - (d.getMonth() < new Date(this.userInfo.create).getMonth() || (d.getMonth() == new Date(this.userInfo.create).getMonth() && d.getDate() < new Date(this.userInfo.create).getDate()) ? 1 : 0)
@@ -259,7 +243,8 @@ export default {
     // 信息
     personInfo () {
       personInfo(this.lists).then( res => {
-                if(res.data.Message == "-2") {
+        // console.log(res)
+        if(res.data.Message == "-2") {
           this.$router.push("login")
         }
         this.$store.commit('SAVE_USER',res.data.data.loginuser)
@@ -268,39 +253,13 @@ export default {
       })
     },
 
-    // 通过
-    personEarnings () {
-      personEarnings(this.lists).then( res => {
-        if(res.data.Message == "-2") {
-          this.$router.push("login")
-        }
-        this.jpcount = res.data.data.jpcount
-        this.dmprobability = res.data.data.dmprobability
-        this.tgprobability = res.data.data.tgprobability
-      })
-    },
 
-   // 上传文件，获取文件流
-    handleChange(file) { 
-      this.file = file ;
-    },
-    // 上传
-    uploadFile () {
-      console.log(this.file);
-       this.formData = new FormData()
-      this.formData.append('file', this.file)
-      this.formData.append('guid', this.lists.guid)
-      this.formData.append('tel', this.lists.tel)
-      uploadImg(this.formData).then(res => {
-        this.url = res.data.url
-      })
-    },
 
     // 编辑
     editor () {
       this.dialogEditor = true
        personInfo(this.lists).then( res => {
-                if(res.data.Message == "-2") {
+        if(res.data.Message == "-2") {
           this.$router.push("login")
         }
         this.editorForm = res.data.data
@@ -310,17 +269,33 @@ export default {
       })
     },
 
-    saveInfo () {
-      this.dialogEditor = false
-      perInfo (this.editorForm).then( res => {
-                if(res.data.Message == "-2") {
-          this.$router.push("login")
+    saveInfo (editorForm) {
+      this.$refs[editorForm].validate((valid) => {
+        if (valid) {
+          perInfo(this.editorForm).then( res => {
+            if(res.data.Message == "-2") {
+              this.$router.push("login")
+            }
+            if (res.data.Message == 'success') {
+              this.personInfo()
+              this.dialogEditor = false
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-        if (res.data.Message == 'success') {
-          this.personInfo()
-        }
-      }) 
-    }
+      })
+
+      // perInfo (this.editorForm).then( res => {
+      //   if(res.data.Message == "-2") {
+      //     this.$router.push("login")
+      //   }
+      //   if (res.data.Message == 'success') {
+      //     this.personInfo()
+      //   }
+      // }) 
+    },
   }
 }
 </script>
@@ -603,5 +578,16 @@ export default {
     width: 140px;
     height: 160px;
     display: block;
+  }
+
+  /deep/.el-form-item__error {
+    width: 100%;
+    color: #F56C6C;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    left: 231px;
+    top: 12px;
   }
 </style>

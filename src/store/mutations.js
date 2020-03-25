@@ -14,9 +14,6 @@ export default {
   SAVE_URL(state,url){
     state.url = url
   },
-  // SAVE_CODE(state,code){
-  //   state.code = code
-  // },
   SAVE_USER(state,loginuser){
     state.loginuser = loginuser
   },
@@ -27,5 +24,11 @@ export default {
     state.checkTask = checkTask
   },
 
+  SAVE_APPLY (state, isShow) {
+    state.isShow = isShow
+  },
+  SAVE_ID (state, jobId) {
+    state.jobId = jobId
+  },
 }
 

@@ -18,7 +18,7 @@
         <div style="padding: 30px 0; margin: auto;">
           <el-form label-width="80px" :model="editorForm" :rules="rules" ref="editorForm">
             <el-row>
-              <div style="padding: 0;width: 300px;margin:auto;">
+              <el-col :span="10" style="padding: 0; width: 300px;float: none;margin: auto;">
                 <!-- <div style="float: left;margin-right: 38px;">
                     <div style="width:100px;"><img src="@/assets/images/c-avatar.png" alt="" style="width: 100%;"></div>
                     <div style="color: #FEB12C;text-align: center; line-height: 30px;">修改<span style="font-size: 12px;color: #ccc;margin: 0 5px;">|</span>删除</div>
@@ -50,8 +50,8 @@
                   </div>
                   <div class="clearfix">
                     <div class="content-input">
-                      <el-form-item label="出生日期" prop="create ">
-                        <el-date-picker v-model="editorForm.create" type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
+                      <el-form-item label="出生日期" prop="create">
+                        <el-date-picker v-model="editorForm.create" type="date" :default-value="start" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                       </el-form-item>
                     </div>
                   </div>
@@ -69,18 +69,10 @@
                       </el-form-item>
                     </div>
                   </div>
-<!-- 
-                  <div class="clearfix">
-                    <div class="content-input">
-                      <el-form-item label="邀请码" prop="othersinvitecode">
-                        <el-input v-model="editorForm.othersinvitecode"></el-input>
-                      </el-form-item>
-                    </div>
-                  </div> -->
                 </div>
-              </div>
+              </el-col>
               
-              <!-- <el-col  :span="10" style="padding: 0;margin-left: 60px;">
+              <!-- <el-col :span="10" style="padding: 0;">
                 <div class="clearfix">
                   <div class="content-input">
                     <el-form-item label="证书名称" prop="imagename">
@@ -88,24 +80,21 @@
                     </el-form-item>
                   </div>
                 </div>
-
                 <div class="clearfix">
                   <div class="icon"><img src="" alt=""></div>
                   <div class="content-input">
                     <el-form-item label="证件附件" prop="password" style="float: left;">
-                         <el-upload
-                          class="avatar-uploader"
-                          :show-file-list="false"
-                          :multiple="false"
-                          action="http://192.168.0.182:8003/api/user/PostUpload"
-                          :on-change="handleChange"
-                          :before-upload="beforeUpload"
+                      <el-upload
+                        class="avatar-uploader"
+                        :show-file-list="false"
+                        :multiple="false"
+                        action="http://192.168.0.182:8003/api/user/PostUpload"
+                        :before-upload="beforeUpload"
+                        :http-request="uploadMyImg"
                         >
                       <img v-if="imageUrl" :src="imageUrl" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-
-
                     </el-form-item>
                     <el-form-item label="示例" prop="password" style="float: left;">
                       <div style="width: 140px; margin-left: 20px; padding:15px 25px;;box-sizing: border-box;float:left; border: 2px solid #E9E9E9;line-height:0;">
@@ -143,7 +132,6 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       dialogEditor: false,
-      imageUrl: '',
       editorForm: {
         sex: '', // 性别
         pickerOptions: {},
@@ -171,9 +159,9 @@ export default {
           { required: true, message: '请选择性别', trigger: 'change' }
         ],
         create: [
-          { type: 'data', required: true, message: '请选择出生日前', trigger: 'change' }
+          { type: 'date', required: true, message: '请选择出生日期', trigger: 'change' }
         ],
-        email: [
+        eamil: [
           { required: true, message: '请输入邮箱', trigger: 'blur' }
         ],
         xtel: [
@@ -186,14 +174,18 @@ export default {
   created () {
     this.editorForm.tel = getTel(this.editorForm.tel)
     this.editorForm.guid = getToken(this.editorForm.guid)
-
     // 禁用时间
     this.pickerOptions = {
       disabledDate(time) {
-        return time.getTime() > Date.now();
+        return time.getTime() > Date.now() - 567648000000;
       }
     }
      
+  },
+  computed: {
+    start() {
+      return Date.now() - 567648000000
+    }
   },
   methods: {
     saveInfo(formName) {
@@ -210,37 +202,6 @@ export default {
         }
       });
     },
-
-    handleChange (imagename, fileList, item) {
-      this.getBase64(imagename.raw).then(res => {
-        this.imagepath = res
-      })
-    },
-    beforeUpload (file) {
-      var _this = this;
-      var reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = function(e) {
-      // 图片base64化
-      var newUrl = this.result;    //图片路径
-      _this.imagename = newUrl;
-      };
-    },
-    getBase64(imagename) {
-      return new Promise(function(resolve, reject) {
-        let reader = new FileReader();
-        reader.readAsDataURL(imagename);
-        reader.onload = function() {
-            this.imagename = reader.result;
-        };
-        reader.onerror = function(error) {
-            reject(error);
-        };
-        reader.onloadend = function() {
-            resolve(imagename);
-        };
-      });
-    }
   }
 }
 </script>
@@ -358,8 +319,6 @@ export default {
     height: 160px;
     display: block;
   }
-
-
   /deep/ .el-form-item__error {
     position: absolute;
     width: 200px;

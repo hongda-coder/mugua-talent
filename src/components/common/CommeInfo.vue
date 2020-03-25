@@ -11,12 +11,11 @@
         </div>
       </el-col>
       <el-col class="card" :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
-        <div class="grid-content bg-purple c-card-info clearfix" style="width: 470px;">
+        <div class="grid-content bg-purple c-card-info clearfix">
           <div class="c-member-avatar"><img src="@/assets/images/c-my-recommend.png"></div>
-          <div class="c-member-count" style="margin-right: 0;">推荐到场 <span>{{dmCount}}</span></div>
-          <div class="c-member-count">推荐面过 <span>{{tgCount}}</span></div>
+          <div class="c-member-count">我的推荐<span>{{inCome}}</span> </div>
           <div class="c-member-manage">
-            <button @click="goRecommend">查看</button>
+            <button @click="goCommission">查看</button>
           </div>
         </div>
       </el-col>
@@ -62,7 +61,6 @@ export default {
       this.lists.guid = getToken(this.lists.guid)
       this.lists.tel = getTel(this.lists.tel)
       personEarnings(this.lists).then( res => {
-        console.log(res)
         if(res.data.Message == "-2") {
            this.$router.push("./login")
         }
@@ -70,7 +68,6 @@ export default {
         this.dmCount = res.data.data.dmCount
         this.tgCount = res.data.data.tgCount
         this.inCome = res.data.data.inCome
-        // console.log(res)
       })
     },
 

@@ -1,18 +1,14 @@
 <template>
   <div>
-    <div v-show="!this.$store.state.checkTask">
+    <div>
       <ul class="tab clearfix">
         <li class="item" :class="{current: num == 1}" v-on:click="change(1)">悬赏任务</li>
         <li class="item" :class="{current: num == 2}" v-on:click="change(2)">我的任务</li>
       </ul>
       <div class="content">
         <RewardTask v-show="num == 1"></RewardTask>
-        <MyTask v-show="num == 2" @closeDialog="closeDialog"></MyTask>
+        <MyTask v-show="num == 2"></MyTask>
       </div>
-    </div>
-
-    <div v-show="this.$store.state.checkTask">
-      <JobDetails></JobDetails>
     </div>
   </div>
 </template>
@@ -20,13 +16,11 @@
 <script>
 import RewardTask from './children/RewardTask'
 import MyTask from './children/MyTask'
-import JobDetails from './children/JobDetails'
 export default {
   name: 'Task',
   components: {
     RewardTask,
-    MyTask,
-    JobDetails
+    MyTask
   },
   data() {
     return {
@@ -36,12 +30,7 @@ export default {
   methods: {
     change: function(index) {
       this.num = index
-    },
-    closeDialog (valNumber) {
-      this.$router.go(0)
-      this.num = valNumber
-      console.log(this.num)
-    },
+    }
   }
 }
 </script>

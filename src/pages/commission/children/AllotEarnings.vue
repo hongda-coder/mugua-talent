@@ -31,9 +31,8 @@
         <af-table-column prop="personalinvitecode" label="所属成员" align="center"></af-table-column>
         <af-table-column prop="dmnumber" label="到场人数" align="center"></af-table-column>
         <af-table-column prop="tgnumber" label="面过人数" align="center"></af-table-column>
-        <af-table-column prop="dmmoney" label="到面佣金" align="center"></af-table-column>
-        <af-table-column prop="tgmoney" label="面过佣金" align="center"></af-table-column>
-        <af-table-column prop="money" label="共获佣金" align="center"></af-table-column>
+        <af-table-column prop="dmmoney" label="佣金节点" align="center"></af-table-column>
+        <af-table-column prop="tgmoney" label="共获佣金" align="center"></af-table-column>
         <af-table-column prop="time" label="创建时间" align="center"></af-table-column>
       </el-table>
     </div>

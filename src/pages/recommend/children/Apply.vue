@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="job">
+    <!-- <div class="job">
       <el-row :gutter="20" style="min-width: 1000px;">
         <el-col :xs="5" :sm="5" :md="5" :lg="12" :xl="12" style="min-width: 550px;">
           <div class="clearfix job-title">
@@ -56,33 +56,54 @@
           </af-table-column>
         </el-table>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
-export default {
-  name: 'Apply',
-  data() {
-    return {
-    table: [{
-        cname: '',
-        jobname: '',
-        address: '',
-        working: '',
-        education: '',
-        record: '',
-        jpetime: '',
-        number: '',
-        state: '',
-        aiMoenyOutside: '',
-        rdMoenyOutside: '',
-      }]
-    }
-  },
-}
+// import { applyList } from "@/api/serve"
+// import { getTel,getToken } from "@/util"
+// export default {
+//   name: 'Apply',
+//   data() {
+//     return {
+//     table: [{
+//         cname: '',
+//         jobname: '',
+//         address: '',
+//         working: '',
+//         education: '',
+//         record: '',
+//         jpetime: '',
+//         number: '',
+//         state: '',
+//         aiMoenyOutside: '',
+//         rdMoenyOutside: '',
+//       }],
+//       lists: {
+//         guid: 'ssc-token', //token
+//         tel: 'tel',  // 加密得电话号码
+//         limit: 1 , // 当前页
+//         curr: 10, //当前页多少数据
+//         msid: this.$store.state.jobId
+//       },
+//     }
+//   },
+//   mounted () {
+//     this.lists.guid = getToken(this.lists.guid)
+//     this.lists.tel = getTel(this.lists.tel)
+//     this.applyList()
+//   },
+//   methods: {
+//     applyList () {
+//       applyList(this.lists).then( res => {
+//         console.log(res)
+//       })
+//     }
+//   }
+// }
 </script>
 <style scoped>
-
+/* 
  .job {
     margin-top: 20px;
     background: #fff;
@@ -173,6 +194,6 @@ export default {
 .content {
   background: #fff;
   padding: 30px 20px;
-}
+} */
 
 </style>

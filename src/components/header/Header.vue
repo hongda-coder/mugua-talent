@@ -53,7 +53,7 @@ export default {
     // 确定退出登录
     comfirmLoginout () {
       this.$router.push('/login')
-      removeToken()
+      localStorage.clear()
     }
   }
 }

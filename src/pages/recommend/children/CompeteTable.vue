@@ -26,7 +26,7 @@
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)" >查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -62,6 +62,7 @@ export default {
         mstime: '',
         number: '',
         state: '',
+        msid: '',
         href:''
       }],
       lists: {
@@ -71,6 +72,8 @@ export default {
         curr: 10 //当前页多少数据
       },
       rows:1, //数据总数量
+      isShow: true, // 是否显示
+      checkTask: true // 是否显示
     }
   },
   mounted () {
@@ -113,17 +116,14 @@ export default {
   methods: {
     competeList () {
       competeList(this.lists).then( res => {
-        console.log(res)
         if(res.data.Message == "-2") {
           this.$router.push("login")
         }
-        
         this.table = res.data.data
         this.rows = res.data.listcount
       })
     },
     handleSizeChange(val) {
-      console.log(val)
       this.lists.curr = val ||this.lists.curr 
       this.competeList() //重新调用接口
     },
@@ -132,7 +132,9 @@ export default {
       this.competeList() //重新调用接口
     },
     goOut (row) {
-      window.open(this.table[row].href,"_blank")
+      this.$router.push({name: 'apply', query: {msid:this.table[row].msid}})
+      // this.$store.commit('SAVE_TASK',this.checkTask)
+      // this.$store.commit('SAVE_ID',this.table[row].msid)
     }
   }
 }

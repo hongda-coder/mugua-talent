@@ -5,7 +5,7 @@ Vue.use(Router)
 
 export default new Router({
   linkActiveClass: 'active',
-  mode: "history",
+  mode: 'hash',
   routes: [
     { 
       path: '/', 
@@ -26,14 +26,6 @@ export default new Router({
       name: 'editor',
       component: () => import('@/pages/registerEditor/Editor')
     },
-
-    {
-      path: '/test', // 测试
-      name: 'test',
-      component: () => import('@/pages/home/children/test.vue')
-    },
-
-
 
     {
       path: '/home', //首页
@@ -143,7 +135,6 @@ export default new Router({
         }
       ]
     },
-
     {
       path: 'withdraw', //提现
       redirect: '/withdraw',  // 绑定银行卡
@@ -176,6 +167,42 @@ export default new Router({
           component: () => import('@/pages/safety/Safety'),
           meta: {
             title: '安全中心'
+          }
+        }
+      ]
+    },
+    {
+      path: 'details', // 查看职位
+      redirect: '/detail',
+      component: () => import('@/components/Home'),
+      meta: {
+        title: '查看职位'
+      },
+      children: [
+        {
+          path: '/details',
+          name: 'details',
+          component: () => import('@/pages/job-details/job-details'),
+          meta: {
+            title: '查看职位'
+          }
+        }
+      ]
+    },
+    {
+      path: 'apply', // 查看竞聘情况
+      redirect: '/apply',
+      component: () => import('@/components/Home'),
+      meta: {
+        title: '查看职位'
+      },
+      children: [
+        {
+          path: '/apply',
+          name: 'apply',
+          component: () => import('@/pages/apply/Apply'),
+          meta: {
+            title: '查看职位'
           }
         }
       ]

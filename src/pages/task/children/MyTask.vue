@@ -15,22 +15,17 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="到面佣金" align="center"  width="130">
-          <template slot-scope="scope">
-            ￥{{scope.row.rdMoenyOutside}}
-          </template>
-        </af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="面过佣金" align="center" width="130">
+        <af-table-column prop="aiMoenyOutside" label="佣金节点" align="center"  width="130"></af-table-column>
+        <af-table-column prop="rdMoenyOutside" label="佣金" align="center" width="130">
             <template slot-scope="scope">
-            ￥{{scope.row.aiMoenyOutside}}
+            ￥{{scope.row.rdMoenyOutside}}
           </template>
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
-            <!-- <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button> -->
-            <el-button type="text" size="small" class="commonColor" @click="goOut">查看</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
           </template>
         </af-table-column>
       </el-table>
@@ -52,25 +47,10 @@
     <el-dialog
       title="提示"
       :visible.sync="dialogShare"
-      @close='closeDialog'
       width="30%"
       >
       <JobShare></JobShare>
-
     </el-dialog>
-
-    <!-- <el-dialog
-      title="提示"
-      :visible.sync="dialogShare"
-      @close='closeDialog'
-      width="30%"
-      >
-      <vueVshare v-if="dialogShare"></vueVshare>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelDialog">取 消</el-button>
-        <el-button type="primary" @click="confirmDialog">确 定</el-button>
-      </span>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -109,17 +89,7 @@ export default {
       },
       dialogShare: false, // 分享
       checkTask: true,
-      // config: {
-      //   url: this.$store.state.url, // 网址，默认使用 window.location.href
-      //   source: '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
-      //   title: '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
-      //   description: '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
-      //   image: '', // 图片, 默认取网页中第一个img标签
-      //   sites: ['qzone', 'wechat', 'douban'], // 启用的站点
-      //   // disabled: ['google'], // 禁用的站点
-      //   wechatQrcodeTitle: '微信扫一扫：分享', // 微信二维码提示文字
-      //   wechatQrcodeHelper: '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
-      // }
+
     }
   },
   mounted () {
@@ -131,6 +101,7 @@ export default {
      // 页面数据
     competeList () {
       competeList(this.lists).then( res => {
+        // console.log(res)
         if(res.data.Message == "-2") {
           this.$router.push("login")
         }
@@ -156,21 +127,6 @@ export default {
       })
     },
 
-    // 分享关闭刷新
-    closeDialog () {
-      this.$emit('closeDialog', this.valNumber)
-      
-    },
-    cancelDialog () {
-      this.dialogShare = false
-      this.$router.go(0)
-    },
-
-    confirmDialog () {
-      this.dialogShare = false
-      this.$router.go(0)
-    },
-
     // 分页
     handleSizeChange(val) {
       this.lists.curr = val ||this.lists.curr;
@@ -183,10 +139,9 @@ export default {
     },
       // 跳到外部
     goOut (row) {
+      this.$router.push({name: 'details', query: {msid:this.table[row].msid}})
       this.$store.commit('SAVE_TASK',this.checkTask)
-      console.log(this.$store.state.checkTask)
-      // this.$emit('goDetails',this.check)
-      // window.open(this.table[row].href,"_blank")
+      this.$store.commit('SAVE_ID',this.table[row].msid)
     }
   }
 }

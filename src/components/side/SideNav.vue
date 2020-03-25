@@ -8,10 +8,10 @@
         <el-menu-item index="/personal" class="item">
           <span slot="title">个人信息设定</span>
         </el-menu-item>
-        <el-menu-item index="/task" class="item">
+        <el-menu-item index="/task" class="item" @click="goTask">
           <span slot="title">任务管理</span>
         </el-menu-item>
-        <el-menu-item index="/recommend" class="item">
+        <el-menu-item index="/recommend" @click="goRecommend" class="item">
           <span slot="title">推荐管理</span>
         </el-menu-item>
         <el-menu-item index="/group" class="item">
@@ -36,12 +36,16 @@
 <script>
 export default {
   name: 'SibeNav',
-    // methods: {
-    // // 跑去收益 
-    // goCommission () {
-    //   this.$router.push({name: 'commission', goNumber: 1})
-    // }
-  // }
+    methods: {
+    // 跑去收益 
+    goTask () {
+      this.$store.state.checkTask = false
+    },
+    goRecommend () {
+      this.$store.state.checkTask = false
+      this.$store.state.isShow = false
+    }
+  }
 }
 </script>
 

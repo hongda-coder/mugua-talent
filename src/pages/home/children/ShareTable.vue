@@ -45,8 +45,6 @@ import { getTel, getToken } from "@/util"
 
 export default {
   name: 'ShareTable',
-  components: {
-  },
   data() {
     return {
       table: [{
@@ -170,22 +168,22 @@ export default {
 
 /*状态 */
 .StatusTypeColorA {
-  color: #FF6002;
+  color: #FF6002; /* 待面试*/
 }
 
 .StatusTypeColorB {
-  color: #FEAD1D;
+  color: #FEAD1D;  /* 面试中*/
 }
 
 .StatusTypeColorC{
-  color: #0FD286;
+  color: #0FD286;  /* 已完成*/
 }
 
 .StatusTypeColorD {
-  color: #FE0000;
+  color: #FE0000;  /* 竞聘中*/
 }
 .StatusTypeColorE {
-  color: #959595;
+  color: #959595;  /* 已取消*/
 }
 
 </style>

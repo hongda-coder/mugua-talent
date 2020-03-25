@@ -4,18 +4,18 @@
       <el-row :gutter="20" style="min-width: 1000px;">
         <el-col :xs="5" :sm="5" :md="5" :lg="12" :xl="12" style="min-width: 550px;">
           <div class="clearfix job-title">
-            <div class="job-name">餐饮运营督导（代招）</div> 
+            <div class="job-name">{{jobState.jobname}}</div> 
             <div class="jpb-price">6-8千/月</div>
           </div>
 
           <div class="clearfix job-time">
-            <div class="end-start">竞聘报名截止时间：<span class="details-time">2020-3-19</span></div>
-            <div class="interview-time">面试花时间： <span class="details-time">2020-03-20 9:00-17:00</span> </div>
+            <div class="end-start">竞聘报名截止时间：<span class="details-time">{{jobState.jpetime}}</span></div>
+            <div class="interview-time">面试花时间： <span class="details-time">{{jobState.mstime}}</span> </div>
           </div>  
           <div class="job-req clearfix">
-            <div class="job-address">广州市-番禺区</div>
-            <div class="req-education">学历不限</div>
-            <div class="req-year">1-3年</div>
+            <div class="job-address">{{jobState.address}}</div>
+            <div class="req-education">{{jobState.record}}</div>
+            <div class="req-year">{{jobState.working}}</div>
           </div>
           
         </el-col>
@@ -33,8 +33,9 @@
       <div class="clearfix">
         <div class="job-left">
           <div class="desc-title">职位描述</div>
-          <div class="job-duty">
-            岗位职责：
+          <p class="job-duty">
+            {{jobState.jobDescriptive}}
+            <!-- 岗位职责：
             <div>
               1、加盟商店面的开业计划、营运、管理、培训等整店方案的指导（公司提供教材资料）
               <br>
@@ -60,19 +61,19 @@
                   <br>
                 </div>
               </div>
-            </div>
-          </div>
+            </div> -->
+          </p>
 
-          <div class="desc-title" style="margin-top: 30px;">公司介绍</div>
+          <!-- <div class="desc-title" style="margin-top: 30px;">公司介绍</div>
             <div>
               广州市志在信息科技有限公司主营业务包括人力资源招聘服务、人力资源服务外包、人力资源管理咨询服务、猎头服务，
               企业互联网化升级服务等，持有人力资源服务许可证，是一家具有互联网特色的人才服务企业。
             </div>
-          <div>
+          <div> -->
 
           </div>
         </div>
-
+            <!-- 
         <div class="job-right">
 
           <div>
@@ -166,8 +167,7 @@
 
           </div>
 
-        </div>
-      </div>
+        </div> -->
     </div>
 
   </div>
@@ -175,11 +175,44 @@
 
 
 <script>
+import { jobDetails } from "@/api/serve"
+import { getTel,getToken } from "@/util"
 export default {
   name: 'JobDetails',
   data () {
     return {
-      
+      lists: {
+        guid: 'ssc-token', //token
+        msid: this.$route.query.msid
+      },
+      jobState: {
+        jobname: '',
+        address: '',
+        working: '',
+        record: '',
+        jpetime: '',
+        mstime: '',
+        jobDescriptive: ''
+      }
+    }
+  },
+  
+  mounted () {
+    this.lists.guid = getToken(this.lists.guid) 
+    this.details()
+    console.log(this.$route.query.msid)
+  },
+  methods: {
+    details () {
+      jobDetails (this.lists).then(res => {
+        console.log(res)
+        if(res.data.Message == -2) {
+          this.$router.query('login')
+        }
+        if (res.data.Message == "success") {
+          this.jobState = res.data.data
+        }
+      })
     }
   }
 }
@@ -199,7 +232,7 @@ export default {
     float: left;
     padding-left: 30px;
     width: 1100px;
-    border-right: 1px solid #ccc;
+    /* border-right: 1px solid #ccc; */
     padding-right: 140px;
     box-sizing: border-box;
   }
@@ -294,21 +327,6 @@ export default {
     color: #959595;
     font-size: 14px;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   .finder {

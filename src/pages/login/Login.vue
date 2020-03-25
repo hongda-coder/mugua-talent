@@ -25,17 +25,17 @@
                 欢迎来到人才推荐中心！
               </div>
               <el-form-item  prop="loginuser" class="input-code">
-                <el-input type="text" v-model="form.loginuser" placeholder="请输入手机号"></el-input>
+                <el-input type="text" v-model="form.loginuser" placeholder="请输入手机号" @keyup.enter.native="submitForm('form')"></el-input>
                 <div class="no-code" v-show="isCode">手机号码未注册</div>
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
               </el-form-item>
               <el-form-item  prop="pwd" class="input-code">
-                <el-input type="password" v-model="form.pwd" placeholder="请输入密码"></el-input>
+                <el-input type="password" v-model="form.pwd" placeholder="请输入密码" @keyup.enter.native="submitForm('form')"></el-input>
                 <div class="no-code" v-show="isPwd">密码错误</div>
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
               </el-form-item>
               <el-form-item>
-                <el-button class="btn" @click="submitForm('form')" @keyup.enter="loginT">登录</el-button>
+                <el-button class="btn" @click="submitForm('form')">登录</el-button>
               </el-form-item>
               <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
               <div class="c_talent_forget" @click="addInfo">老用户</div>
@@ -85,8 +85,8 @@ export default {
       formLabelWidth: '100px',
       dialogEditVisible: false,
       form: {
-        loginuser: '18977784437',
-        pwd: '123456'
+        loginuser: '',
+        pwd: ''
       },
       oldForm: {  
         TrueName: '', // 真实姓名
@@ -102,12 +102,12 @@ export default {
     Pic,
     Footer
   },
+
   methods: {
     submitForm(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('Login',this.form).then(res => {
-            console.log(res)
             if(res.data.Message == '-3') {
               this.isCode = true
             } else if (res.data.Message == '-4') {

@@ -26,17 +26,11 @@
         </af-table-column>
         <af-table-column prop="name" label="操作" align="center"  width="110">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看</el-button>
+            <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)" >查看</el-button>
           </template>
         </af-table-column>
       </el-table>
     </div>
-    <!-- <div v-show="table.length==0">
-      <div class="no-wrap">
-        <div class="no-record"><img src="@/assets/images/no-record.png" alt=""></div>
-        <div style="line-height: 80px;">暂无数据</div>
-      </div>
-    </div> -->
 
         <!-- 分页 -->
     <div class="block" style="width: 520px;margin: 15px auto;text-align: center;">
@@ -77,7 +71,9 @@ export default {
         tel: 'tel',  // 加密得电话号码
         limit: 1 , // 当前页
         curr: 10 //当前页多少数据
-      }
+      },
+      checkTask: true, // 是否显示
+      isShow: false // 是否显示
     }
   },
   mounted () {
@@ -126,7 +122,9 @@ export default {
       })
     },
     goOut (row) {
-      window.open(this.table[row].href,"_blank")
+      this.$router.push({name: 'apply', query: {msid:this.table[row].msid}})
+      this.$store.commit('SAVE_TASK',this.checkTask)
+      this.$store.commit('SAVE_APPLY',this.isShow)
     },
 
     handleSizeChange(val) {

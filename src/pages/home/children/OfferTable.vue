@@ -19,17 +19,13 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="到面佣金" align="center"  width="130">
-          <template slot-scope="scope">
-            ￥{{scope.row.rdMoenyOutside}}
-          </template>
-        </af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="面过佣金" align="center" width="130">
+        <af-table-column prop="rdMoenyOutside" label="佣金节点" align="center"  width="130"></af-table-column>
+        <af-table-column prop="aiMoenyOutside" label="佣金" align="center" width="130">
             <template slot-scope="scope">
             ￥{{scope.row.aiMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="name" label="操作" align="center" width="150">
+        <af-table-column prop="name" label="操作" align="center" width="170">
           <template slot-scope="scope">
             <el-button type="text" size="small" class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
@@ -47,27 +43,22 @@
     <el-dialog
       title="提示"
       :visible.sync="shareTalbe"
-      @close='closeDialog'
       width="30%"
       >
-      <vueVshare v-if="shareTalbe"></vueVshare>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="shareCancle">取 消</el-button>
-        <el-button type="primary" @click="shareComfirm">确 定</el-button>
-      </span>
+      <JobShare></JobShare>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import vueVshare from '@/components/common/test'
+import JobShare from '@/components/common/JobShare'
 import { jobList,shareJob, getTask, competeList } from "@/api/serve"
 import { getTel,getToken } from "@/util"
 export default {
   name: 'OfferTable',
   inject:['reload'], 
   components: {
-    vueVshare
+    JobShare
   },
   data () {
     return {
@@ -94,17 +85,7 @@ export default {
       },
       shareTalbe: false, // 分享弹出层
       tableIndex: '',
-      // defaultConfig: {
-      //   shareList: ['more','qzone','tsina','tqq','renren','weixin'],
-      //   common:{
-      //     bdUrl: ''
-      //   },
-      //   share: [{bdSize: 24}],
-      //   slide: false,
-      //   image: false,
-      //   selectShare: false
-      // },
-       disabled: false
+      disabled: false
     }
   },
   mounted () {
@@ -157,11 +138,10 @@ export default {
     // 分享
     share (row, column) {
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-        console.log(res)
         if(res.Message == "-2") {
           this.$router.push("login")
         }
-        this.$store.commit('SAVE_URL',res.data.data.urlpath)
+        this.$store.commit('SAVE_SHARE',res.data.data.urlpath)
         this.shareTalbe = true
       })
     },
@@ -170,7 +150,7 @@ export default {
       getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
         if (res.data.Message = 'success') {
           this.jobList()
-          this.winReload()
+          // this.winReload()
           this.disabled = true
           this.$alert('领取任务成功', {
             confirmButtonText: '确定',
@@ -184,24 +164,6 @@ export default {
           });
         }
       })
-    },
-
-    closeDialog () {
-      this.winReload()
-    },
-
-    winReload (cond){
-      window.location.reload();
-    },
-
-    shareComfirm () {
-      this.shareTalbe = false
-      this.winReload()
-    },
-
-    shareCancle () {
-      this.shareTalbe = false
-      this.winReload()
     },
     // 跳转到更多
     goTask  () {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <div class="job">
+    <div class="job">
       <el-row :gutter="20" style="min-width: 1000px;">
         <el-col :xs="5" :sm="5" :md="5" :lg="12" :xl="12" style="min-width: 550px;">
           <div class="clearfix job-title">
@@ -29,7 +29,7 @@
     </div>
     <div style="margin-right: 10px;">
       <div class="tab clearfix">
-        <div class="item current">浏览情况</div>
+        <div class="item current">报名情况</div>
       </div>
       <div class="content">
         <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
@@ -39,38 +39,72 @@
               {{scope.$index+1}}
           </template>
           </af-table-column>
-          <af-table-column prop="cname" label="姓名" align="center"></af-table-column>
-          <af-table-column prop="jobname" label="性别" align="center"></af-table-column>
-          <af-table-column prop="address" label="年龄" align="center"></af-table-column>
-          <af-table-column prop="working" label="工作经验" align="center"></af-table-column>
-          <af-table-column prop="record" label="最高学历" align="center"></af-table-column>
-          <af-table-column prop="jpetime" label="浏览时间" align="center"></af-table-column>
+          <af-table-column prop="TrueName" label="姓名" align="center"></af-table-column>
+          <af-table-column prop="sex" label="性别" align="center"></af-table-column>
+          <af-table-column prop="tel" label="联系方式" align="center"></af-table-column>
+          <af-table-column prop="working" label="求职意向" align="center"></af-table-column>
+          <af-table-column prop="record" label="工作经历" align="center"></af-table-column>
+          <af-table-column prop="jpetime" label="教育经历" align="center"></af-table-column>
+          <af-table-column prop="mstime" label="项目经验" align="center"></af-table-column>
+          <af-table-column prop="number" label="语言能力" align="center"></af-table-column>
+          <af-table-column prop="state" label="自我评价" align="center"></af-table-column>
+          <af-table-column prop="rdMoenyOutside" label="创建时间" align="center"></af-table-column>
+          <af-table-column prop="aiMoenyOutside" label="操作" align="center" width="150">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" class="commonColor" @click="goOut(scope.$index,scope.row)">查看简历</el-button>
+            </template>
+          </af-table-column>
         </el-table>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
-// export default {
-//   name: 'Browse',
-//   data() {
-//     return {
-//     table: [{
-//         cname: '',
-//         jobname: '',
-//         address: '',
-//         working: '',
-//         education: '',
-//         record: '',
-//         jpetime: '',
-//       }]
-//     }
-//   },
-// }
+import { applyList } from "@/api/serve"
+import { getTel,getToken } from "@/util"
+export default {
+  name: 'Apply',
+  data() {
+    return {
+    table: [{
+        cname: '',
+        jobname: '',
+        address: '',
+        working: '',
+        education: '',
+        record: '',
+        jpetime: '',
+        number: '',
+        state: '',
+        aiMoenyOutside: '',
+        rdMoenyOutside: '',
+      }],
+      lists: {
+        guid: 'ssc-token', //token
+        tel: 'tel',  // 加密得电话号码
+        limit: 1 , // 当前页
+        curr: 10, //当前页多少数据
+        msid: this.$route.query.msid
+      },
+    }
+  },
+  mounted () {
+    this.lists.guid = getToken(this.lists.guid)
+    this.lists.tel = getTel(this.lists.tel)
+    console.log(this.$route.query.msid)
+    this.applyList ()
+  },
+  methods: {
+    applyList () {
+      applyList(this.lists).then( res => {
+        console.log(res)
+      })
+    }
+  }
+}
 </script>
-
 <style scoped>
-/*
+
  .job {
     margin-top: 20px;
     background: #fff;
@@ -162,5 +196,5 @@
   background: #fff;
   padding: 30px 20px;
 }
-*/
+
 </style>

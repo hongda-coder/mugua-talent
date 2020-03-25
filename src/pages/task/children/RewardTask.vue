@@ -36,17 +36,13 @@
         <af-table-column prop="record" label="学历要求" align="center"></af-table-column>
         <af-table-column prop="jpetime" label="竞聘结束日期" align="center"></af-table-column>
         <af-table-column prop="mstime" label="面试时间" align="center"></af-table-column>
-        <af-table-column prop="aiMoenyOutside" label="到面佣金" align="center"  width="130">
-          <template slot-scope="scope">
-            ￥{{scope.row.rdMoenyOutside}}
-          </template>
-        </af-table-column>
-        <af-table-column prop="rdMoenyOutside" label="面过佣金" align="center" width="130">
+        <af-table-column prop="rdMoenyOutside" label="佣金节点" align="center"  width="130"></af-table-column>
+        <af-table-column prop="aiMoenyOutside" label="佣金" align="center" width="130">
             <template slot-scope="scope">
             ￥{{scope.row.aiMoenyOutside}}
           </template>
         </af-table-column>
-        <af-table-column prop="name" label="操作" align="center"  width="150">
+        <af-table-column prop="name" label="操作" align="center"  width="170">
           <template slot-scope="scope" width="180">
             <el-button type="text" size="small"  class="commonColor" @click="share(scope.$index,scope.row)">分享</el-button>
             <span class="commonColor" style="margin: 0 5px;font-size: 12px;">|</span>
@@ -75,23 +71,19 @@
       @close='closeDialog'
       width="30%"
       >
-      <vueVshare v-if="dialogShare"></vueVshare>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelDialog">取 消</el-button>
-        <el-button type="primary" @click="confirmDialog">确 定</el-button>
-      </span>
+      <JobShare></JobShare>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import vueVshare from '@/components/common/test'
+import JobShare from '@/components/common/JobShare'
 import { jobList, getTask, shareJob } from "@/api/serve"
 import { getTel, getToken } from "@/util"
 export default {
   name: 'RewardTask',
   components: {
-    vueVshare
+    JobShare
   },
   data () {
     return {
@@ -173,12 +165,10 @@ export default {
 
     // 分享
     share (row) {
-      this.dialogShare = true
       shareJob ({msid:this.table[row].msid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
-        this.$store.commit('SAVE_URL',res.data.data.urlpath)
+        this.$store.commit('SAVE_SHARE',res.data.data.urlpath)
+        console.log(this.$store.state.shareUrl)
         this.dialogShare = true
-        console.log(res.data.data.urlpath)
-        console.log(this.$store.state.url)
       })
     },
 
@@ -191,7 +181,6 @@ export default {
             confirmButtonText: '确定',
             center: true,
             callback: action => {
-              this.$router.go(0)
               this.$message({
                 type: 'info',
                 message: `action: ${ action }`
@@ -202,7 +191,7 @@ export default {
       })
     },
 
-      // 分页
+    // 分页
     handleSizeChange(val) {
       this.lists.curr = val ||this.lists.curr;
       this.jobList();//重新调用接口
@@ -215,7 +204,6 @@ export default {
     // 分享关闭刷新
     closeDialog () {
       this.$router.go(0)
-      console.log("5646546")
     },
     cancelDialog () {
       this.dialogShare = false
@@ -225,19 +213,17 @@ export default {
       this.dialogShare = false
       this.$router.go(0)
     },
-        // 跳到外部
+    
+    // 跳到外部
     goOut (row) {
+     this.$router.push({name: 'details', query: {msid:this.table[row].msid}})
       this.$store.commit('SAVE_TASK',this.checkTask)
-      // console.log(this.$store.state.checkTask)
-      // window.open(this.table[row].href,"_blank")
     }
   }
 }
 </script>
 
 <style scoped>
-
-
 .c-info-name::before {
   display: inline-block;
   content: '';

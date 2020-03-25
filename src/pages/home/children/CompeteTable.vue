@@ -45,8 +45,6 @@ import { getTel,getToken } from "@/util"
 
 export default {
   name: 'CompeteTable',
-  components: {
-  },
   data() {
     return {
       table: [{

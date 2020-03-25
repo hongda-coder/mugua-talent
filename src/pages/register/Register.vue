@@ -147,20 +147,20 @@ export default {
   methods: {
     // 发送ajax请求(向指定手机号发送验证码短信)
     getCode () {
-      this.computeTime = 60
-      this.isDisabled = true
-      this.intervalId = setInterval(() => {
-        this.computeTime--
-        if(this.computeTime<=0) {
-          // 停止计时
-          clearInterval(this.intervalId)
-          this.isDisabled = false
-        }
-      }, 1000)
       shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.tel}).then(res => {
-        console.log(res)
         if ( res.data.Message == -4 ) {
           this.isShowReg = true
+        } else if (res.data.Message == 'success') {
+          this.computeTime = 60
+          this.isDisabled = true
+          this.intervalId = setInterval(() => {
+            this.computeTime--
+            if(this.computeTime<=0) {
+              // 停止计时
+              clearInterval(this.intervalId)
+              this.isDisabled = false
+            }
+          }, 1000)
         }
       })
     },
@@ -173,7 +173,7 @@ export default {
       register ({tel:this.form.tel,pwd:this.form.pwd,code:this.form.code,othersinvitecode:this.form.othersinvitecode}).then( res=> {
         console.log(res)
         if (res.data.Message == 'success') {
-          this.$router.push("login")
+          this.$router.push("./login")
           // this.openVn()
           // setTimeout (function () {
           //   this.$router.push("login")
