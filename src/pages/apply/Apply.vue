@@ -99,6 +99,9 @@ export default {
       applyList(this.lists).then( res => {
         console.log(res)
       })
+    },
+    goOut () {
+      this.$router.push('resume')
     }
   }
 }

@@ -48,6 +48,7 @@
       title="提示"
       :visible.sync="dialogShare"
       width="30%"
+      @close='closeDialog'
       >
       <JobShare></JobShare>
     </el-dialog>
@@ -126,7 +127,9 @@ export default {
         this.dialogShare = true
       })
     },
-
+    closeDialog () {
+      this.$store.commit('SAVE_SHARE','')
+    },
     // 分页
     handleSizeChange(val) {
       this.lists.curr = val ||this.lists.curr;
@@ -137,7 +140,7 @@ export default {
       this.lists.limit = val ||this.lists.limit;
       this.jobList();//重新调用接口
     },
-      // 跳到外部
+    // 跳到外部  查看
     goOut (row) {
       this.$router.push({name: 'details', query: {msid:this.table[row].msid}})
       this.$store.commit('SAVE_TASK',this.checkTask)

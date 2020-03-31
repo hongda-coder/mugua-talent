@@ -121,6 +121,8 @@ export default {
         this.rows = res.data.listcount
       })
     },
+
+    // 查看
     goOut (row) {
       this.$router.push({name: 'apply', query: {msid:this.table[row].msid}})
       this.$store.commit('SAVE_TASK',this.checkTask)

@@ -171,22 +171,26 @@ export default {
         this.dialogShare = true
       })
     },
+      // 分享关闭刷新
+    closeDialog () {
+      this.$store.commit('SAVE_SHARE','')
+    },
 
     //领任务
     getTask (row, column) {
       getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
         if (res.data.Message = 'success') {
           this.disabled = true
-          this.$alert('领取任务成功', {
-            confirmButtonText: '确定',
-            center: true,
-            callback: action => {
-              this.$message({
-                type: 'info',
-                message: `action: ${ action }`
-              });
-            }
-          });
+          // this.$alert('领取任务成功', {
+          //   confirmButtonText: '确定',
+          //   center: true,
+          //   callback: action => {
+          //     this.$message({
+          //       type: 'info',
+          //       message: `action: ${ action }`
+          //     });
+          //   }
+          // });
         }
       })
     },
@@ -201,10 +205,6 @@ export default {
       this.jobList();//重新调用接口
     },
 
-    // 分享关闭刷新
-    closeDialog () {
-      this.$router.go(0)
-    },
     cancelDialog () {
       this.dialogShare = false
       this.$router.go(0)

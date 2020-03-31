@@ -19,7 +19,11 @@
             <div class="c_join_once"> <a href="#">立即加入</a> </div>
           </div>
           <div class="col-xs-2 col-md-2"></div>
-          <div class="right-content">
+          <div class="right-content" v-show="isSHow" >
+            <div class="login-way clearfix">
+              <div class="pass-login active" @click="passLogin">密码登录</div>
+              <div class="que-login" @click="queLogin">快捷登录</div>
+            </div>
             <el-form ref="form" :model="form" class="demo-ruleForm c_talent_form">
               <div class="c_talent_title">
                 欢迎来到人才推荐中心！
@@ -36,6 +40,34 @@
               </el-form-item>
               <el-form-item>
                 <el-button class="btn" @click="submitForm('form')">登录</el-button>
+              </el-form-item>
+              <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
+              <div class="c_talent_forget" @click="addInfo">老用户</div>
+            </el-form>
+          </div>
+          <div class="right-content" v-show="!isSHow">
+            <div class="login-way clearfix">
+              <div class="pass-login" @click="passLogin">密码登录</div>
+              <div class="que-login active" @click="queLogin">快捷登录</div>
+            </div>
+            <el-form ref="form" :model="queForm" class="demo-ruleForm c_talent_form">
+              <div class="c_talent_title">
+                欢迎来到人才推荐中心！
+              </div>
+              <el-form-item  prop="phone" class="input-code">
+                <el-input type="text" v-model="queForm.phone" placeholder="请输入手机号" @keyup.enter.native="submitForm('queForm')"></el-input>
+                <div class="no-code" v-show="isCode">手机号码未注册</div>
+                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
+              </el-form-item>
+              <Sliding style="width: 390px; margin-bottom: 22px;" />
+              <el-form-item  prop="code" class="input-code">
+                <el-input type="te" class="my-input" v-model="queForm.code" placeholder="请输入密码" @keyup.enter.native="submitForm('queForm')"></el-input>
+                <button class="text" type="button" :disabled="isDisabled" 
+                @click="getCode()"> {{computeTime>0 ? `已发送(${computeTime}s)` : '获取验证码'}}</button>
+                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe660;</i></div>
+              </el-form-item>
+              <el-form-item>
+                <el-button class="btn" @click="submitForm('queForm')">登录</el-button>
               </el-form-item>
               <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
               <div class="c_talent_forget" @click="addInfo">老用户</div>
@@ -78,6 +110,8 @@
 import { oldUser } from "@/api/serve"
 import Footer from "@/components/footer/Footer"
 import Pic from '@/components/common/Pic'
+
+import Sliding from '@/components/common/Sliding'
 export default {
   name: "Login",
   data () {
@@ -85,8 +119,8 @@ export default {
       formLabelWidth: '100px',
       dialogEditVisible: false,
       form: {
-        loginuser: '',
-        pwd: ''
+        loginuser: '18977784437',
+        pwd: '123456'
       },
       oldForm: {  
         TrueName: '', // 真实姓名
@@ -94,13 +128,22 @@ export default {
         tel: '',// 电话号码
         loginuser: '' // 密钥
       },
-      isCode: false,
-      isPwd: false,
+
+      queForm: {
+        phone: '18977784437',
+        code: '123456'
+      },
+      computeTime: 0, // 计时的时间
+      isDisabled: true,  // 获取验证码是否可以点击
+      isCode: false,  // 手机号未注册
+      isPwd: false,   // 密码错误
+      isSHow: true   // 看去哪里登录
     }
   },
   components: {
     Pic,
-    Footer
+    Footer,
+    Sliding
   },
 
   methods: {
@@ -126,20 +169,47 @@ export default {
         }
       })
     },
+    // 跑去注册
     goRegister () {
        this.$router.push("./register")
     },
-    changeCodeImg () {
-      let num = Math.ceil( Math.random()*10) //生成一个随机数（防止缓存）
-　　},
+
+    // 发送ajax请求(向指定手机号发送验证码短信)
+    getCode () {
+      shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.tel}).then(res => {
+        if ( res.data.Message == -4 ) {
+          this.isShowReg = true
+        } else if (res.data.Message == 'success') {
+          this.computeTime = 60
+          this.isDisabled = true
+          this.intervalId = setInterval(() => {
+            this.computeTime--
+            if(this.computeTime<=0) {
+              // 停止计时
+              clearInterval(this.intervalId)
+              this.isDisabled = false
+            }
+          }, 1000)
+        }
+      })
+    },
+    
     addInfo () {
       this.dialogEditVisible = true
     },
+
     saveInfo () {
       this.dialogEditVisible = false
       oldUser (this.oldForm).then( res => {
         console.log(res)
       })
+    },
+
+    passLogin () {
+      this.isSHow = true
+    },
+    queLogin () {
+      this.isSHow = false
     }
   }
 }
@@ -147,43 +217,47 @@ export default {
 
 
 <style scoped>
-  /**2020-2-12 */
-  .left-content {
-    float: left;
-  }
+/**2020-2-12 */
+.left-content {
+  float: left;
+}
 
-  .right-content {
-    float: right;
-  }
+.right-content {
+  float: right;
+  background: #fff;
+  width: 420px;
+  border-radius: 10px;
+  margin-top: 25px;
+}
 
-  input:focus { 
-    outline: 1px solid #FEAD1C!important;
-    box-shadow: 0px 0px 5px #FEAD1C;
-  }
-  /**2020-2-12 */
+input:focus { 
+  outline: 1px solid #FEAD1C!important;
+  box-shadow: 0px 0px 5px #FEAD1C;
+}
+/**2020-2-12 */
 
-  .c_talent_w {
-    width: 1200px;
-    margin: auto;
+.c_talent_w {
+  width: 1200px;
+  margin: auto;
 }
 
 
- .c_header_nav_jz {
-    width: 100%;
-    background: #000;
+.c_header_nav_jz {
+  width: 100%;
+  background: #000;
 }
 
 .c_jzheaader {
-    width: 1200px;
-    margin: auto;
+  width: 1200px;
+  margin: auto;
 }
 
 .c_jzlogo {
-    width: 92px;
-    float: left;
-    box-sizing: border-box;
-    /* height: 50px; */
-    line-height: 50px;
+  width: 92px;
+  float: left;
+  box-sizing: border-box;
+  /* height: 50px; */
+  line-height: 50px;
 }
 
 .c_jzlogo img {
@@ -192,56 +266,53 @@ export default {
 }
 
 .c_talent_soon {
-    float: left;
-    font-size: 18px;
-    color: #fff;
-    margin-left: 12px;
-    line-height: 50px;
+  float: left;
+  font-size: 18px;
+  color: #fff;
+  margin-left: 12px;
+  line-height: 50px;
 }
 
 .c_talent_recommend {
-    width: 100%;
-    height: 500px;
-    background: url("../../assets/images/c-talent-recommend-banner.png") no-repeat;
+  width: 100%;
+  height: 500px;
+  background: url("../../assets/images/c-talent-recommend-banner.png") no-repeat;
 }
 
-  .c_layout_left {
-    margin-top: 80px;
+.c_layout_left {
+  margin-top: 80px;
 }
 
 .c_join_once a{
-    display: block;
-    width:  110px;
-    color: #FE5C1C;
-    background: #FFF;
-    border-radius: 15px;
-    text-align: center;
-    font-size: 18px;
-    line-height: 30px;
-    margin-top: 60px;
+  display: block;
+  width:  110px;
+  color: #FE5C1C;
+  background: #FFF;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 30px;
+  margin-top: 60px;
 }
 
 .c_talent_form {
-    width: 420px;
-    margin-left: 60px;
-    margin-top: 60px;
-    background: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    box-sizing: border-box;
+  width: 420px;
+  border-radius: 15px;
+  padding: 0 20px 20px 20px;
+  box-sizing: border-box;
 }
 
 .c_talent_title {
-    width: 100%;
-    text-align: center;
-    color: #FE5C1C;
-    font-size: 20px;
-    margin-bottom: 20px;
-    line-height: 60px;
+  width: 100%;
+  text-align: center;
+  color: #FE5C1C;
+  font-size: 20px;
+  margin-bottom: 20px;
+  line-height: 60px;
 }
 
 .c_talent_form  .form-group {
-    position: relative;
+  position: relative;
 }
 
 .c_talent_form input {
@@ -306,50 +377,89 @@ export default {
   cursor: pointer;
 }
 
-  .code {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50px;
-    border: 1px solid #ccc;
-    width: 92px;
-    height: 48px;
-    line-height: 48px;
-    text-align: center;
-    border-radius: 4px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-  }
+/deep/ .el-form-item__content {
+  margin-left: 0!important;
+}
 
-  /deep/ .el-form-item__content {
-    margin-left: 0!important;
-  }
+/deep/ .el-input__inner {
+  height: 48px;
+  line-height: 48px;
+  padding: 6px 34px;
+  box-sizing: border-box;
+}
 
-  /deep/ .el-input__inner {
-    height: 48px;
-    line-height: 48px;
-    padding: 6px 34px;
-    box-sizing: border-box;
-  }
-
-  /deep/ .el-input__inner:focus {
-    border-color: #FEAD1C;
-  }
+/deep/ .el-input__inner:focus {
+  border-color: #FEAD1C;
+}
 
 
-  .no-code {
-    position: absolute;
-    top: 38px;
-    left: 5px;
-    color:red;
-  }
+.no-code {
+  position: absolute;
+  top: 38px;
+  left: 5px;
+  color:red;
+}
 
-  /deep/ .el-input {
-    display: inline;
-  }
 
-  /deep/ .el-input__inner {
-    width: 390px;
-  }
+.login-way {
+  line-height: 50px;
+  cursor: pointer;
+}
+
+.login-way > .pass-login {
+  float: left;
+  width: 210px;
+  text-align: center;
+}
+
+.login-way > .que-login {
+  float: left;
+  width: 210px;
+  text-align: center;
+}
+
+.login-way > .active {
+  color:#FEAD1C;
+  position: relative;
+}
+
+.login-way > .active::before {
+  content: '';
+  display: block;
+  width: 90px;
+  height: 2px;
+  background: #FEAD1C;
+  position: absolute;
+  top: 50px;
+  left: 60px;
+}
+
+/deep/ .el-input {
+  display: inline;
+}
+
+/deep/ .el-input__inner {
+  width: 390px;
+}
+
+/deep/ .my-input > .el-input__inner {
+  width: 280px;
+}
+
+.code {
+  width: 92px;
+  border: 1px solid #ccc;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  background: #fff;
+}
 
 </style>

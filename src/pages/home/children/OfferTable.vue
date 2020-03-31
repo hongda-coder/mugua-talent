@@ -44,6 +44,7 @@
       title="提示"
       :visible.sync="shareTalbe"
       width="30%"
+      @close='closeDialog'
       >
       <JobShare></JobShare>
     </el-dialog>
@@ -145,6 +146,10 @@ export default {
         this.shareTalbe = true
       })
     },
+
+    closeDialog () {
+      this.$store.commit('SAVE_SHARE','')
+    },
      // 领任务
     getTask (row, column) {
       getTask({tel: this.lists.tel,guid: this.lists.guid,msid: this.table[row].msid}).then( res => {
@@ -152,16 +157,16 @@ export default {
           this.jobList()
           // this.winReload()
           this.disabled = true
-          this.$alert('领取任务成功', {
-            confirmButtonText: '确定',
-            center: true,
-            callback: action => {
-              this.$message({
-                type: 'info',
-                message: `action: ${ action }`
-              });
-            }
-          });
+          // this.$alert('领取任务成功', {
+          //   confirmButtonText: '确定',
+          //   center: true,
+          //   callback: action => {
+          //     this.$message({
+          //       type: 'info',
+          //       message: `action: ${ action }`
+          //     })
+          //   }
+          // })
         }
       })
     },
@@ -169,9 +174,11 @@ export default {
     goTask  () {
       this.$router.push('task')
     },
-      // 跳到外部
+    // 跳到外部  查看
     goOut (row) {
-      window.open(this.table[row].href,"_blank")
+      this.$router.push({name: 'details', query: {msid:this.table[row].msid}})
+      this.$store.commit('SAVE_TASK',this.checkTask)
+      this.$store.commit('SAVE_ID',this.table[row].msid)
     }
   }
 }

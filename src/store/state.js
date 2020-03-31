@@ -5,7 +5,7 @@ export default {
   address: 'http://192.168.0.182',
   tel: getTel(),
   url:'', 
-  shareUrl: '',
+  shareUrl: '', // 分享
   loginuser:'', // 用户名
   bankNumber: '', // 银行显示
   checkTask: false,  // 任务以及推荐的查看

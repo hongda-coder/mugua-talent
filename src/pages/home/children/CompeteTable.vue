@@ -122,10 +122,12 @@ export default {
     goOut (row) {
       window.open(this.table[row].href,"_blank")
     },
-          // 跳到外部
+    // 查看
     goOut (row) {
-      window.open(this.table[row].href,"_blank")
-    }
+      this.$router.push({name: 'apply', query: {msid:this.table[row].msid}})
+      this.$store.commit('SAVE_TASK',this.checkTask)
+      this.$store.commit('SAVE_APPLY',this.isShow)
+    },
   }
 }
 </script>

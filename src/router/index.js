@@ -207,5 +207,23 @@ export default new Router({
         }
       ]
     },
+    {
+      path: 'resume', // 查看竞聘情况
+      redirect: '/resume',
+      component: () => import('@/components/Home'),
+      meta: {
+        title: '查看职位'
+      },
+      children: [
+        {
+          path: '/resume',
+          name: 'resume',
+          component: () => import('@/pages/resume/resume'),
+          meta: {
+            title: '查看职位'
+          }
+        }
+      ]
+    }
   ]
 })

@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3006068",
+      "name": "语言能力",
+      "font_class": "yuyannengli",
+      "unicode": "e683",
+      "unicode_decimal": 59011
+    },
+    {
+      "icon_id": "4961930",
+      "name": "工作经验",
+      "font_class": "gongzuojingyan",
+      "unicode": "e663",
+      "unicode_decimal": 58979
+    },
+    {
+      "icon_id": "5743272",
+      "name": "意向服务商",
+      "font_class": "yixiangfuwushang",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "6070667",
+      "name": "自我评价",
+      "font_class": "moban-ziwopingjia",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "7683590",
+      "name": "项目*",
+      "font_class": "xiangmu",
+      "unicode": "e737",
+      "unicode_decimal": 59191
+    },
+    {
+      "icon_id": "9819711",
+      "name": "教育",
+      "font_class": "xuexiao",
+      "unicode": "e712",
+      "unicode_decimal": 59154
+    },
+    {
       "icon_id": "444566",
       "name": "分类",
       "font_class": "fenlei",

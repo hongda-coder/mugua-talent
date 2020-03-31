@@ -237,16 +237,7 @@ export default {
 			}
       }
     },
-    // openVn() {
-    //   const h = this.$createElement;
-    //   this.$message({
-    //     duration: this.durationTime,
-    //     message: h('p', null, [
-    //       h('span', null),
-    //       h('i', { style: 'color: teal' }, `注册成功！ ${ this.durationTime/1000 }s后自动跳到登录页`)
-    //     ])
-    //   });
-    // },
+
 
 
     // 注册账号

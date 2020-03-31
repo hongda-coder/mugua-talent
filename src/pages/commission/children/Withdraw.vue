@@ -174,7 +174,7 @@ export default {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
 
-    // 银行卡
+    // 银行卡信息
     this.bankInfo()
 
     // 提现记录
@@ -216,7 +216,7 @@ export default {
       this.dialogUnbank = true
     },
     confirmUnbank () {
-      unbindBank ({bankid: this.bankid,guid:this.lists.guid}).then( res => {
+      unbindBank ({bankid: this.bankid,guid:this.lists.guid,tel:this.lists.tel}).then( res => {
         this.$message('解绑银行卡成功')
         this.bankid = ''
         this.dialogUnbank = false

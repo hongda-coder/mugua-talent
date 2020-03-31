@@ -31,8 +31,8 @@
         <af-table-column prop="orderno" label="流水号" align="center"></af-table-column>
         <af-table-column prop="cname" label="所属企业" align="center"></af-table-column>
         <af-table-column prop="jobename" label="职位名称" align="center"></af-table-column>
-        <af-table-column prop="dmnumber" label="到场人数" align="center"></af-table-column>
-        <af-table-column prop="tgnumber" label="面过人数" align="center"></af-table-column>
+        <af-table-column prop="dmnumber" label="人数" align="center"></af-table-column>
+        <af-table-column prop="tgnumber" label="通过人数" align="center"></af-table-column>
         <af-table-column prop="dmmoney" label="佣金节点" align="center"></af-table-column>
         <af-table-column prop="tgmoney" label="共获佣金" align="center"></af-table-column>
         <af-table-column prop="time" label="创建时间" align="center"></af-table-column>
