@@ -19,59 +19,66 @@
             <div class="c_join_once"> <a href="#">立即加入</a> </div>
           </div>
           <div class="col-xs-2 col-md-2"></div>
-          <div class="right-content" v-show="isSHow" >
-            <div class="login-way clearfix">
-              <div class="pass-login active" @click="passLogin">密码登录</div>
-              <div class="que-login" @click="queLogin">快捷登录</div>
-            </div>
-            <el-form ref="form" :model="form" class="demo-ruleForm c_talent_form">
-              <div class="c_talent_title">
-                欢迎来到人才推荐中心！
+
+          <div class="right-content">
+            <div class="my-form" v-show="isSHow">
+              <div class="login-way clearfix">
+                <div class="pass-login active" @click="passLogin">密码登录</div>
+                <div class="que-login" @click="queLogin">快捷登录</div>
               </div>
-              <el-form-item  prop="loginuser" class="input-code">
-                <el-input type="text" v-model="form.loginuser" placeholder="请输入手机号" @keyup.enter.native="submitForm('form')"></el-input>
-                <div class="no-code" v-show="isCode">手机号码未注册</div>
-                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
-              </el-form-item>
-              <el-form-item  prop="pwd" class="input-code">
-                <el-input type="password" v-model="form.pwd" placeholder="请输入密码" @keyup.enter.native="submitForm('form')"></el-input>
-                <div class="no-code" v-show="isPwd">密码错误</div>
-                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
-              </el-form-item>
-              <el-form-item>
-                <el-button class="btn" @click="submitForm('form')">登录</el-button>
-              </el-form-item>
-              <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
-              <div class="c_talent_forget" @click="addInfo">老用户</div>
-            </el-form>
-          </div>
-          <div class="right-content" v-show="!isSHow">
-            <div class="login-way clearfix">
-              <div class="pass-login" @click="passLogin">密码登录</div>
-              <div class="que-login active" @click="queLogin">快捷登录</div>
+              <el-form ref="form" :model="form" class="demo-ruleForm c_talent_form">
+                <el-form-item  prop="loginuser" class="input-code">
+                  <el-input type="text" v-model="form.loginuser" placeholder="请输入手机号" @keyup.enter.native="submitForm('form')"></el-input>
+                  <div class="no-code" v-show="isCode">手机号码未注册</div>
+                  <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
+                </el-form-item>
+                <el-form-item  prop="pwd" class="input-code">
+                  <el-input type="password" v-model="form.pwd" placeholder="请输入密码" @keyup.enter.native="submitForm('form')"></el-input>
+                  <div class="no-code" v-show="isPwd">密码错误</div>
+                  <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
+                </el-form-item>
+                <el-form-item>
+                  <el-button class="btn" @click="passLogin('form')">登录</el-button>
+                </el-form-item>
+                <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
+                <div class="c_talent_forget" @click="addInfo">老用户</div>
+              </el-form>
             </div>
-            <el-form ref="form" :model="queForm" class="demo-ruleForm c_talent_form">
-              <div class="c_talent_title">
-                欢迎来到人才推荐中心！
+
+            <div class="my-form" v-show="!isSHow">
+              <div class="login-way clearfix">
+                <div class="pass-login" @click="passLogin">密码登录</div>
+                <div class="que-login active" @click="queLogin">快捷登录</div>
               </div>
-              <el-form-item  prop="phone" class="input-code">
-                <el-input type="text" v-model="queForm.phone" placeholder="请输入手机号" @keyup.enter.native="submitForm('queForm')"></el-input>
-                <div class="no-code" v-show="isCode">手机号码未注册</div>
-                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
-              </el-form-item>
-              <Sliding style="width: 390px; margin-bottom: 22px;" />
-              <el-form-item  prop="code" class="input-code">
-                <el-input type="te" class="my-input" v-model="queForm.code" placeholder="请输入密码" @keyup.enter.native="submitForm('queForm')"></el-input>
-                <button class="text" type="button" :disabled="isDisabled" 
-                @click="getCode()"> {{computeTime>0 ? `已发送(${computeTime}s)` : '获取验证码'}}</button>
-                <div class="c_talent_form_iconfont"><i class="iconfont">&#xe660;</i></div>
-              </el-form-item>
-              <el-form-item>
-                <el-button class="btn" @click="submitForm('queForm')">登录</el-button>
-              </el-form-item>
-              <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
-              <div class="c_talent_forget" @click="addInfo">老用户</div>
-            </el-form>
+              <el-form ref="form" :model="queForm" class="demo-ruleForm c_talent_form">
+                <el-form-item  prop="loginuser" class="input-code">
+                  <el-input type="text" v-model="queForm.loginuser" placeholder="请输入手机号" @keyup.enter.native="codeLogin('queForm')"></el-input>
+                  <div class="no-code" v-show="isCode">手机号码未注册</div>
+                  <div class="c_talent_form_iconfont"><i class="iconfont">&#xe842;</i></div>
+                </el-form-item>
+                <div class="form-group" style="margin-bottom: 15px;">
+                  <div class="jc-component__range">
+                    <div class="jc-range" :class="rangeStatus?'success':''" >
+                      <i @mousedown="rangeMove" :class="rangeStatus?successIcon:startIcon"></i>
+                      {{rangeStatus?successText:startText}}
+                    </div>
+                  </div>
+                </div>
+
+                <el-form-item  prop="code" class="input-code">
+                  <el-input type="text" class="my-input" v-model="queForm.code" placeholder="请输入密码" @keyup.enter.native="codeLogin('queForm')"></el-input>
+                  <button class="code" type="button" :disabled="isDisabled" 
+                  @click="getCode()"> {{computeTime>0 ? `已发送(${computeTime}s)` : '获取验证码'}}</button>
+                  <div class="c_talent_form_iconfont"><i class="iconfont">&#xe660;</i></div>
+                </el-form-item>
+                <el-form-item>
+                  <el-button class="btn" @click="codeLogin('queForm')">登录</el-button>
+                </el-form-item>
+                <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
+                <div class="c_talent_forget" @click="addInfo">老用户</div>
+              </el-form>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -107,11 +114,10 @@
 
 
 <script>
-import { oldUser } from "@/api/serve"
+import { oldUser, shortCode } from "@/api/serve"
 import Footer from "@/components/footer/Footer"
 import Pic from '@/components/common/Pic'
 
-import Sliding from '@/components/common/Sliding'
 export default {
   name: "Login",
   data () {
@@ -128,29 +134,66 @@ export default {
         tel: '',// 电话号码
         loginuser: '' // 密钥
       },
-
       queForm: {
-        phone: '18977784437',
-        code: '123456'
+        loginuser: '18977784437',
+        code: ''
       },
       computeTime: 0, // 计时的时间
       isDisabled: true,  // 获取验证码是否可以点击
       isCode: false,  // 手机号未注册
       isPwd: false,   // 密码错误
-      isSHow: true   // 看去哪里登录
+      isSHow: true,   // 看去哪里登录
+      isDisabled: true,
+      rangeStatus: false,
+      type: 3
     }
   },
   components: {
     Pic,
     Footer,
-    Sliding
+  },
+  props: {
+    // 成功之后的函数
+    successFun: {
+      type: Function
+    },
+    //成功图标
+    successIcon: {
+      type: String,
+      default: 'el-icon-success'
+    },
+    //成功文字
+    successText: {
+      type: String,
+      default: '验证成功'
+    },
+    //开始的图标
+    startIcon: {
+      type: String,
+      default: 'el-icon-d-arrow-right'
+    },
+    //开始的文字
+    startText: {
+      type: String,
+      default: '拖动滑块到最右边'
+    },
+    //失败之后的函数
+    errorFun: {
+      type: Function
+    },
+    //或者用值来进行监听
+    status: {
+      type: String
+    }
   },
 
   methods: {
-    submitForm(form) {
+
+    /**密码登录 */
+    passLogin(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          this.$store.dispatch('Login',this.form).then(res => {
+          this.$store.dispatch('LoginPassWord',{loginuser:this.form.loginuser,pwd:this.form.pwd,type:this.form.type}).then(res => {
             if(res.data.Message == '-3') {
               this.isCode = true
             } else if (res.data.Message == '-4') {
@@ -176,12 +219,12 @@ export default {
 
     // 发送ajax请求(向指定手机号发送验证码短信)
     getCode () {
-      shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.tel}).then(res => {
+      shortCode({tel:this.queForm.loginuser,type:this.type}).then(res => {
         if ( res.data.Message == -4 ) {
-          this.isShowReg = true
         } else if (res.data.Message == 'success') {
           this.computeTime = 60
           this.isDisabled = true
+          this.form.type = 3
           this.intervalId = setInterval(() => {
             this.computeTime--
             if(this.computeTime<=0) {
@@ -210,11 +253,82 @@ export default {
     },
     queLogin () {
       this.isSHow = false
-    }
+    },
+
+    //滑块移动
+		rangeMove(e){
+      if (this.queForm.loginuser == "") {
+        this.isShowTel = true
+        return false 
+      } else {
+      let ele = e.target;
+			let startX = e.clientX;
+			let eleWidth = ele.offsetWidth;
+			let parentWidth =  ele.parentElement.offsetWidth;
+			let MaxX = parentWidth - eleWidth;
+      if(this.rangeStatus){//不运行
+        this.isDisabled = true
+				return false;
+			}
+			document.onmousemove = (e) => {
+				let endX = e.clientX;
+				this.disX = endX - startX;
+				if(this.disX<=0){
+					this.disX = 0;
+				}
+				if(this.disX>=MaxX-eleWidth){//减去滑块的宽度,体验效果更好
+					this.disX = MaxX;
+				}
+				ele.style.transition = '.1s all';
+				ele.style.transform = 'translateX('+this.disX+'px)';
+				e.preventDefault();
+			}
+			document.onmouseup = ()=> {
+				if(this.disX !== MaxX){
+					ele.style.transition = '.5s all';
+					ele.style.transform = 'translateX(0)';
+					//执行成功的函数
+					this.errorFun && this.errorFun();
+				}else{
+          this.isDisabled = false
+					this.rangeStatus = true;
+					if(this.status){
+						this.$parent[this.status] = true;
+					}
+					//执行成功的函数
+					this.successFun && this.successFun();
+				}
+				document.onmousemove = null;
+				document.onmouseup = null;
+			}
+      }
+    },
+
+    codeLogin(queForm) {
+      this.$refs[queForm].validate((valid) => {
+        if (valid) {
+          this.$store.dispatch('LoginCode',this.queForm).then(res => {
+            if(res.data.Message == '-3') {
+              this.isCode = true
+            } else if (res.data.Message == '-4') {
+              this.isPwd = true
+            } else if(res.data.Message == 'ok') {
+              this.$router.push({name:'editor'})
+            } else if(res.data.Message == 'success') {
+              this.$router.push({name:'home'})
+            }
+          }).catch(error=>{
+            console.log(error)
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      })
+    },
   }
 }
 </script>
-
 
 <style scoped>
 /**2020-2-12 */
@@ -224,23 +338,18 @@ export default {
 
 .right-content {
   float: right;
-  background: #fff;
-  width: 420px;
-  border-radius: 10px;
-  margin-top: 25px;
-}
+  margin-top: 42px;
+} 
 
 input:focus { 
   outline: 1px solid #FEAD1C!important;
   box-shadow: 0px 0px 5px #FEAD1C;
 }
 /**2020-2-12 */
-
 .c_talent_w {
   width: 1200px;
   margin: auto;
 }
-
 
 .c_header_nav_jz {
   width: 100%;
@@ -404,6 +513,7 @@ input:focus {
 .login-way {
   line-height: 50px;
   cursor: pointer;
+  margin-bottom: 30px;
 }
 
 .login-way > .pass-login {
@@ -462,4 +572,49 @@ input:focus {
   background: #fff;
 }
 
+.my-form {
+  float: right;
+  background: #fff;
+  width: 420px;
+  border-radius: 10px;
+  /* margin-top: 25px; */
+}
+
+
+
+
+  /**滑块 */
+.jc-range{
+	background-color: #FFCCCC;
+	position: relative;
+	transition: 1s all;
+	user-select: none;
+	color: #333;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 45px; 
+  border-radius: 4px;
+}
+.jc-range i{
+	position: absolute;
+	left: 0;
+	width: 60px;/*no*/
+	height: 100%;
+	color: #919191;
+	background-color: #fff;
+	border: 1px solid #bbb;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  border-radius: 4px;
+}
+.jc-range.success{
+	background-color: #7AC23C;
+	color: #fff;
+}
+.jc-range.success i{
+	color: #7AC23C;
+}
 </style>

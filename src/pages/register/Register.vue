@@ -66,8 +66,6 @@
         </div>
       </div>
     </div>
-    <!-- <el-button @click="openVn" v-show="false"></el-button> -->
-    <!-- banner登录区 -->
     <Pic></Pic>
     <Footer></Footer>
   </div>
@@ -80,13 +78,11 @@ import { register,shortCode } from "@/api/serve"
 import Footer from "@/components/footer/Footer"
 import Pic from '@/components/common/Pic'
 
-import Sliding from '@/components/common/Sliding'
 export default {
   name: "Register",
   components: {
     Pic,
-    Footer,
-    Sliding
+    Footer
   },
   props: {
     // 成功之后的函数
@@ -141,7 +137,6 @@ export default {
       isDisabled: true,
       disX : 0,
       rangeStatus: false,
-      // durationTime: '5000'
     }
   },
   methods: {
@@ -174,10 +169,6 @@ export default {
         console.log(res)
         if (res.data.Message == 'success') {
           this.$router.push("./login")
-          // this.openVn()
-          // setTimeout (function () {
-          //   this.$router.push("login")
-          // }, this.durationTime)
         }
       })
     },
@@ -237,9 +228,6 @@ export default {
 			}
       }
     },
-
-
-
     // 注册账号
     handlerPhone () {
       this.isShowReg = false
@@ -247,7 +235,6 @@ export default {
         this.isShowTel = true
       } else {
         this.isShowTel = false
-        
       }
     },
     // 注册密码
