@@ -124,7 +124,7 @@ export default {
       isShowPwd: false,
       isShowOthersinvitecode: false,
       isShowReg: false,
-      isShowCode: false,
+      isShowCode: false, // 邀请码出错
       form: {
         tel: '',
         pwd: '',
@@ -145,7 +145,9 @@ export default {
       shortCode({guid: this.form.guid,type:this.form.type,tel:this.form.tel}).then(res => {
         if ( res.data.Message == -4 ) {
           this.isShowReg = true
-        } else if (res.data.Message == 'success') {
+        } else if(res.data.Message == -5 ) {
+          this.isShowCode = true
+        }else if (res.data.Message == 'success') {
           this.computeTime = 60
           this.isDisabled = true
           this.intervalId = setInterval(() => {

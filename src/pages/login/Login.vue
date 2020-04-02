@@ -38,7 +38,7 @@
                   <div class="c_talent_form_iconfont"><i class="iconfont">&#xe636;</i></div>
                 </el-form-item>
                 <el-form-item>
-                  <el-button class="btn" @click="passLogin('form')">登录</el-button>
+                  <el-button class="btn" @click="pwdLogin('form')">登录</el-button>
                 </el-form-item>
                 <div class="c_talent_forget">没有账号？<a href="#" @click="goRegister">立即注册</a> </div>
                 <div class="c_talent_forget" @click="addInfo">老用户</div>
@@ -50,7 +50,7 @@
                 <div class="pass-login" @click="passLogin">密码登录</div>
                 <div class="que-login active" @click="queLogin">快捷登录</div>
               </div>
-              <el-form ref="form" :model="queForm" class="demo-ruleForm c_talent_form">
+              <el-form ref="queForm" :model="queForm" class="demo-ruleForm c_talent_form">
                 <el-form-item  prop="loginuser" class="input-code">
                   <el-input type="text" v-model="queForm.loginuser" placeholder="请输入手机号" @keyup.enter.native="codeLogin('queForm')"></el-input>
                   <div class="no-code" v-show="isCode">手机号码未注册</div>
@@ -136,7 +136,8 @@ export default {
       },
       queForm: {
         loginuser: '18977784437',
-        code: ''
+        code: '',
+        type: 3
       },
       computeTime: 0, // 计时的时间
       isDisabled: true,  // 获取验证码是否可以点击
@@ -145,7 +146,7 @@ export default {
       isSHow: true,   // 看去哪里登录
       isDisabled: true,
       rangeStatus: false,
-      type: 3
+     
     }
   },
   components: {
@@ -190,7 +191,7 @@ export default {
   methods: {
 
     /**密码登录 */
-    passLogin(form) {
+    pwdLogin(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('LoginPassWord',{loginuser:this.form.loginuser,pwd:this.form.pwd,type:this.form.type}).then(res => {
@@ -212,6 +213,30 @@ export default {
         }
       })
     },
+    /**验证码登录 */
+    codeLogin(queForm) {
+      this.$refs[queForm].validate((valid) => {
+        if (valid) {
+          this.$store.dispatch('LoginCode',this.queForm).then(res => {
+            if(res.data.Message == '-3') {
+              this.isCode = true
+            } else if (res.data.Message == '-4') {
+              this.isPwd = true
+            } else if(res.data.Message == 'ok') {
+              this.$router.push({name:'editor'})
+            } else if(res.data.Message == 'success') {
+              this.$router.push({name:'home'})
+            }
+          }).catch(error=>{
+            console.log(error)
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      })
+    },
+
     // 跑去注册
     goRegister () {
        this.$router.push("./register")
@@ -219,12 +244,12 @@ export default {
 
     // 发送ajax请求(向指定手机号发送验证码短信)
     getCode () {
-      shortCode({tel:this.queForm.loginuser,type:this.type}).then(res => {
+      shortCode({tel:this.queForm.loginuser,type:this.queForm.type}).then(res => {
         if ( res.data.Message == -4 ) {
         } else if (res.data.Message == 'success') {
           this.computeTime = 60
           this.isDisabled = true
-          this.form.type = 3
+          this.queForm.type = 1
           this.intervalId = setInterval(() => {
             this.computeTime--
             if(this.computeTime<=0) {
@@ -302,29 +327,6 @@ export default {
 				document.onmouseup = null;
 			}
       }
-    },
-
-    codeLogin(queForm) {
-      this.$refs[queForm].validate((valid) => {
-        if (valid) {
-          this.$store.dispatch('LoginCode',this.queForm).then(res => {
-            if(res.data.Message == '-3') {
-              this.isCode = true
-            } else if (res.data.Message == '-4') {
-              this.isPwd = true
-            } else if(res.data.Message == 'ok') {
-              this.$router.push({name:'editor'})
-            } else if(res.data.Message == 'success') {
-              this.$router.push({name:'home'})
-            }
-          }).catch(error=>{
-            console.log(error)
-          })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      })
     },
   }
 }

@@ -5,7 +5,7 @@
         <el-col :xs="5" :sm="5" :md="5" :lg="12" :xl="12" style="min-width: 550px;">
           <div class="clearfix job-title">
             <div class="job-name">{{jobState.jobname}}</div> 
-            <div class="jpb-price">6-8千/月</div>
+            <div class="jpb-price">{{jobState.money}}</div>
           </div>
 
           <div class="clearfix job-time">
@@ -33,7 +33,7 @@
       <div class="clearfix">
         <div class="job-left">
           <div class="desc-title">职位描述</div>
-          <p class="job-duty">
+          <div class="job-duty">
             {{jobState.jobDescriptive}}
             <!-- 岗位职责：
             <div>
@@ -62,7 +62,7 @@
                 </div>
               </div>
             </div> -->
-          </p>
+          </div>
 
           <!-- <div class="desc-title" style="margin-top: 30px;">公司介绍</div>
             <div>
@@ -192,6 +192,7 @@ export default {
         record: '',
         jpetime: '',
         mstime: '',
+        money: '',
         jobDescriptive: ''
       }
     }
@@ -205,9 +206,8 @@ export default {
   methods: {
     details () {
       jobDetails (this.lists).then(res => {
-        console.log(res)
         if(res.data.Message == -2) {
-          this.$router.query('login')
+          this.$router.push('login')
         }
         if (res.data.Message == "success") {
           this.jobState = res.data.data
@@ -257,6 +257,7 @@ export default {
   .job-duty {
     margin-top: 10px;
     line-height: 30px;
+    white-space: pre-line;
   }
 
   .job-right {

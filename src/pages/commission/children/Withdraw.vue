@@ -102,10 +102,7 @@
         :total="rows">
       </el-pagination>
     </div>
-
-
     <!-- 解除银行卡绑定 -->
-
     <el-dialog
       title="解除银行卡绑定"
       :visible.sync="dialogUnbank"
@@ -117,7 +114,6 @@
         <el-button type="primary" @click="confirmUnbank">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -203,6 +199,7 @@ export default {
     bankInfo () {
       bankInfo ({guid:this.lists.guid,tel:this.lists.tel}).then( res => {
         this.$store.commit('SAVE_BANK',res.data.Message)
+        console.log(res)
         this.bankForm = res.data.data
         this.bankid = res.data.data.id
       }) 

@@ -19,9 +19,9 @@ export default  {
     })
   },
   LoginCode ({commit},user) {
-    const { loginuser, code } = user
+    const { loginuser, code, type } = user
     return new Promise((resolve,reject) => {
-      login({loginuser,code}).then(response => {
+      login({loginuser,code, type}).then(response => {
         commit('SET_TOKEN', response.data.token); 
         setToken('ssc-token', response.data.token); //值保存到cookie
 

@@ -31,7 +31,7 @@
       <div class="tab clearfix">
         <div class="item current">报名情况</div>
       </div>
-      <div class="content">
+      <div class="table-wrap">
         <el-table :data="table" height="250" border :row-style="{height: '34px',padding: '0px',lineHeight: '34px'}" :cell-style="{ padding: '0'}"
           :header-cell-style="{background: '#F1F5FE',padding: '0px',lineHeight: '40px'}">
           <af-table-column prop="id" label="编号" align="center" width="70px">
@@ -40,11 +40,15 @@
           </template>
           </af-table-column>
           <af-table-column prop="TrueName" label="姓名" align="center"></af-table-column>
-          <af-table-column prop="sex" label="性别" align="center"></af-table-column>
+          <af-table-column prop="sex" label="性别" align="center">
+            <template slot-scope="scope">
+              {{scope.row.sex | userSex}}
+            </template>
+          </af-table-column>
           <af-table-column prop="tel" label="联系方式" align="center"></af-table-column>
-          <af-table-column prop="working" label="求职意向" align="center"></af-table-column>
-          <af-table-column prop="record" label="工作经历" align="center"></af-table-column>
-          <af-table-column prop="jpetime" label="教育经历" align="center"></af-table-column>
+          <af-table-column prop="" label="求职意向" align="center"></af-table-column>
+          <af-table-column prop="working" label="工作经历" align="center"></af-table-column>
+          <af-table-column prop="record" label="教育经历" align="center"></af-table-column>
           <af-table-column prop="mstime" label="项目经验" align="center"></af-table-column>
           <af-table-column prop="number" label="语言能力" align="center"></af-table-column>
           <af-table-column prop="state" label="自我评价" align="center"></af-table-column>
@@ -98,10 +102,23 @@ export default {
     applyList () {
       applyList(this.lists).then( res => {
         console.log(res)
+        this.table = res.data.data
       })
     },
     goOut () {
       this.$router.push('resume')
+    }
+  },
+  filters: {
+    userSex (type) {
+      switch (type) {
+        case '1':
+          return '男'
+        case '2':
+          return '女'
+        default:
+          return type 
+      }
     }
   }
 }
@@ -198,6 +215,10 @@ export default {
 .content {
   background: #fff;
   padding: 30px 20px;
+}
+
+.commonColor {
+  color: #FEAD1D;
 }
 
 </style>
