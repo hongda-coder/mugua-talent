@@ -17,8 +17,8 @@
       <div style="padding: 20px;background: #fff;">
         <div style="padding: 30px 0; margin: auto;">
           <el-form label-width="80px" :model="editorForm" :rules="rules" ref="editorForm">
-            <el-row>
-              <el-col :span="10" style="padding: 0; width: 300px;float: none;margin: auto;">
+            <el-row style="width: 1200px; margin: auto;display: flex;justify-content: space-between;">
+              <el-col :span="10" style="padding: 0; width: 300px;">
                 <!-- <div style="float: left;margin-right: 38px;">
                     <div style="width:100px;"><img src="@/assets/images/c-avatar.png" alt="" style="width: 100%;"></div>
                     <div style="color: #FEB12C;text-align: center; line-height: 30px;">修改<span style="font-size: 12px;color: #ccc;margin: 0 5px;">|</span>删除</div>
@@ -72,29 +72,26 @@
                 </div>
               </el-col>
               
-              <!-- <el-col :span="10" style="padding: 0;">
-                <div class="clearfix">
+              <el-col :span="10" style="padding: 0;">
+                <!-- <div class="clearfix">
                   <div class="content-input">
                     <el-form-item label="证书名称" prop="imagename">
                       <el-input v-model="editorForm.imagename"></el-input>
                     </el-form-item>
                   </div>
-                </div>
+                </div> -->
                 <div class="clearfix">
                   <div class="icon"><img src="" alt=""></div>
                   <div class="content-input">
                     <el-form-item label="证件附件" prop="password" style="float: left;">
-                      <el-upload
+                     <el-upload
                         class="avatar-uploader"
+                        :action="actionUrl"
                         :show-file-list="false"
-                        :multiple="false"
-                        action="http://192.168.0.182:8003/api/user/PostUpload"
-                        :before-upload="beforeUpload"
-                        :http-request="uploadMyImg"
-                        >
-                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                        :on-change="getFile">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                      </el-upload>
                     </el-form-item>
                     <el-form-item label="示例" prop="password" style="float: left;">
                       <div style="width: 140px; margin-left: 20px; padding:15px 25px;;box-sizing: border-box;float:left; border: 2px solid #E9E9E9;line-height:0;">
@@ -103,16 +100,14 @@
                     </el-form-item>
                   </div>
                 </div>
-              </el-col> -->
+              </el-col>
             </el-row>
-
             <div style="width: 150px;margin:60px auto 0 auto;">
               <el-button style="background: #FEAD1C; color: #fff;width:100%; border: none;"  @click="saveInfo('editorForm')">保存</el-button>
             </div>
           </el-form>
         </div>
       </div>
-
     </div>
     <Footer style="position: fixed;bottom: 0; left: 0;width: 100%;"></Footer>
   </div>
@@ -120,6 +115,7 @@
 
 <script>
 import { perInfo2,uploadImg,perInfo } from "@/api/serve"
+import config from "./config"
 import { getTel,getToken } from "@/util"
 import Footer from "@/components/footer/Footer"
 export default {
@@ -143,10 +139,10 @@ export default {
         guid: 'ssc-token', //token
         tel: 'tel', // 加密手机号
       },
-      imageUrl: '', // 证书名称
-      file: '',
-      formData: {},
-      imagename: '',//  类型
+      imageUrl: '', // 图片链接
+      imagename: '',//  上传图片  64编码
+      imagepath: '', // 上传图片  后缀名 
+      actionUrl: config.PATH.URL + 'user/PostUpload1',
       rules: {
         loginuser: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -202,6 +198,35 @@ export default {
         }
       });
     },
+
+    // 上传图片
+    getBase64(file){  //把图片转成base64编码
+      return new Promise(function(resolve,reject){
+          let reader=new FileReader();
+          let imgResult="";
+          reader.readAsDataURL(file);
+          reader.onload=function(){
+              imgResult=reader.result;
+          };
+          reader.onerror=function(error){
+              reject(error);
+          };
+          reader.onloadend=function(){
+              resolve(imgResult);
+          }
+      })
+    },
+
+    getFile(file,fileList){  //上传头像
+    this.imagepath = file.name.substring(file.name.lastIndexOf("."), file.name.length)  
+      this.getBase64(file.raw).then(res=>{
+        this.imagename = res.substring(res.indexOf(',') + 1, res.length) 
+        uploadImg({imagename:this.imagename,imagepath: this.imagepath}).then( res=> {
+          this.imageUrl = res.data.path
+        })
+
+      })
+    }
   }
 }
 </script>
@@ -211,6 +236,7 @@ export default {
   .c_header_nav_jz {
     width: 100%;
     background: #000;
+    
   }
   .c_jzheaader {
     width: 1200px;
@@ -309,14 +335,14 @@ export default {
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 140px;
-    height: 160px;
-    line-height: 160px;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
     text-align: center;
   }
   .avatar {
-    width: 140px;
-    height: 160px;
+    width: 178px;
+    height: 178px;
     display: block;
   }
   /deep/ .el-form-item__error {

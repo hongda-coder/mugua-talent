@@ -95,14 +95,13 @@ export default {
   mounted () {
     this.lists.guid = getToken(this.lists.guid)
     this.lists.tel = getTel(this.lists.tel)
-    console.log(this.$route.query.msid)
     this.applyList ()
   },
   methods: {
     applyList () {
       applyList(this.lists).then( res => {
-        console.log(res)
         this.table = res.data.data
+        console.log(res)
       })
     },
     goOut () {

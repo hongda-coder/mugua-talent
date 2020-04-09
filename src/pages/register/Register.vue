@@ -58,6 +58,7 @@
                 <button class="code" type="button" :disabled="isDisabled" 
                 @click="getCode()"> {{computeTime>0 ? `已发送(${computeTime}s)` : '获取验证码'}}</button>
                 <div class="c_talent_form_iconfont"><i class="iconfont">&#xe660;</i></div>
+                <div class="code-wrang" v-show="isCode">验证码错误</div>
               </div>
               <button type="button" class="btn" @click="registerBtn">免费注册</button>
               <div class="c_talent_forget">已有账号？<a href="#" @click="goLogin">立即登录</a> </div>
@@ -125,6 +126,7 @@ export default {
       isShowOthersinvitecode: false,
       isShowReg: false,
       isShowCode: false, // 邀请码出错
+      isCode: false, // 验证码错误
       form: {
         tel: '',
         pwd: '',
@@ -169,6 +171,9 @@ export default {
     registerBtn () {
       register ({tel:this.form.tel,pwd:this.form.pwd,code:this.form.code,othersinvitecode:this.form.othersinvitecode}).then( res=> {
         console.log(res)
+        if (res.data.Message == '-3') {
+          this.isCode = true
+        }
         if (res.data.Message == 'success') {
           this.$router.push("./login")
         }
@@ -384,7 +389,7 @@ export default {
     color: #FE5C1C;
 }
 
-.c_talent_hint{
+.c_talent_hint,.code-wrang{
   position: absolute;
   top: 52px;
   left: 8px;

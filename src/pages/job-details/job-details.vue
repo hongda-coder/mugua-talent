@@ -19,13 +19,13 @@
           </div>
           
         </el-col>
-
+<!-- 
         <el-col :xs="5" :sm="5" :md="5" :lg="10" :xl="12" style="min-width: 410px">
           <div class="finder" >
             <div class="share-task">我要分享</div>
             <div class="get-task">领任务</div>
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
 

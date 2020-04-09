@@ -135,7 +135,7 @@ export default {
         loginuser: '' // 密钥
       },
       queForm: {
-        loginuser: '18977784437',
+        loginuser: '',
         code: '',
         type: 3
       },
@@ -195,6 +195,8 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('LoginPassWord',{loginuser:this.form.loginuser,pwd:this.form.pwd,type:this.form.type}).then(res => {
+            
+              console.log(res)
             if(res.data.Message == '-3') {
               this.isCode = true
             } else if (res.data.Message == '-4') {

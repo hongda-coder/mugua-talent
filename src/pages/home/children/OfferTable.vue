@@ -37,8 +37,6 @@
       </el-table>
     </div>
 
-
-
     <!-- 分享 -->
     <el-dialog
       title="提示"
@@ -142,7 +140,11 @@ export default {
         if(res.Message == "-2") {
           this.$router.push("login")
         }
-        this.$store.commit('SAVE_SHARE',res.data.data.urlpath)
+        this.$nextTick(() => {
+          console.log(this.$store.state.shareUrl)
+          this.$store.commit('SAVE_SHARE',res.data.data.urlpath)
+          console.log(this.$store.state.shareUrl)
+        })
         this.shareTalbe = true
       })
     },

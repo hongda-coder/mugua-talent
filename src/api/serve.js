@@ -92,15 +92,6 @@ export function personEarnings(data){
   })
 }
 
-// 上传图片
-export function uploadImg(data){  
-  return ajax({
-    url:'user/UpLoad1',
-    method:'post',
-    data
-  })
-}
-
 // 修改电话号码
 export function newPhone(data){  
   return ajax({
@@ -255,5 +246,14 @@ export function jobDetails(data){
   })
 }
 
+
+// 上传图片
+export function uploadImg(data){  
+  return ajax({
+      url:'user/PostUpload1',
+      method:'post',
+      data
+  })
+}
 
 
