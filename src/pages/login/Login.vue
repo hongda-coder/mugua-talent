@@ -125,8 +125,8 @@ export default {
       formLabelWidth: '100px',
       dialogEditVisible: false,
       form: {
-        loginuser: '18977784437',
-        pwd: '123456'
+        loginuser: '',
+        pwd: ''
       },
       oldForm: {  
         TrueName: '', // 真实姓名
@@ -144,7 +144,6 @@ export default {
       isCode: false,  // 手机号未注册
       isPwd: false,   // 密码错误
       isSHow: true,   // 看去哪里登录
-      isDisabled: true,
       rangeStatus: false,
      
     }
@@ -195,8 +194,6 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$store.dispatch('LoginPassWord',{loginuser:this.form.loginuser,pwd:this.form.pwd,type:this.form.type}).then(res => {
-            
-              console.log(res)
             if(res.data.Message == '-3') {
               this.isCode = true
             } else if (res.data.Message == '-4') {
@@ -206,12 +203,7 @@ export default {
             } else if(res.data.Message == 'success') {
               this.$router.push({name:'home'})
             }
-          }).catch(error=>{
-            console.log(error)
           })
-        } else {
-          console.log('error submit!!');
-          return false;
         }
       })
     },
@@ -229,12 +221,7 @@ export default {
             } else if(res.data.Message == 'success') {
               this.$router.push({name:'home'})
             }
-          }).catch(error=>{
-            console.log(error)
           })
-        } else {
-          console.log('error submit!!');
-          return false;
         }
       })
     },
@@ -248,6 +235,7 @@ export default {
     getCode () {
       shortCode({tel:this.queForm.loginuser,type:this.queForm.type}).then(res => {
         if ( res.data.Message == -4 ) {
+          this.isCode = true
         } else if (res.data.Message == 'success') {
           this.computeTime = 60
           this.isDisabled = true
@@ -271,6 +259,7 @@ export default {
     saveInfo () {
       this.dialogEditVisible = false
       oldUser (this.oldForm).then( res => {
+        // eslint-disable-next-line no-console
         console.log(res)
       })
     },
